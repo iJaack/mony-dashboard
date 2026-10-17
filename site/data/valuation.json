@@ -1,0 +1,85 @@
+{
+  "updatedAt": "2026-10-16T22:52:12.000Z",
+  "rows": [
+    {
+      "token": "AVAX",
+      "priceUsd": 9.98,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 9.71838200133041,
+      "buyLevel": 0.3214439055972507,
+      "marginOfSafety": -0.026919913071309143,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "NEAR",
+      "priceUsd": 5.08,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 5.2469896323811565,
+      "buyLevel": 0.4398007625801798,
+      "marginOfSafety": 0.03182579804438723,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "ZEC",
+      "priceUsd": 1145.22,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 585.5062692252021,
+      "buyLevel": null,
+      "marginOfSafety": -0.955948313782301,
+      "gatePass": false,
+      "note": "No cash-flow gate model supplied."
+    },
+    {
+      "token": "VVV",
+      "priceUsd": 23.02,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 8.73072748353269,
+      "buyLevel": 4.889207390778306,
+      "marginOfSafety": -1.6366645899117542,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "PHAR",
+      "priceUsd": 0.085954,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 0.10386981029161292,
+      "buyLevel": 0.058167093763303236,
+      "marginOfSafety": 0.17248332543705003,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "p33",
+      "priceUsd": 0.136473,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 0.1666626557759946,
+      "buyLevel": 0.09343008466129651,
+      "marginOfSafety": 0.18114229390758918,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "AAVE",
+      "priceUsd": 154.98,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 48.05864700520833,
+      "buyLevel": 26.912842322916664,
+      "marginOfSafety": -2.2248098866204895,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    },
+    {
+      "token": "HYPE",
+      "priceUsd": 80.12,
+      "priceAt": "2026-10-16T22:52:00.000Z",
+      "modeledValue": 47.29068389967527,
+      "buyLevel": 26.48278298381815,
+      "marginOfSafety": -0.6942026080648447,
+      "gatePass": false,
+      "note": "Dated research; buy level uses the stressed value and a 30% margin of safety."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-10-17T18:32:37.525Z",
+  "sources": {
+    "avalanche_rpc": {
+      "status": "ok",
+      "updatedAt": "2026-10-17T18:32:37.525Z",
+      "lastSuccessAt": "2026-10-17T18:32:37.525Z",
+      "note": "Balances refreshed from Avalanche C-Chain."
+    },
+    "hyperliquid": {
+      "status": "ok",
+      "updatedAt": "2026-10-17T18:32:37.525Z",
+      "lastSuccessAt": "2026-10-17T18:32:37.525Z",
+      "note": "Margin equity, positions and spot balances refreshed."
+    },
+    "coingecko": {
+      "status": "ok",
+      "updatedAt": "2026-10-17T18:32:37.525Z",
+      "lastSuccessAt": "2026-10-17T18:32:37.525Z",
+      "note": "Available USD prices refreshed; each quote retains its own date."
+    },
+    "serialized_audit": {
+      "status": "stale",
+      "updatedAt": "2026-08-26T11:39:19.972Z",
+      "lastSuccessAt": "2026-08-26T11:39:19.972Z",
+      "note": "Dated public assessments; unavailable verdicts are not a safety pass."
+    },
+    "decisions": {
+      "status": "ok",
+      "updatedAt": "2026-10-17T16:41:00.000Z",
+      "lastSuccessAt": "2026-10-17T16:41:00.000Z",
+      "note": "Decisions are published after each run, twice daily."
+    }
+  }
+}

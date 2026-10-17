@@ -1,0 +1,44 @@
+{
+  "updatedAt": "2026-10-17T16:41:00.000Z",
+  "decisions": [
+    {
+      "id": "2026-10-17-savax-trim-1",
+      "date": "2026-10-17T16:41:00.000Z",
+      "outcome": "execute",
+      "title": "sAVAX trim, tranche 1",
+      "reason": "Trimmed sAVAX into WAVAX to reduce concentration above the 15% cap while keeping AVAX exposure.",
+      "asset": "sAVAX",
+      "action": "trim",
+      "size": {
+        "amount": 0.55,
+        "asset": "sAVAX",
+        "usd": 6.98
+      },
+      "received": {
+        "amount": 0.7097,
+        "asset": "WAVAX"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x390aac82074fedf420f8c45ce74905a019da0d88be263cfa4eb4022d5f976dbb",
+          "block": 97809002,
+          "gasUsed": 55839,
+          "gasAvax": 0.000335034
+        },
+        {
+          "label": "swap",
+          "hash": "0x3dc1541819b4e4c05aeeb34216fea419fe3c69d18450f0c4cdc9bbcc0de06abe",
+          "block": 97809086,
+          "gasUsed": 383647,
+          "gasAvax": 0.002301882
+        }
+      ],
+      "trim": {
+        "completedAmount": 0.55,
+        "asset": "sAVAX",
+        "targetWeight": 0.15
+      }
+    }
+  ]
+}

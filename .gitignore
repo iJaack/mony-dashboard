@@ -1,0 +1,13 @@
+fixtures/
+*.log
+codex-*.log
+PHASE*_BRIEF.md
+DESIGN.md
+JAACK_STYLE.md
+designs/
+.hallmark/
+jaack-me-reference*.png
+shots/
+node_modules/
+.DS_Store
+PHASE*_REPORT.md

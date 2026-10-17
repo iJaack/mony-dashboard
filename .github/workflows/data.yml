@@ -1,0 +1,61 @@
+name: Refresh public data
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: mony-public-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node --test
+      - run: node scripts/update-public-data.mjs
+      - name: Save refreshed data
+        shell: bash
+        run: |
+          if [ -n "$(git status --porcelain site/data)" ]; then
+            git config user.name "Mony"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add site/data/*.json
+            git commit -m "Refresh public treasury data"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy refreshed site
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,131 @@
+{
+  "generatedAt": "2026-10-17T18:32:37.525Z",
+  "updatedAt": "2026-10-17T18:32:37.525Z",
+  "wallet": "0x0fe61780bd5508b3C99e420662050e5560608cA4",
+  "currency": "USD",
+  "estimated": false,
+  "note": "Margin account equity includes open-position profit and loss. Positions below $0.01 are omitted from holdings, but remain in NAV.",
+  "nav": 73.820532522579,
+  "venues": {
+    "avalanche": {
+      "valueUsd": 41.445108522579,
+      "updatedAt": "2026-10-17T18:32:37.525Z"
+    },
+    "hyperliquid": {
+      "valueUsd": 32.375424,
+      "updatedAt": "2026-10-17T18:32:37.525Z",
+      "accountValue": 32.375424,
+      "withdrawable": 32.375424,
+      "spotBalances": [],
+      "assetPositions": []
+    }
+  },
+  "avalancheBalances": [
+    {
+      "asset": "AVAX",
+      "balance": 0.6536594036082937,
+      "decimals": 18
+    },
+    {
+      "asset": "sAVAX",
+      "balance": 2.1574067758984015,
+      "decimals": 18
+    },
+    {
+      "asset": "WAVAX",
+      "balance": 0.7097465510196115,
+      "decimals": 18
+    },
+    {
+      "asset": "USDC",
+      "balance": 0,
+      "decimals": 6
+    },
+    {
+      "asset": "USDt",
+      "balance": 0.660293,
+      "decimals": 6
+    },
+    {
+      "asset": "BTC.b",
+      "balance": 0,
+      "decimals": 8
+    },
+    {
+      "asset": "WETH.e",
+      "balance": 0,
+      "decimals": 18
+    }
+  ],
+  "positions": [
+    {
+      "asset": "AVAX",
+      "venue": "Avalanche",
+      "balance": 0.6536594036082937,
+      "priceUsd": 9.85,
+      "valueUsd": 6.438545125542,
+      "weight": 0.08721889297632315
+    },
+    {
+      "asset": "sAVAX",
+      "venue": "Avalanche",
+      "balance": 2.1574067758984015,
+      "priceUsd": 12.68,
+      "valueUsd": 27.355917918392,
+      "weight": 0.37057329422576063
+    },
+    {
+      "asset": "WAVAX",
+      "venue": "Avalanche",
+      "balance": 0.7097465510196115,
+      "priceUsd": 9.85,
+      "valueUsd": 6.991003527543,
+      "weight": 0.09470269704983106
+    },
+    {
+      "asset": "USDt",
+      "venue": "Avalanche",
+      "balance": 0.660293,
+      "priceUsd": 0.999014,
+      "valueUsd": 0.659641951102,
+      "weight": 0.008935751728697428
+    },
+    {
+      "asset": "USDC",
+      "venue": "Hyperliquid margin",
+      "balance": 32.375424,
+      "priceUsd": 1,
+      "valueUsd": 32.375424,
+      "weight": 0.43856936401938773
+    }
+  ],
+  "allocation": {
+    "sAVAX": {
+      "weight": 0.37057329422576063,
+      "cap": 0.15,
+      "overCap": true,
+      "excessUsd": 16.282838040005,
+      "trimAmount": 1.284135492114,
+      "trimmedAmount": 0.55
+    },
+    "satellites": {
+      "weight": 0,
+      "capEach": 0.1,
+      "capCombined": 0.4,
+      "overCap": false,
+      "assets": []
+    }
+  },
+  "drawdown": {
+    "sevenDay": null,
+    "fromPeak": 0,
+    "peakNav": 73.820532522579,
+    "pauseThreshold": -0.1,
+    "escalateThreshold": -0.25
+  },
+  "execution": {
+    "status": "active",
+    "escalated": false
+  },
+  "gasAvax": 0.002636916
+}

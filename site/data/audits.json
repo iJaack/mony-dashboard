@@ -1,0 +1,47 @@
+{
+  "updatedAt": "2026-08-26T11:39:19.972Z",
+  "rows": [
+    {
+      "token": "PHAR",
+      "isSafe": true,
+      "createdAt": "2026-08-11T17:38:17.971Z",
+      "assessment": "This asset is considered safe by reputation."
+    },
+    {
+      "token": "p33",
+      "isSafe": true,
+      "createdAt": "2026-08-26T11:39:19.972Z",
+      "assessment": "No direct mint, blacklist, fee, or liquidity-rug mechanism is present; administrative fund controls remain."
+    },
+    {
+      "token": "sAVAX",
+      "isSafe": false,
+      "createdAt": "2026-08-03T23:12:41.841Z",
+      "assessment": "The proxy can be upgraded and privileged roles can withdraw backing AVAX or halt user operations."
+    },
+    {
+      "token": "USDC",
+      "isSafe": false,
+      "createdAt": "2026-08-10T16:54:51.476Z",
+      "assessment": "The proxy can be upgraded and privileged operators can pause transfers or freeze trader addresses."
+    },
+    {
+      "token": "WAVAX",
+      "isSafe": null,
+      "createdAt": null,
+      "assessment": "Provider returned no_liquidity_pool. This is not a safety pass."
+    },
+    {
+      "token": "BTC.b",
+      "isSafe": true,
+      "createdAt": "2026-08-03T23:06:34.993Z",
+      "assessment": "This asset is considered safe by reputation."
+    },
+    {
+      "token": "WETH.e",
+      "isSafe": true,
+      "createdAt": "2026-08-03T23:11:49.769Z",
+      "assessment": "This asset is considered safe by reputation."
+    }
+  ]
+}
