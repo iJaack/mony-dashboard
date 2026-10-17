@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-10-17T21:12:05.651Z",
-  "updatedAt": "2026-10-17T21:12:05.651Z",
+  "generatedAt": "2026-10-17T23:08:15.891Z",
+  "updatedAt": "2026-10-17T23:08:15.891Z",
   "wallet": "0x0fe61780bd5508b3C99e420662050e5560608cA4",
   "currency": "USD",
   "estimated": false,
   "note": "Margin account equity includes open-position profit and loss. Positions below $0.01 are omitted from holdings, but remain in NAV.",
-  "nav": 74.020402427846,
+  "nav": 73.398082536012,
   "venues": {
     "avalanche": {
-      "valueUsd": 41.644978427846,
-      "updatedAt": "2026-10-17T21:12:05.651Z"
+      "valueUsd": 41.022658536012,
+      "updatedAt": "2026-10-17T23:08:15.891Z"
     },
     "hyperliquid": {
       "valueUsd": 32.375424,
-      "updatedAt": "2026-10-17T21:12:05.651Z",
+      "updatedAt": "2026-10-17T23:08:15.891Z",
       "accountValue": 32.375424,
       "withdrawable": 32.375424,
       "spotBalances": [],
@@ -62,33 +62,33 @@
       "asset": "AVAX",
       "venue": "Avalanche",
       "balance": 0.6536594036082937,
-      "priceUsd": 9.87,
-      "valueUsd": 6.451618313614,
-      "weight": 0.08716000051341175
+      "priceUsd": 9.73,
+      "valueUsd": 6.360105997109,
+      "weight": 0.08665220912260863
     },
     {
       "asset": "sAVAX",
       "venue": "Avalanche",
       "balance": 2.1574067758984015,
-      "priceUsd": 12.76,
-      "valueUsd": 27.528510460464,
-      "weight": 0.37190436092668355
+      "priceUsd": 12.56,
+      "valueUsd": 27.097029105284,
+      "weight": 0.3691789781019024
     },
     {
       "asset": "WAVAX",
       "venue": "Avalanche",
       "balance": 0.7097465510196115,
-      "priceUsd": 9.87,
-      "valueUsd": 7.005198458564,
-      "weight": 0.094638751327954
+      "priceUsd": 9.73,
+      "valueUsd": 6.905833941421,
+      "weight": 0.09408738897276676
     },
     {
       "asset": "USDt",
       "venue": "Avalanche",
       "balance": 0.660293,
-      "priceUsd": 0.999028,
-      "valueUsd": 0.659651195204,
-      "weight": 0.008911748295978508
+      "priceUsd": 0.999086,
+      "valueUsd": 0.659689492198,
+      "weight": 0.008987830055019902
     },
     {
       "asset": "USDC",
@@ -96,16 +96,16 @@
       "balance": 32.375424,
       "priceUsd": 1,
       "valueUsd": 32.375424,
-      "weight": 0.4373851389359723
+      "weight": 0.44109359374770235
     }
   ],
   "allocation": {
     "sAVAX": {
-      "weight": 0.37190436092668355,
+      "weight": 0.3691789781019024,
       "cap": 0.15,
       "overCap": true,
-      "excessUsd": 16.425450096287,
-      "trimAmount": 1.287260979333,
+      "excessUsd": 16.087316724882,
+      "trimAmount": 1.28083731886,
       "trimmedAmount": 0.55
     },
     "satellites": {
@@ -118,7 +118,7 @@
   },
   "drawdown": {
     "sevenDay": null,
-    "fromPeak": 0,
+    "fromPeak": -0.008407410274,
     "peakNav": 74.020402427846,
     "pauseThreshold": -0.1,
     "escalateThreshold": -0.25

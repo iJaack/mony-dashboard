@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-10-17T21:12:05.651Z",
+  "generatedAt": "2026-10-17T23:08:15.891Z",
   "sources": {
     "avalanche_rpc": {
       "status": "ok",
-      "updatedAt": "2026-10-17T21:12:05.651Z",
-      "lastSuccessAt": "2026-10-17T21:12:05.651Z",
+      "updatedAt": "2026-10-17T23:08:15.891Z",
+      "lastSuccessAt": "2026-10-17T23:08:15.891Z",
       "note": "Balances refreshed from Avalanche C-Chain."
     },
     "hyperliquid": {
       "status": "ok",
-      "updatedAt": "2026-10-17T21:12:05.651Z",
-      "lastSuccessAt": "2026-10-17T21:12:05.651Z",
+      "updatedAt": "2026-10-17T23:08:15.891Z",
+      "lastSuccessAt": "2026-10-17T23:08:15.891Z",
       "note": "Margin equity, positions and spot balances refreshed."
     },
     "coingecko": {
       "status": "ok",
-      "updatedAt": "2026-10-17T21:12:05.651Z",
-      "lastSuccessAt": "2026-10-17T21:12:05.651Z",
+      "updatedAt": "2026-10-17T23:08:15.891Z",
+      "lastSuccessAt": "2026-10-17T23:08:15.891Z",
       "note": "Available USD prices refreshed; each quote retains its own date."
     },
     "serialized_audit": {
