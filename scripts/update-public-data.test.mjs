@@ -20,11 +20,14 @@ async function temporaryData(fn) {
 function provider({ spot = [], open = [], margin = '32.38', decimals = 18, omitPrice = false } = {}) {
   return async (url, options) => {
     if (url.includes('coingecko')) {
-      const prices = Object.fromEntries(['avalanche-2', 'benqi-liquid-staked-avax', 'usd-coin', 'tether', 'bitcoin', 'ethereum', 'near', 'zcash', 'venice-token', 'pharaoh-2', 'aave', 'hyperliquid'].map((id) => [id, { usd: id.includes('usd-coin') || id === 'tether' ? 1 : 10, usd_24h_change: 2 }]));
+      const prices = Object.fromEntries(['avalanche-2', 'benqi-liquid-staked-avax', 'usd-coin', 'tether', 'bitcoin', 'ethereum', 'near', 'zcash', 'venice-token', 'pharaoh-2', 'aave', 'hyperliquid', 'polygon-ecosystem-token', 'binancecoin'].map((id) => [id, { usd: id.includes('usd-coin') || id === 'tether' ? 1 : 10, usd_24h_change: 2 }]));
       if (omitPrice) delete prices['benqi-liquid-staked-avax'];
       return json(prices);
     }
+    if (url.includes('polymarket.com')) return json([]);
+    if (url.includes('avantisfi.com')) return json({ positions: [], limitOrders: [] });
     const body = JSON.parse(options.body);
+    if (/publicnode|base\.org|drpc|arbitrum\.io|optimism\.io|binance\.org/.test(url)) return json(body.map((row) => ({ id: row.id, jsonrpc: '2.0', result: '0x0' })));
     if (url.includes('avax.network')) return json(body.map((row) => ({ id: row.id, jsonrpc: '2.0', result: row.id === 'native' ? '0xde0b6b3a7640000' : row.id.startsWith('decimals-') ? `0x${decimals.toString(16)}` : row.id === 'balance-sAVAX' ? `0x${(2n * 10n ** BigInt(decimals)).toString(16)}` : '0x0' })));
     if (body.type === 'clearinghouseState') return json({ marginSummary: { accountValue: margin }, withdrawable: '20', assetPositions: open });
     if (body.type === 'spotClearinghouseState') return json({ balances: spot });
@@ -182,3 +185,34 @@ test('allocations aggregate both venues and receipt gas is deduplicated', async 
   assert.equal(gasSpent([...decisions, ...decisions]), gasSpent(decisions));
   assert.equal(gasSpent(decisions.map((row) => ({ ...row, outcome: 'blocked' }))), gasSpent(decisions));
 });
+
+test('multichain venues add Polymarket, Avantis and wallet balances to NAV and cap math', async () => temporaryData(async (dataDir) => {
+  const base = provider();
+  const fetcher = async (url, options) => {
+    if (url.includes('polymarket.com')) return json([{ size: 10, curPrice: 0.5, currentValue: 5, redeemable: false, endDate: '2027-01-01' }, { size: 100, curPrice: 0, currentValue: 0, redeemable: true, endDate: '2026-06-07' }]);
+    if (/publicnode|base\.org|drpc|arbitrum\.io|optimism\.io|binance\.org/.test(url)) {
+      const body = JSON.parse(options.body);
+      return json(body.map((row) => {
+        const to = row.params?.[0]?.to?.toLowerCase();
+        let result = '0x0';
+        if (row.id === 'pusd') result = '0xf4240'; // 1 pUSD
+        else if (row.id === 'shares-avUSDC') result = '0x989680'; // 10 shares
+        else if (row.id === 'redeem-avUSDC') result = '0xe4e1c0'; // 15 USDC
+        else if (row.id === 'balance-USDC' && to === '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913') result = '0x1e8480'; // 2 USDC on Base
+        return { id: row.id, jsonrpc: '2.0', result };
+      }));
+    }
+    return base(url, options);
+  };
+  const result = await updatePublicData({ dataDir, fetcher, now: NOW });
+  const t = result.treasury;
+  assert.equal(t.venues.polymarket.valueUsd, 6);
+  assert.equal(t.venues.polymarket.openPositions, 1);
+  assert.equal(t.venues.avantis.valueUsd, 15);
+  assert.equal(t.venues.base.valueUsd, 2);
+  assert.equal(t.nav, 85.38);
+  assert.equal(t.allocation.satellites.assets.length, 0);
+  assert.ok(Math.abs(t.allocation.external.weight - 21 / t.nav) < 1e-9);
+  assert.ok(Math.abs(t.allocation.sAVAX.weight - 20 / t.nav) < 1e-9);
+  for (const key of ['polymarket', 'avantis', 'yo', 'evm_wallets']) assert.equal(result.sources.sources[key].status, 'ok');
+}));

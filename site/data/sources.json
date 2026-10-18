@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-10-18T05:52:31.169Z",
+  "generatedAt": "2026-10-18T08:26:27.006Z",
   "sources": {
     "avalanche_rpc": {
       "status": "ok",
-      "updatedAt": "2026-10-18T05:52:31.169Z",
-      "lastSuccessAt": "2026-10-18T05:52:31.169Z",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
       "note": "Balances refreshed from Avalanche C-Chain."
     },
     "hyperliquid": {
       "status": "ok",
-      "updatedAt": "2026-10-18T05:52:31.169Z",
-      "lastSuccessAt": "2026-10-18T05:52:31.169Z",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
       "note": "Margin equity, positions and spot balances refreshed."
     },
     "coingecko": {
       "status": "ok",
-      "updatedAt": "2026-10-18T05:52:31.169Z",
-      "lastSuccessAt": "2026-10-18T05:52:31.169Z",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
       "note": "Available USD prices refreshed; each quote retains its own date."
     },
     "serialized_audit": {
@@ -25,10 +25,34 @@
       "lastSuccessAt": "2026-08-26T11:39:19.972Z",
       "note": "Dated public assessments; unavailable verdicts are not a safety pass."
     },
+    "polymarket": {
+      "status": "ok",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
+      "note": "Prediction market positions marked at current outcome prices, plus pUSD cash on Polygon."
+    },
+    "avantis": {
+      "status": "ok",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
+      "note": "Vault shares valued at the current redeem preview, net of withdrawal fees; open trades checked."
+    },
+    "yo": {
+      "status": "ok",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
+      "note": "Vault shares valued at the current redeem preview on Base."
+    },
+    "evm_wallets": {
+      "status": "ok",
+      "updatedAt": "2026-10-18T08:26:27.006Z",
+      "lastSuccessAt": "2026-10-18T08:26:27.006Z",
+      "note": "Native and major stable balances refreshed on Base, Polygon, Ethereum, Arbitrum, Optimism and BNB Chain."
+    },
     "decisions": {
       "status": "ok",
-      "updatedAt": "2026-10-17T16:41:00.000Z",
-      "lastSuccessAt": "2026-10-17T16:41:00.000Z",
+      "updatedAt": "2026-10-18T07:05:15.000Z",
+      "lastSuccessAt": "2026-10-18T07:05:15.000Z",
       "note": "Decisions are published after each run, twice daily."
     }
   }

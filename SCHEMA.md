@@ -16,7 +16,7 @@ The JSON Schema 2020-12 document below defines every public file. To validate a 
 
 `generatedAt` records the refresh attempt; `updatedAt` records the applicable data date. Source `lastSuccessAt` is null for unverified seeds. A failed source is stale when previously successful values remain, or error when only initial estimates or no usable values remain. Initial files use stale with note `seed`. Partial quotes keep their original dates. Dated safety assessments become stale after 30 days; the decision feed becomes stale after one day without a published outcome.
 
-NAV includes full venue values, including holdings below the $0.01 display threshold. Hyperliquid account value already includes open-position profit and loss; open positions must not be added to NAV again. The initial AVAX value is a residual estimate, with a null position price. The separate initial AVAX market quote is approximate and does not imply a reconciled position value.
+NAV includes full venue values across Avalanche, Hyperliquid, Polymarket (positions marked at current outcome prices plus pUSD cash), Avantis and YO vaults (redeem preview, net of withdrawal fees), and native plus major stable balances on Base, Polygon, Ethereum, Arbitrum, Optimism and BNB Chain, including holdings below the $0.01 display threshold. Hyperliquid account value already includes open-position profit and loss; open positions must not be added to NAV again. The initial AVAX value is a residual estimate, with a null position price. The separate initial AVAX market quote is approximate and does not imply a reconciled position value.
 
 The 7-day drawdown needs at least two recent points and seven days of coverage. Peak drawdown needs at least two points; the all-time high is retained separately in treasury even as history is compacted. Execution pauses at or below -10% over seven days; the escalation flag is set at or below -25% from peak. Drawdown alone does not prove that trades are running.
 
@@ -124,7 +124,16 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
           "enum": [
             "Avalanche",
             "Hyperliquid margin",
-            "Hyperliquid spot"
+            "Hyperliquid spot",
+            "Polymarket",
+            "Avantis",
+            "YO",
+            "Base",
+            "Polygon",
+            "Ethereum",
+            "Arbitrum",
+            "Optimism",
+            "BNB Chain"
           ]
         },
         "balance": {
@@ -377,6 +386,33 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
                 "spotBalances",
                 "assetPositions"
               ]
+            },
+            "polymarket": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "avantis": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "yo": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "base": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "polygon": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "ethereum": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "arbitrum": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "optimism": {
+              "$ref": "#/$defs/extraVenue"
+            },
+            "bnb": {
+              "$ref": "#/$defs/extraVenue"
             }
           },
           "required": [
@@ -405,6 +441,43 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
             },
             "satellites": {
               "$ref": "#/$defs/satellites"
+            },
+            "external": {
+              "type": "object",
+              "description": "Positions outside the trading mandate (Polymarket, Avantis, YO): counted in NAV and weights, excluded from satellite caps.",
+              "additionalProperties": false,
+              "properties": {
+                "weight": {
+                  "type": "number"
+                },
+                "venues": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "venue": {
+                        "type": "string"
+                      },
+                      "valueUsd": {
+                        "type": "number"
+                      },
+                      "weight": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "venue",
+                      "valueUsd",
+                      "weight"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "weight",
+                "venues"
+              ]
             }
           },
           "required": [
@@ -602,6 +675,18 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
               "$ref": "#/$defs/source"
             },
             "decisions": {
+              "$ref": "#/$defs/source"
+            },
+            "polymarket": {
+              "$ref": "#/$defs/source"
+            },
+            "avantis": {
+              "$ref": "#/$defs/source"
+            },
+            "yo": {
+              "$ref": "#/$defs/source"
+            },
+            "evm_wallets": {
               "$ref": "#/$defs/source"
             }
           },
@@ -939,6 +1024,40 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
       "required": [
         "updatedAt",
         "rows"
+      ]
+    },
+    "extraVenue": {
+      "type": "object",
+      "description": "Venue outside Avalanche and Hyperliquid. Polymarket, Avantis and YO add protocol detail fields; chain wallets add balances.",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "valueUsd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/balance"
+          }
+        }
+      },
+      "required": [
+        "label",
+        "valueUsd",
+        "updatedAt"
       ]
     }
   }

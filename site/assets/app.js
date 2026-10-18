@@ -34,6 +34,23 @@
     } catch { return null; }
   }
 
+  function extraVenues(data) {
+    const venues = data.venues;
+    const line = (title, detail, venue) => venue ? `<div class="venue-line"><span>${escape(title)}<small>${escape(detail)}</small><small>${time(venue.updatedAt)}</small></span><strong>${money(venue.valueUsd)}</strong></div>` : '';
+    const pm = venues.polymarket;
+    const av = venues.avantis;
+    const yo = venues.yo;
+    const wallets = ['base', 'polygon', 'ethereum', 'arbitrum', 'optimism', 'bnb'].filter((key) => venues[key]);
+    const walletValue = wallets.reduce((sum, key) => sum + (venues[key].valueUsd ?? 0), 0);
+    const held = wallets.filter((key) => venues[key].valueUsd >= 0.01).map((key) => venues[key].label);
+    return [
+      pm && line('Polymarket', `Polygon · ${pm.openPositions} open positions${pm.redeemablePositions ? `, ${pm.redeemablePositions} redeemable` : ''} · ${money(pm.cash)} cash · outside the trading mandate`, pm),
+      av && line('Avantis', `Base · avUSDC vault at redeem value${av.openTrades ? ` · ${av.openTrades} open trades` : ' · no open trades'} · outside the trading mandate`, av),
+      yo && yo.valueUsd >= 0.01 ? line('YO', 'Base · vault at redeem value · outside the trading mandate', yo) : '',
+      wallets.length ? `<div class="venue-line"><span>Other chains<small>Native and stable balances · ${escape(held.join(', ') || 'no holdings')}</small><small>${time(venues[wallets[0]].updatedAt)}</small></span><strong>${money(walletValue)}</strong></div>` : '',
+    ].join('');
+  }
+
   function renderTreasury(data) {
     if (!data || !finite(data.nav) || !Array.isArray(data.positions)) return;
     el('nav-title').textContent = `${data.estimated ? '≈ ' : ''}${money(data.nav)}`;
@@ -44,16 +61,17 @@
     el('hero-context').textContent = concentration.overCap ? 'sAVAX remains above its 15% cap.' : 'Holdings are measured against the treasury limits.';
     const venues = data.venues;
     el('venues-content').innerHTML = `<div class="venue-line"><span>Avalanche<small>C-Chain · ${escape(data.positions.filter((row) => row.venue === 'Avalanche').map((row) => row.asset).join(', ') || 'no holdings')}</small><small>${time(venues.avalanche.updatedAt)}</small></span><strong>${money(venues.avalanche.valueUsd)}</strong></div>
-      <div class="venue-line"><span>Hyperliquid<small>Margin equity + spot · ${venues.hyperliquid.assetPositions.length} open positions</small><small>${time(venues.hyperliquid.updatedAt)}</small></span><strong>${money(venues.hyperliquid.valueUsd)}</strong></div>`;
+      <div class="venue-line"><span>Hyperliquid<small>Margin equity + spot · ${venues.hyperliquid.assetPositions.length} open positions</small><small>${time(venues.hyperliquid.updatedAt)}</small></span><strong>${money(venues.hyperliquid.valueUsd)}</strong></div>${extraVenues(data)}`;
     const satellites = data.allocation.satellites;
     el('allocation-content').innerHTML = `<div class="allocation-label"><span>sAVAX concentration</span><strong><span class="${concentration.overCap ? 'warn' : 'good'}">${percent(concentration.weight)}</span> <span class="muted">/ 15% cap</span></strong></div>
       <div class="cap-track" role="img" aria-label="sAVAX weight ${percent(concentration.weight)}, cap 15 percent"><svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true"><rect class="${concentration.overCap ? 'bar-warning' : 'bar-good'}" width="${Math.min(100, Math.max(0, concentration.weight * 100))}" height="6"/></svg><span class="cap-mark"></span></div>
       <div class="cap-scale"><span>0%</span><span class="cap-tag">15% cap</span><span>100%</span></div>
       <p>${concentration.overCap ? `Over cap by ${money(concentration.excessUsd)}. About ${amount(concentration.trimAmount)} sAVAX would reach the target at current marks.` : 'Within the concentration cap.'}</p>
+      ${data.allocation.external ? `<p>Outside the trading mandate: ${percent(data.allocation.external.weight)} · ${data.allocation.external.venues.map((row) => `${escape(row.venue)} ${percent(row.weight)}`).join('; ') || 'none'}. Counted in NAV and weights; not traded by the treasury run.</p>` : ''}
       <p>Satellites: ${percent(satellites.weight)} / 40% combined cap${satellites.overCap ? ' · over cap' : ''}. ${satellites.assets.length ? satellites.assets.map((row) => `${escape(row.asset)} ${percent(row.weight)} / 10%${row.overCap ? ' · over cap' : ''}`).join('; ') : 'No satellite holdings.'}</p>`;
     const priority = ['sAVAX', 'USDC', 'WAVAX', 'AVAX', 'USDt', 'BTC.b', 'WETH.e'];
     const positions = [...data.positions].sort((a, b) => (priority.indexOf(a.asset) < 0 ? 99 : priority.indexOf(a.asset)) - (priority.indexOf(b.asset) < 0 ? 99 : priority.indexOf(b.asset)));
-    el('holdings-content').innerHTML = `<table><caption class="sr-only">Treasury holdings across both venues, in USD.</caption><thead><tr><th scope="col">Asset / venue</th><th scope="col">Balance</th><th scope="col">Value</th><th scope="col">Weight</th></tr></thead><tbody>${positions.map((row) => `<tr><th scope="row"><span class="asset"><span class="app-monogram ${row.asset === 'sAVAX' ? '' : 'outline'}" aria-hidden="true">${escape(row.asset.slice(0, 1))}</span><span>${escape(row.asset)}<small>${escape(row.venue)}</small></span></span></th><td data-label="Balance">${amount(row.balance, 6)}</td><td data-label="Value">${money(row.valueUsd)}</td><td data-label="Weight">${percent(row.weight)}</td></tr>`).join('')}</tbody></table>${venues.hyperliquid.assetPositions.length ? `<div class="derivatives"><h3>Open positions</h3>${venues.hyperliquid.assetPositions.map((row) => `<p class="small muted">${escape(row.asset)} · ${amount(row.balance)} · position value ${money(row.positionValue)} · unrealized P&amp;L ${money(row.unrealizedPnl)}. Included in margin equity.</p>`).join('')}</div>` : ''}`;
+    el('holdings-content').innerHTML = `<table><caption class="sr-only">Treasury holdings across all venues, in USD.</caption><thead><tr><th scope="col">Asset / venue</th><th scope="col">Balance</th><th scope="col">Value</th><th scope="col">Weight</th></tr></thead><tbody>${positions.map((row) => `<tr><th scope="row"><span class="asset"><span class="app-monogram ${row.asset === 'sAVAX' ? '' : 'outline'}" aria-hidden="true">${escape(row.asset.slice(0, 1))}</span><span>${escape(row.asset)}<small>${escape(row.venue)}</small></span></span></th><td data-label="Balance">${amount(row.balance, 6)}</td><td data-label="Value">${money(row.valueUsd)}</td><td data-label="Weight">${percent(row.weight)}</td></tr>`).join('')}</tbody></table>${venues.hyperliquid.assetPositions.length ? `<div class="derivatives"><h3>Open positions</h3>${venues.hyperliquid.assetPositions.map((row) => `<p class="small muted">${escape(row.asset)} · ${amount(row.balance)} · position value ${money(row.positionValue)} · unrealized P&amp;L ${money(row.unrealizedPnl)}. Included in margin equity.</p>`).join('')}</div>` : ''}`;
     el('holdings-note').textContent = data.note;
     el('trim-content').innerHTML = `<strong>Trim progress <span class="muted">/ ${amount(concentration.trimmedAmount)} sAVAX completed</span></strong><p>Current weight ${percent(concentration.weight)} / 15% target.</p>`;
     el('gas-content').textContent = `Gas spent: ${amount(data.gasAvax, 9)} AVAX${data.execution.escalated ? ' · Peak drawdown threshold reached; escalation required.' : ''}`;
@@ -143,7 +161,7 @@
 
   function renderSources(data) {
     if (!data || !data.sources) return;
-    const labels = { avalanche_rpc: 'Avalanche RPC', hyperliquid: 'Hyperliquid', coingecko: 'CoinGecko', serialized_audit: 'Serialized Audit', decisions: 'Decisions' };
+    const labels = { avalanche_rpc: 'Avalanche RPC', hyperliquid: 'Hyperliquid', polymarket: 'Polymarket', avantis: 'Avantis', yo: 'YO', evm_wallets: 'Other chains RPC', coingecko: 'CoinGecko', serialized_audit: 'Serialized Audit', decisions: 'Decisions' };
     el('sources-content').innerHTML = Object.entries(labels).map(([key, label]) => {
       const row = data.sources[key];
       return `<article class="source-item"><div class="work-meta">${row?.updatedAt ? time(row.updatedAt) : 'No snapshot'}</div><div><div class="inline spread"><h3>${label}</h3>${badge(row?.status ?? 'error')}</div><p>${escape(row?.note ?? 'Unavailable')}</p>${row?.lastSuccessAt ? `<p>Last success: ${time(row.lastSuccessAt)}</p>` : ''}</div></article>`;
