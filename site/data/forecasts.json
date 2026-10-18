@@ -11,7 +11,7 @@
       "confidence": "Medium",
       "horizon": "2026-10-28",
       "staleAfter": "2026-10-23",
-      "lastReviewed": "2026-10-16",
+      "lastReviewed": "2026-10-18",
       "market": "CME FedWatch"
     },
     {
@@ -23,20 +23,236 @@
       "confidence": "Medium",
       "horizon": "2026-12-09",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-16",
-      "market": "CME FedWatch ~89%"
+      "lastReviewed": "2026-10-18",
+      "market": "CME FedWatch"
     },
     {
       "title": "US spot BTC ETFs net positive for October",
+      "band": [
+        0.15,
+        0.28
+      ],
+      "confidence": "Low",
+      "horizon": "2026-10-30",
+      "staleAfter": "2026-10-23",
+      "lastReviewed": "2026-10-18",
+      "market": "Flow data, no traded price"
+    },
+    {
+      "title": "Meta raises 2026 capex low end above $130B on Oct 21",
+      "band": [
+        0.55,
+        0.7
+      ],
+      "confidence": "Low",
+      "horizon": "2026-10-21",
+      "staleAfter": "2026-10-21",
+      "lastReviewed": "2026-10-18",
+      "market": "Earnings event"
+    },
+    {
+      "title": "US confirms suspending Ukraine intel sharing or PURL by Nov 30",
       "band": [
         0.2,
         0.35
       ],
       "confidence": "Low",
-      "horizon": "2026-10-30",
-      "staleAfter": "2026-10-23",
-      "lastReviewed": "2026-10-16",
-      "market": "Flow data, no traded price"
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-10-30",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "Schwab Crypto AVAX trading by Dec 31",
+      "band": [
+        0.62,
+        0.78
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "AVAX between $8 and $12 on Dec 1 (CoinGecko)",
+      "band": [
+        0.48,
+        0.6
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-01",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "US spot AVAX ETFs reach $36.6M cumulative net inflows by Nov 30",
+      "band": [
+        0.35,
+        0.5
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-11-09",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "sAVAX trades 3%+ below redemption rate, Oct 19–Dec 15",
+      "band": [
+        0.03,
+        0.08
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-15",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "Ethereum Glamsterdam upgrade live on mainnet by Dec 31",
+      "band": [
+        0.55,
+        0.7
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-10-30",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "Solana Alpenglow consensus live on mainnet by Oct 31",
+      "band": [
+        0.85,
+        0.93
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-10-31",
+      "staleAfter": "2026-10-22",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "Zcash NU7 upgrade activates on mainnet by Nov 30",
+      "band": [
+        0.55,
+        0.7
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-10-21",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "NEAR House of Stake approves cutting max issuance to 1.6% by Dec 31",
+      "band": [
+        0.45,
+        0.62
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "None"
+    },
+    {
+      "title": "AVAX dips to $7 by Dec 31 (Binance 1-min low)",
+      "band": [
+        0.28,
+        0.38
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.41"
+    },
+    {
+      "title": "Bitcoin dips to $70k by Dec 31",
+      "band": [
+        0.33,
+        0.43
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.405"
+    },
+    {
+      "title": "MSCI removes Strategy (MSTR) from MSCI World or USA by Dec 31",
+      "band": [
+        0.88,
+        0.95
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-11",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.935"
+    },
+    {
+      "title": "US–Iran ceasefire holds through the Nov 3 midterms (no US strike)",
+      "band": [
+        0.8,
+        0.88
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-11-03",
+      "staleAfter": "2026-10-27",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.785"
+    },
+    {
+      "title": "Democrats win the US House in the 2026 midterms",
+      "band": [
+        0.82,
+        0.9
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-11-04",
+      "staleAfter": "2026-11-02",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.905"
+    },
+    {
+      "title": "Democrats win the US Senate in the 2026 midterms",
+      "band": [
+        0.52,
+        0.62
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-04",
+      "staleAfter": "2026-11-02",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.645"
+    },
+    {
+      "title": "Next Google Gemini Pro model released by Nov 30",
+      "band": [
+        0.2,
+        0.35
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-11-09",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.25"
+    },
+    {
+      "title": "ECB raises the deposit rate 25bp at the Dec 16–17 meeting",
+      "band": [
+        0.74,
+        0.86
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-17",
+      "staleAfter": "2026-10-30",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.825"
     },
     {
       "title": "Mojtaba Khamenei ceases to be de facto leader by Dec 31",
@@ -52,34 +268,256 @@
       "treasuryLink": "Holds No · ~69.2 shares, ~$61"
     },
     {
-      "title": "Schwab Crypto AVAX trading by Dec 31",
+      "title": "Strait of Hormuz traffic back to normal by Dec 31",
       "band": [
-        0.62,
-        0.78
+        0.07,
+        0.14
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.125"
+    },
+    {
+      "title": "Russia–Ukraine ceasefire by Dec 31, holding 10+ days",
+      "band": [
+        0.04,
+        0.09
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "market": "None"
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.095"
     },
     {
-      "title": "US confirms suspending Ukraine intel sharing or PURL by Nov 30",
-      "band": [
-        0.25,
-        0.4
-      ],
-      "confidence": "Low",
-      "horizon": "2026-11-30",
-      "market": "None"
-    },
-    {
-      "title": "Meta raises 2026 capex low end above $130B on Oct 21",
+      "title": "Israel–Iran ceasefire holds through Dec 31 (no strikes)",
       "band": [
         0.4,
         0.55
       ],
       "confidence": "Low",
-      "horizon": "2026-10-21",
-      "market": "Earnings event"
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.505"
+    },
+    {
+      "title": "US recession by end of 2026 (Polymarket test)",
+      "band": [
+        0.01,
+        0.04
+      ],
+      "confidence": "High",
+      "horizon": "2027-01-29",
+      "staleAfter": "2026-10-30",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.075"
+    },
+    {
+      "title": "CLARITY Act signed into law in 2026",
+      "band": [
+        0.02,
+        0.06
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.0505"
+    },
+    {
+      "title": "Next Astra model (6.1+) released by Dec 31",
+      "band": [
+        0.5,
+        0.7
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.915"
+    },
+    {
+      "title": "AVAX reaches $13 by Dec 31",
+      "band": [
+        0.3,
+        0.4
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.255"
+    },
+    {
+      "title": "Bitcoin reaches $100k by Dec 31",
+      "band": [
+        0.15,
+        0.23
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.205"
+    },
+    {
+      "title": "Ethereum dips to $2,250 by Dec 31",
+      "band": [
+        0.68,
+        0.78
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.655"
+    },
+    {
+      "title": "Ethereum reaches $3,000 by Dec 31",
+      "band": [
+        0.26,
+        0.36
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.335"
+    },
+    {
+      "title": "Solana dips to $80 by Dec 31",
+      "band": [
+        0.28,
+        0.38
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.345"
+    },
+    {
+      "title": "XRP dips to $1.00 by Dec 31",
+      "band": [
+        0.36,
+        0.46
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.305"
+    },
+    {
+      "title": "Hyperliquid (HYPE) reaches $100 by Dec 31",
+      "band": [
+        0.34,
+        0.44
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.34"
+    },
+    {
+      "title": "Zcash dips to $700 by Dec 31",
+      "band": [
+        0.33,
+        0.45
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.255"
+    },
+    {
+      "title": "BNB reaches $1,000 by Dec 31",
+      "band": [
+        0.04,
+        0.09
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.21"
+    },
+    {
+      "title": "Dogecoin dips to $0.06 by Dec 31",
+      "band": [
+        0.3,
+        0.4
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.37"
+    },
+    {
+      "title": "Chainlink dips to $8 by Dec 31",
+      "band": [
+        0.17,
+        0.27
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.51"
+    },
+    {
+      "title": "Uniswap (UNI) reaches $11 by Dec 31",
+      "band": [
+        0.24,
+        0.34
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.19"
+    },
+    {
+      "title": "USDT market cap hits $200B by Dec 31",
+      "band": [
+        0.02,
+        0.07
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-15",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.4155"
+    },
+    {
+      "title": "Ethena USDe depegs by Dec 31",
+      "band": [
+        0.01,
+        0.03
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-15",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.02"
+    },
+    {
+      "title": "Aave TVL falls below $10B in 2026",
+      "band": [
+        0.03,
+        0.07
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-15",
+      "lastReviewed": "2026-10-18",
+      "market": "Polymarket Yes 0.075"
     }
   ]
 }
