@@ -169,14 +169,34 @@
     updated('sources-updated', data.generatedAt);
   }
 
+  const romeDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' });
+  const dayLabel = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' });
+  const day = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value ?? '') ? `<time datetime="${escape(value)}">${escape(dayLabel.format(new Date(`${value}T00:00:00Z`)))}</time>` : '—';
+  function renderForecasts(data) {
+    if (!data || !Array.isArray(data.rows)) return;
+    const today = romeDay.format(new Date());
+    const pct = (value) => `${Math.round(value * 100)}%`;
+    const rows = data.rows.filter((row) => Array.isArray(row.band) && finite(row.band[0]) && finite(row.band[1]));
+    const stale = rows.filter((row) => row.staleAfter && today > row.staleAfter).length;
+    el('forecasts-summary').innerHTML = `${escape(data.source ?? 'Forecast book')} <span class="badge">${rows.length} active</span>${stale ? ` <span class="badge warn">${stale} stale</span>` : ''}`;
+    el('forecasts-content').innerHTML = rows.length ? rows.map((row) => {
+      const [lo, hi] = row.band.map((value) => Math.min(1, Math.max(0, value)));
+      const isStale = row.staleAfter && today > row.staleAfter;
+      const linked = typeof row.treasuryLink === 'string' && row.treasuryLink;
+      return `<article class="forecast${linked ? ' linked' : ''}"><div class="forecast-head"><h3>${escape(row.title)}</h3><strong class="forecast-band">${pct(lo)}–${pct(hi)}</strong></div><div class="forecast-track" role="img" aria-label="Probability band ${pct(lo)} to ${pct(hi)}"><svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true"><path class="forecast-grid" d="M25 0V6M50 0V6M75 0V6"/><rect class="forecast-range" x="${(lo * 100).toFixed(2)}" width="${Math.max(0.8, (hi - lo) * 100).toFixed(2)}" height="6"/></svg></div><div class="forecast-meta"><span>By ${day(row.horizon)}</span><span>${escape(row.confidence)} confidence</span><span>${escape(row.market)}</span>${row.lastReviewed ? `<span>Reviewed ${day(row.lastReviewed)}</span>` : ''}${isStale ? '<span class="badge warn">stale</span>' : ''}</div>${linked ? `<p class="forecast-link"><span class="badge gold">Treasury</span> ${escape(row.treasuryLink)}</p>` : ''}</article>`;
+    }).join('') : empty('No active forecasts');
+    el('forecasts-updated').innerHTML = `As of: ${day(data.asOf)} <span class="muted">/ bands are probabilities of Yes</span>`;
+  }
+
   async function main() {
-    const [treasury, prices, historyData, sources, decisions, valuation, audits] = await Promise.all(['treasury', 'prices', 'nav-history', 'sources', 'decisions', 'valuation', 'audits'].map(load));
+    const [treasury, prices, historyData, sources, decisions, valuation, audits, forecasts] = await Promise.all(['treasury', 'prices', 'nav-history', 'sources', 'decisions', 'valuation', 'audits', 'forecasts'].map(load));
     const history = validHistory(historyData);
     safeRender(['nav-title', 'venues-content', 'holdings-content', 'allocation-content', 'trim-content'], () => renderTreasury(treasury));
     safeRender(['latest-content', 'decisions-content', 'execution-content'], () => renderDecisions(decisions));
     safeRender(['history-chart'], () => renderChart(history, 7));
     safeRender(['risk-content'], () => renderRisk(history, treasury));
     safeRender(['signals-content'], () => renderSignals(valuation, prices));
+    safeRender(['forecasts-content'], () => renderForecasts(forecasts));
     safeRender(['audit-content'], () => renderAudits(audits));
     safeRender(['sources-content'], () => renderSources(sources));
     document.querySelectorAll('[data-days]').forEach((button) => button.addEventListener('click', () => {

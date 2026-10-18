@@ -16,7 +16,7 @@
   <header class="site-nav">
     <a class="site-wordmark" href="#treasury" aria-label="mony.jaack.me">mony<span class="gold">.</span><span class="domain">jaack.me</span></a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="#treasury" aria-current="page">Treasury</a><a href="#operations">Operations</a><a href="#signals">Signals</a><a href="#sources">Sources</a>
+      <a href="#treasury" aria-current="page">Treasury</a><a href="#operations">Operations</a><a href="#signals">Signals</a><a href="#forecasts">Forecasts</a><a href="#sources">Sources</a>
     </nav>
     <div class="nav-status"><span class="public-label">Public · read-only</span><span class="badge" id="execution-status">Execution: unavailable</span></div>
   </header>
@@ -79,6 +79,13 @@
       <div class="signals" id="signals-content"><p class="empty-state">Unavailable</p></div>
       <p class="small muted">Modeled values, buy levels, margin of safety and gates are dated research. Buy level = stressed value × 70%; margin of safety = 1 − research price / modeled value. A valuation pass also requires a safety verdict before buy admission.</p>
       <p class="updated" id="signals-updated">Last updated: unavailable</p>
+    </section>
+    <section id="forecasts" class="home-section" aria-labelledby="forecasts-title">
+      <div class="section-head"><h2 id="forecasts-title">Forecast inputs</h2><a class="text-link" href="#decisions">Decision feed →</a></div>
+      <p class="section-intro" id="forecasts-summary">Forecast book</p>
+      <div class="forecast-list" id="forecasts-content"><p class="empty-state">Unavailable</p></div>
+      <p class="small muted">Probability bands from a dated forecast book that Mony reads as context. Forecasts are not trade instructions; prediction-market positions are reported, not traded. A row is marked stale once its review date has passed.</p>
+      <p class="updated" id="forecasts-updated">As of: unavailable</p>
     </section>
     <section id="decisions" class="home-section" aria-labelledby="decisions-title">
       <div class="section-head"><h2 id="decisions-title">Decision feed</h2><a class="text-link" href="#execution">Execution record →</a></div>

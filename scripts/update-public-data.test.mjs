@@ -244,3 +244,11 @@ test('drawdown uses managed NAV without open prediction positions and starts its
   assert.equal(second.treasury.execution.escalated, false);
   assert.equal(second['nav-history'].at(-1).managed, 62.38);
 }));
+
+test('refresh never rewrites or deletes the forecast book', async () => temporaryData(async (dataDir) => {
+  const book = `${JSON.stringify({ asOf: '2026-10-18', source: 'Forecast book', rows: [] }, null, 2)}\n`;
+  await writeFile(`${dataDir}/forecasts.json`, book);
+  await updatePublicData({ dataDir, fetcher: provider(), now: NOW });
+  await updatePublicData({ dataDir, fetcher: failing, now: new Date(NOW.valueOf() + 900_000) });
+  assert.equal(await readFile(`${dataDir}/forecasts.json`, 'utf8'), book);
+}));

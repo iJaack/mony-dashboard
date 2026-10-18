@@ -13,6 +13,7 @@ The JSON Schema 2020-12 document below defines every public file. To validate a 
 | `site/data/decisions.json` | `#/$defs/decisions` |
 | `site/data/valuation.json` | `#/$defs/valuation` |
 | `site/data/audits.json` | `#/$defs/audits` |
+| `site/data/forecasts.json` | `#/$defs/forecasts` |
 
 `generatedAt` records the refresh attempt; `updatedAt` records the applicable data date. Source `lastSuccessAt` is null for unverified seeds. A failed source is stale when previously successful values remain, or error when only initial estimates or no usable values remain. Initial files use stale with note `seed`. Partial quotes keep their original dates. Dated safety assessments become stale after 30 days; the decision feed becomes stale after one day without a published outcome.
 
@@ -1119,6 +1120,41 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "valueUsd",
         "updatedAt"
       ]
+    },
+    "forecasts": {
+      "type": "object",
+      "description": "Dated forecast book Mony reads as context. Bands are probabilities of Yes; forecasts are not trade instructions. Not touched by the scheduled refresh.",
+      "additionalProperties": false,
+      "properties": {
+        "asOf": { "type": "string", "format": "date" },
+        "source": { "type": "string", "maxLength": 40 },
+        "rows": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "title": { "type": "string", "maxLength": 120 },
+              "band": {
+                "type": "array",
+                "description": "[low, high] probability of Yes, 0 to 1, low <= high.",
+                "items": { "type": "number", "minimum": 0, "maximum": 1 },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "confidence": { "enum": ["Low", "Medium", "High"] },
+              "horizon": { "type": "string", "format": "date", "description": "Resolution date." },
+              "staleAfter": { "type": "string", "format": "date", "description": "The row is shown as stale when the Europe/Rome date is later than this." },
+              "lastReviewed": { "type": "string", "format": "date" },
+              "market": { "type": "string", "maxLength": 60, "description": "Short market reference, e.g. Polymarket Yes 0.115, or None." },
+              "treasuryLink": { "type": "string", "maxLength": 80, "description": "Present when the treasury holds a related position; the row is highlighted." }
+            },
+            "required": ["title", "band", "confidence", "horizon", "market"]
+          }
+        }
+      },
+      "required": ["asOf", "source", "rows"]
     }
   }
 }
@@ -1192,3 +1228,14 @@ node tools/publish-ops.mjs --audits audits.json
 ```
 
 The research modes expect `{ "updatedAt": "ISO UTC date", "rows": [...] }`, not a raw provider response. Each asset appears at most once. A missing audit verdict uses `isSafe: null` and `createdAt: null`.
+
+## Publishing forecast inputs
+
+`site/data/forecasts.json` is replaced as a whole through its own allowlist. The scheduled refresh never reads, rewrites or deletes it.
+
+```sh
+node tools/publish-ops.mjs --forecasts forecasts.json --dry-run
+node tools/publish-ops.mjs --forecasts forecasts.json
+```
+
+Input is `{ "asOf": "YYYY-MM-DD", "source": "Forecast book", "rows": [...] }` with the row fields above. Dates are calendar dates (`YYYY-MM-DD`). Unknown fields, including internal ids and links, are stripped; strings containing links, internal names or private terminology are rejected. Titles must be unique.

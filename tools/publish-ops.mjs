@@ -1,9 +1,13 @@
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const FORBIDDEN = /signer|verifier|nonce|signature|socket|token|secret|\/(?:var|etc|home|Users|private|tmp)\/|notion\.(?:so|site)|\bops\b|ed25519|pubkey|slippage|0x[0-9a-fA-F]{64}|[A-Z]:\\|\b(?:localhost|[\w-]+\.local)\b|https?:\/\/|[<>]/i;
+const FORBIDDEN = /signer|verifier|nonce|signature|socket|token|secret|\/(?:var|etc|home|Users|private|tmp)\/|notion\.(?:so|site|com)|\bops\b|ed25519|pubkey|slippage|0x[0-9a-fA-F]{64}|[A-Z]:\\|\b(?:localhost|[\w-]+\.local)\b|https?:\/\/|[<>]/i;
+// Internal names are matched by SHA-256 of each lowercased word so the public source does not spell them out.
+const PRIVATE_WORDS = new Set(['c29d95402fd9be7a029be3466b33c4c458cdbec279691a0d542791ae7f61dcb9']);
+const privateWord = (text) => (text.toLowerCase().match(/[a-z0-9]+/g) ?? []).some((word) => PRIVATE_WORDS.has(createHash('sha256').update(word).digest('hex')));
 const HASH = /^0x[0-9a-fA-F]{64}$/;
 const OUTCOMES = ['execute', 'no_op', 'blocked', 'escalated'];
 const ACTIONS = ['trim', 'buy', 'sell', 'rebalance', 'none'];
@@ -16,7 +20,7 @@ function object(value) {
 function string(value, max, name) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`Invalid ${name}`);
   const normalized = value.normalize('NFKC');
-  if (FORBIDDEN.test(normalized) || /[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2060-\u206f]/u.test(normalized)) {
+  if (FORBIDDEN.test(normalized) || privateWord(normalized) || /[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2060-\u206f]/u.test(normalized)) {
     throw new Error(`Unsafe public text in ${name}`);
   }
   return normalized.trim().slice(0, max);
@@ -119,6 +123,34 @@ export function sanitizeAudits(value) {
   return { updatedAt: date(value.updatedAt), rows };
 }
 
+const CONFIDENCE = ['Low', 'Medium', 'High'];
+
+function day(value, name) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) !== value) {
+    throw new Error(`Invalid ${name}`);
+  }
+  return value;
+}
+
+export function sanitizeForecasts(value) {
+  object(value);
+  if (!Array.isArray(value.rows) || value.rows.length > 50) throw new Error('Invalid rows');
+  const rows = value.rows.map((row) => {
+    object(row);
+    if (!Array.isArray(row.band) || row.band.length !== 2) throw new Error('Invalid band');
+    const band = row.band.map((item) => number(item, 'band'));
+    if (band[0] > band[1] || band[1] > 1) throw new Error('Invalid band');
+    const clean = { title: string(row.title, 120, 'title'), band, confidence: enumeration(row.confidence, CONFIDENCE), horizon: day(row.horizon, 'horizon') };
+    if (row.staleAfter !== undefined && row.staleAfter !== null) clean.staleAfter = day(row.staleAfter, 'staleAfter');
+    if (row.lastReviewed !== undefined && row.lastReviewed !== null) clean.lastReviewed = day(row.lastReviewed, 'lastReviewed');
+    clean.market = string(row.market, 60, 'market');
+    if (row.treasuryLink !== undefined && row.treasuryLink !== null) clean.treasuryLink = string(row.treasuryLink, 80, 'treasuryLink');
+    return clean;
+  });
+  if (new Set(rows.map((row) => row.title)).size !== rows.length) throw new Error('Duplicate forecast');
+  return { asOf: day(value.asOf, 'asOf'), source: string(value.source, 40, 'source'), rows };
+}
+
 export function upsertDecision(existing, decision) {
   const rows = (existing?.decisions ?? []).map(sanitizeDecision).filter((item) => item.id !== decision.id);
   rows.push(sanitizeDecision(decision));
@@ -131,14 +163,14 @@ async function main(args) {
   const dryRun = args.includes('--dry-run');
   const inputs = args.filter((arg) => arg !== '--dry-run');
   let kind = 'decisions';
-  if (inputs[0] === '--valuation' || inputs[0] === '--audits') kind = inputs.shift().slice(2);
+  if (['--valuation', '--audits', '--forecasts'].includes(inputs[0])) kind = inputs.shift().slice(2);
   if (inputs.length !== 1) throw new Error('Provide one JSON file or - for stdin');
   let raw;
   if (inputs[0] === '-') {
     raw = '';
     for await (const chunk of process.stdin) raw += chunk;
   } else raw = await readFile(resolve(inputs[0]), 'utf8');
-  const sanitize = { decisions: sanitizeDecision, valuation: sanitizeValuation, audits: sanitizeAudits }[kind];
+  const sanitize = { decisions: sanitizeDecision, valuation: sanitizeValuation, audits: sanitizeAudits, forecasts: sanitizeForecasts }[kind];
   const clean = sanitize(JSON.parse(raw));
   if (dryRun) {
     process.stdout.write(`${JSON.stringify(clean, null, 2)}\n`);

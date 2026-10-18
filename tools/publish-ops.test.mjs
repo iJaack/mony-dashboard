@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
-import { sanitizeDecision, sanitizeValuation, sanitizeAudits, upsertDecision } from './publish-ops.mjs';
+import { sanitizeDecision, sanitizeValuation, sanitizeAudits, sanitizeForecasts, upsertDecision } from './publish-ops.mjs';
 
 const base = {
   id: '2026-10-17-savax-trim-1', date: '2026-10-17T16:41:00Z', outcome: 'execute',
@@ -87,4 +87,16 @@ test('CLI file input and real upsert operate only on an isolated copy', async ()
     assert.equal(saved.decisions.length, 1);
     assert.deepEqual(saved.decisions[0], sanitizeDecision(base));
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test('forecast allowlist keeps public fields and rejects leaks', () => {
+  const row = { title: 'Fed holds at the next FOMC', band: [0.8, 0.9], confidence: 'Medium', horizon: '2026-10-28', staleAfter: '2026-10-23', lastReviewed: '2026-10-16', market: 'CME FedWatch', treasuryLink: 'Holds No, ~$61', id: 'https://app.notion.com/p/x', owner: 'agent' };
+  const clean = sanitizeForecasts({ asOf: '2026-10-18', source: 'Forecast book', rows: [row], extra: 1 });
+  assert.deepEqual(clean, { asOf: '2026-10-18', source: 'Forecast book', rows: [{ title: row.title, band: [0.8, 0.9], confidence: 'Medium', horizon: '2026-10-28', staleAfter: '2026-10-23', lastReviewed: '2026-10-16', market: 'CME FedWatch', treasuryLink: 'Holds No, ~$61' }] });
+  for (const market of [Buffer.from('UHJlZGljdGllIHNheXM=', 'base64').toString(), 'app.notion.com/p/x', 'https://example.com', 'token price', 'signer']) {
+    assert.throws(() => sanitizeForecasts({ asOf: '2026-10-18', source: 'Forecast book', rows: [{ ...row, market }] }), /Unsafe/);
+  }
+  assert.throws(() => sanitizeForecasts({ asOf: '2026-10-18', source: 'Forecast book', rows: [{ ...row, band: [0.9, 0.8] }] }));
+  assert.throws(() => sanitizeForecasts({ asOf: '2026-10-18', source: 'Forecast book', rows: [{ ...row, horizon: '2026-02-30' }] }));
+  assert.throws(() => sanitizeForecasts({ asOf: '2026-10-18', source: 'Forecast book', rows: [{ ...row, confidence: 'Sure' }] }));
 });
