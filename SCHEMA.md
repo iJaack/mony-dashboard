@@ -18,7 +18,7 @@ The JSON Schema 2020-12 document below defines every public file. To validate a 
 
 NAV includes full venue values across Avalanche, Hyperliquid, Polymarket (positions marked at current outcome prices plus pUSD cash), Avantis and YO vaults (redeem preview, net of withdrawal fees), and native plus major stable balances on Base, Polygon, Ethereum, Arbitrum, Optimism and BNB Chain, including holdings below the $0.01 display threshold. Hyperliquid account value already includes open-position profit and loss; open positions must not be added to NAV again. The initial AVAX value is a residual estimate, with a null position price. The separate initial AVAX market quote is approximate and does not imply a reconciled position value.
 
-Drawdown is measured on managed NAV: the full NAV minus open prediction-market positions, with prediction-market cash kept in. Its peak is tracked separately from the full-NAV history, starting 18 Oct 2026; earlier points without a managed value are ignored. Managed NAV is the single basis for position weights, the sAVAX cap, satellite caps, tier sizes and drawdown. The headline `nav` is total holdings, including open prediction-market positions, which carry weight 0 and `inManagedNav: false`. The 7-day drawdown needs at least two recent points and seven days of coverage. Peak drawdown needs at least two points; the all-time high is retained separately in treasury even as history is compacted. Execution pauses at or below -10% over seven days; the escalation flag is set at or below -25% from peak. Drawdown alone does not prove that trades are running.
+Drawdown is measured on managed NAV: the full NAV minus open prediction-market positions, with prediction-market cash kept in. Its peak is tracked separately from the full-NAV history, starting 18 Oct 2026; earlier points without a managed value are ignored. The headline `nav` (total holdings, including open prediction-market positions) drives position weights, the sAVAX cap, satellite caps and tier sizes. Managed NAV is used only for drawdown; open prediction-market positions are flagged `inManagedNav: false`. Polymarket, Avantis, YO and other-chain balances are reported, not traded, and not satellites. The 7-day drawdown needs at least two recent points and seven days of coverage. Peak drawdown needs at least two points; the all-time high is retained separately in treasury even as history is compacted. Execution pauses at or below -10% over seven days; the escalation flag is set at or below -25% from peak. Drawdown alone does not prove that trades are running.
 
 History is bucketed to the last point of each quarter-hour, then to the last point per UTC day beyond 30 days. The hard 2,000-entry ceiling retains the highest sampled point and the newest points. Thirty days at 15-minute intervals needs 2,880 entries, so the ceiling necessarily shortens full-resolution coverage. A wholly failed refresh creates no new history point; a partially refreshed valuation may use dated fallback values and is marked estimated.
 
@@ -154,7 +154,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         },
         "inManagedNav": {
           "const": false,
-          "description": "Present on open prediction-market positions, which are excluded from managed NAV and carry weight 0."
+          "description": "Present on open prediction-market positions, which are excluded from managed NAV (the drawdown basis). Their weight still uses full NAV."
         }
       },
       "required": [
@@ -495,7 +495,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
               "additionalProperties": false,
               "properties": {
                 "kind": {
-                  "const": "managed"
+                  "const": "full"
                 },
                 "valueUsd": {
                   "type": "number",
@@ -564,7 +564,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "managedNav": {
           "type": "number",
           "minimum": 0,
-          "description": "Full NAV minus open prediction-market positions; prediction-market cash stays in. Single basis for weights, the sAVAX cap, tier sizes and drawdown."
+          "description": "Full NAV minus open prediction-market positions; prediction-market cash stays in. Used only for drawdown alarms."
         }
       },
       "required": [

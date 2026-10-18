@@ -214,9 +214,10 @@ test('multichain venues add Polymarket, Avantis and wallet balances to NAV and c
   assert.equal(t.nav, 85.38);
   assert.equal(t.allocation.satellites.assets.length, 0);
   assert.equal(t.managedNav, 80.38);
-  assert.ok(Math.abs(t.allocation.external.weight - 16 / 80.38) < 1e-9);
-  assert.ok(Math.abs(t.allocation.sAVAX.weight - 20 / 80.38) < 1e-9);
-  assert.equal(t.allocation.tiers.t2Usd, 8.038);
+  assert.ok(Math.abs(t.allocation.external.weight - 21 / 85.38) < 1e-9);
+  assert.ok(Math.abs(t.allocation.sAVAX.weight - 20 / 85.38) < 1e-9);
+  assert.equal(t.allocation.tiers.t2Usd, 8.538);
+  assert.equal(t.drawdown.managedNav, 80.38);
   assert.equal(t.positions.find((row) => row.asset === 'Outcomes').inManagedNav, false);
   for (const key of ['polymarket', 'avantis', 'yo', 'evm_wallets']) assert.equal(result.sources.sources[key].status, 'ok');
 }));

@@ -257,8 +257,8 @@ export function allocation(positions, nav, decisions = []) {
   return {
     sAVAX: { weight, cap: 0.15, overCap: weight > 0.15, excessUsd: tidy(excessUsd), trimAmount: value > 0 ? tidy(excessUsd * balance / value) : 0, trimmedAmount: tidy(decisions.filter((row) => row.asset === 'sAVAX' && row.outcome === 'execute' && ['trim', 'sell'].includes(row.action) && row.size?.asset === 'sAVAX').reduce((sum, row) => sum + row.size.amount, 0)) },
     satellites: { weight: nav > 0 ? satelliteValue / nav : 0, capEach: 0.1, capCombined: 0.4, overCap: satelliteValue > nav * 0.4, assets },
-    basis: { kind: 'managed', valueUsd: tidy(nav) },
-    tiers: { t1Usd: tidy(nav * 0.03), t2Usd: tidy(nav * 0.1), note: 'Percent limits on managed NAV; the EUR ceilings of 1k and 5k do not bind at this size.' },
+    basis: { kind: 'full', valueUsd: tidy(nav) },
+    tiers: { t1Usd: tidy(nav * 0.03), t2Usd: tidy(nav * 0.1), note: 'Percent limits on full NAV; the EUR ceilings of 1k and 5k do not bind at this size. Per-transaction caps still apply.' },
     external: { weight: nav > 0 ? externalValue / nav : 0, venues: [...externalValues].map(([venue, valueUsd]) => ({ venue, valueUsd: tidy(valueUsd), weight: nav > 0 ? valueUsd / nav : 0 })) },
   };
 }
@@ -403,10 +403,10 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
       const extraValue = tidy(Object.values(extraVenues).reduce((sum, row) => sum + row.valueUsd, 0));
       const nav = tidy(avalancheValue + hlValue + extraValue);
       if (!Number.isFinite(nav) || nav < 0) throw new Error('Invalid treasury value');
-      // Managed NAV excludes open prediction-market positions (pUSD cash stays in). It is the single basis for
-      // weights, the sAVAX cap, tier sizes and drawdown; the full NAV is the headline total holdings.
+      // Full NAV drives weights, the sAVAX cap and tiers. Managed NAV (full NAV minus open prediction-market
+      // positions, pUSD cash kept in) drives drawdown alarms only, with its own peak.
       const managedNav = tidy(Math.max(0, nav - (extraVenues.polymarket?.positionsValue ?? 0)));
-      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => managedRow(row) ? { ...row, weight: managedNav > 0 ? row.valueUsd / managedNav : 0 } : { ...row, weight: 0, inManagedNav: false });
+      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => ({ ...row, weight: nav > 0 ? row.valueUsd / nav : 0, ...(managedRow(row) ? {} : { inManagedNav: false }) }));
       history.push({ t: at, nav, managed: managedNav });
       const managedPeak = previous?.drawdown?.basis === 'managed' ? previous.drawdown.peakNav : null;
       const risk = { ...drawdown(history, managedNav, now.valueOf(), managedPeak, 'managed'), basis: 'managed', managedNav };
@@ -420,7 +420,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
           hyperliquid: { valueUsd: hlValue, updatedAt: sources.hyperliquid.updatedAt, accountValue: hl.accountValue, withdrawable: hl.withdrawable, spotBalances: hl.spotBalances, assetPositions: hl.assetPositions },
           ...extraVenues,
         },
-        avalancheBalances, positions, allocation: allocation(positions.filter(managedRow), managedNav, decisionFile.decisions), drawdown: risk,
+        avalancheBalances, positions, allocation: allocation(positions, nav, decisionFile.decisions), drawdown: risk,
         execution: { status: risk.sevenDay !== null && risk.sevenDay <= -0.1 ? 'paused' : 'active', escalated: risk.fromPeak !== null && risk.fromPeak <= -0.25 },
         gasAvax: gasSpent(decisionFile.decisions),
       };
@@ -429,7 +429,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
     }
   }
   if (treasury) {
-    treasury = { ...treasury, generatedAt: at, allocation: allocation(treasury.positions.filter(managedRow), treasury.managedNav ?? treasury.nav, decisionFile.decisions), gasAvax: gasSpent(decisionFile.decisions) };
+    treasury = { ...treasury, generatedAt: at, allocation: allocation(treasury.positions, treasury.nav, decisionFile.decisions), gasAvax: gasSpent(decisionFile.decisions) };
   }
   const output = {
     treasury,
