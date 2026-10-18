@@ -58,20 +58,22 @@
     el('execution-status').textContent = `Execution: ${data.execution.status === 'paused' ? 'paused' : 'active'}`;
     el('execution-status').classList.toggle('warn', data.execution.status === 'paused' || data.execution.escalated);
     const concentration = data.allocation.sAVAX;
+    if (finite(data.managedNav)) el('managed-line').textContent = `Managed NAV ${money(data.managedNav)} (excludes open prediction-market positions) drives weights, caps, tiers and drawdown.`;
     el('hero-context').textContent = concentration.overCap ? 'sAVAX remains above its 15% cap.' : 'Holdings are measured against the treasury limits.';
     const venues = data.venues;
     el('venues-content').innerHTML = `<div class="venue-line"><span>Avalanche<small>C-Chain · ${escape(data.positions.filter((row) => row.venue === 'Avalanche').map((row) => row.asset).join(', ') || 'no holdings')}</small><small>${time(venues.avalanche.updatedAt)}</small></span><strong>${money(venues.avalanche.valueUsd)}</strong></div>
       <div class="venue-line"><span>Hyperliquid<small>Margin equity + spot · ${venues.hyperliquid.assetPositions.length} open positions</small><small>${time(venues.hyperliquid.updatedAt)}</small></span><strong>${money(venues.hyperliquid.valueUsd)}</strong></div>${extraVenues(data)}`;
     const satellites = data.allocation.satellites;
-    el('allocation-content').innerHTML = `<div class="allocation-label"><span>sAVAX concentration</span><strong><span class="${concentration.overCap ? 'warn' : 'good'}">${percent(concentration.weight)}</span> <span class="muted">/ 15% cap</span></strong></div>
+    el('allocation-content').innerHTML = `<div class="allocation-label"><span>sAVAX concentration <small class="muted">of managed NAV</small></span><strong><span class="${concentration.overCap ? 'warn' : 'good'}">${percent(concentration.weight)}</span> <span class="muted">/ 15% cap</span></strong></div>
       <div class="cap-track" role="img" aria-label="sAVAX weight ${percent(concentration.weight)}, cap 15 percent"><svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true"><rect class="${concentration.overCap ? 'bar-warning' : 'bar-good'}" width="${Math.min(100, Math.max(0, concentration.weight * 100))}" height="6"/></svg><span class="cap-mark"></span></div>
       <div class="cap-scale"><span>0%</span><span class="cap-tag">15% cap</span><span>100%</span></div>
       <p>${concentration.overCap ? `Over cap by ${money(concentration.excessUsd)}. About ${amount(concentration.trimAmount)} sAVAX would reach the target at current marks.` : 'Within the concentration cap.'}</p>
-      ${data.allocation.external ? `<p>Outside the trading mandate: ${percent(data.allocation.external.weight)} · ${data.allocation.external.venues.map((row) => `${escape(row.venue)} ${percent(row.weight)}`).join('; ') || 'none'}. Counted in NAV and weights; not traded by the treasury run.</p>` : ''}
+      ${data.allocation.external ? `<p>Outside the trading mandate: ${percent(data.allocation.external.weight)} · ${data.allocation.external.venues.map((row) => `${escape(row.venue)} ${percent(row.weight)}`).join('; ') || 'none'}. Open prediction-market positions are outside managed NAV; vaults and other chains are in it. None are traded by the treasury run.</p>` : ''}
+      ${data.allocation.tiers ? `<p>Tier sizes on managed NAV ${money(data.allocation.basis?.valueUsd)}: T1 ${money(data.allocation.tiers.t1Usd)} · T2 ${money(data.allocation.tiers.t2Usd)}.</p>` : ''}
       <p>Satellites: ${percent(satellites.weight)} / 40% combined cap${satellites.overCap ? ' · over cap' : ''}. ${satellites.assets.length ? satellites.assets.map((row) => `${escape(row.asset)} ${percent(row.weight)} / 10%${row.overCap ? ' · over cap' : ''}`).join('; ') : 'No satellite holdings.'}</p>`;
     const priority = ['sAVAX', 'USDC', 'WAVAX', 'AVAX', 'USDt', 'BTC.b', 'WETH.e'];
     const positions = [...data.positions].sort((a, b) => (priority.indexOf(a.asset) < 0 ? 99 : priority.indexOf(a.asset)) - (priority.indexOf(b.asset) < 0 ? 99 : priority.indexOf(b.asset)));
-    el('holdings-content').innerHTML = `<table><caption class="sr-only">Treasury holdings across all venues, in USD.</caption><thead><tr><th scope="col">Asset / venue</th><th scope="col">Balance</th><th scope="col">Value</th><th scope="col">Weight</th></tr></thead><tbody>${positions.map((row) => `<tr><th scope="row"><span class="asset"><span class="app-monogram ${row.asset === 'sAVAX' ? '' : 'outline'}" aria-hidden="true">${escape(row.asset.slice(0, 1))}</span><span>${escape(row.asset)}<small>${escape(row.venue)}</small></span></span></th><td data-label="Balance">${amount(row.balance, 6)}</td><td data-label="Value">${money(row.valueUsd)}</td><td data-label="Weight">${percent(row.weight)}</td></tr>`).join('')}</tbody></table>${venues.hyperliquid.assetPositions.length ? `<div class="derivatives"><h3>Open positions</h3>${venues.hyperliquid.assetPositions.map((row) => `<p class="small muted">${escape(row.asset)} · ${amount(row.balance)} · position value ${money(row.positionValue)} · unrealized P&amp;L ${money(row.unrealizedPnl)}. Included in margin equity.</p>`).join('')}</div>` : ''}`;
+    el('holdings-content').innerHTML = `<table><caption class="sr-only">Treasury holdings across all venues, in USD.</caption><thead><tr><th scope="col">Asset / venue</th><th scope="col">Balance</th><th scope="col">Value</th><th scope="col">Weight <small class="muted">of managed NAV</small></th></tr></thead><tbody>${positions.map((row) => `<tr><th scope="row"><span class="asset"><span class="app-monogram ${row.asset === 'sAVAX' ? '' : 'outline'}" aria-hidden="true">${escape(row.asset.slice(0, 1))}</span><span>${escape(row.asset)}<small>${escape(row.venue)}</small></span></span></th><td data-label="Balance">${amount(row.balance, 6)}</td><td data-label="Value">${money(row.valueUsd)}</td><td data-label="Weight">${row.inManagedNav === false ? '<span class="muted" title="Excluded from managed NAV">excluded</span>' : percent(row.weight)}</td></tr>`).join('')}</tbody></table>${venues.hyperliquid.assetPositions.length ? `<div class="derivatives"><h3>Open positions</h3>${venues.hyperliquid.assetPositions.map((row) => `<p class="small muted">${escape(row.asset)} · ${amount(row.balance)} · position value ${money(row.positionValue)} · unrealized P&amp;L ${money(row.unrealizedPnl)}. Included in margin equity.</p>`).join('')}</div>` : ''}`;
     el('holdings-note').textContent = data.note;
     el('trim-content').innerHTML = `<strong>Trim progress <span class="muted">/ ${amount(concentration.trimmedAmount)} sAVAX completed</span></strong><p>Current weight ${percent(concentration.weight)} / 15% target.</p>`;
     el('gas-content').textContent = `Gas spent: ${amount(data.gasAvax, 9)} AVAX${data.execution.escalated ? ' · Peak drawdown threshold reached; escalation required.' : ''}`;
@@ -123,19 +125,17 @@
   }
 
   function renderRisk(history, treasury) {
-    if (!history || !treasury || !finite(treasury.nav)) return;
-    const recent = history.filter((row) => Date.parse(row.t) >= Date.now() - 7 * DAY);
-    const enough = history.length >= 2;
-    const week = enough && Date.parse(history[0].t) <= Date.now() - 7 * DAY && recent.length >= 2;
-    const peak = Math.max(treasury.drawdown?.peakNav ?? 0, treasury.nav, ...history.map((row) => row.nav));
-    const weekPeak = Math.max(treasury.nav, ...recent.map((row) => row.nav));
-    const sevenDay = week && weekPeak > 0 ? treasury.nav / weekPeak - 1 : null;
-    const fromPeak = enough && peak > 0 ? treasury.nav / peak - 1 : null;
-    el('risk-content').innerHTML = [
+    if (!treasury || !finite(treasury.nav) || !treasury.drawdown) return;
+    const risk = treasury.drawdown;
+    const managed = risk.basis === 'managed';
+    const sevenDay = finite(risk.sevenDay) ? risk.sevenDay : null;
+    const fromPeak = finite(risk.fromPeak) ? risk.fromPeak : null;
+    const basis = managed ? `<p class="small muted">Drawdown uses managed NAV ${money(risk.managedNav)}: the full treasury excluding open prediction-market positions (prediction-market cash stays in). Managed peak ${money(risk.peakNav)}; tracking started 18 Oct 2026.</p>` : '';
+    el('risk-content').innerHTML = basis + [
       ['7-day drawdown', sevenDay, 25, 'pause', '−10% pause', '−25%'],
       ['From peak', fromPeak, 30, 'escalate', '−25% escalate', '−30%'],
     ].map(([label, value, max, kind, threshold, end]) => `<div class="risk-row"><span>${label}</span><strong>${finite(value) ? percent(value) : '— <small>insufficient history</small>'}</strong></div><div class="risk-track" role="img" aria-label="${label}: ${finite(value) ? percent(value) : 'insufficient history'}; ${threshold}"><svg viewBox="0 0 100 5" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-neutral" width="${finite(value) ? Math.min(100, Math.max(0, -value * 100 / max * 100)) : 0}" height="5"/></svg><span class="risk-limit ${kind}"></span></div><div class="risk-scale"><span>0%</span><span>${threshold}</span><span>${end}</span></div>`).join('');
-    updated('risk-updated', history.at(-1)?.t);
+    updated('risk-updated', history?.at(-1)?.t ?? treasury.updatedAt);
   }
 
   function renderSignals(data, priceData) {

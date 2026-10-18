@@ -208,7 +208,7 @@ export function compactHistory(history, now = Date.now()) {
   const points = new Map();
   for (const point of history) {
     const t = Date.parse(point.t);
-    if (Number.isFinite(t) && t <= now && Number.isFinite(point.nav) && point.nav >= 0) points.set(t, { t: new Date(t).toISOString(), nav: point.nav });
+    if (Number.isFinite(t) && t <= now && Number.isFinite(point.nav) && point.nav >= 0) points.set(t, { t: new Date(t).toISOString(), nav: point.nav, ...(Number.isFinite(point.managed) && point.managed >= 0 ? { managed: point.managed } : {}) });
   }
   const bins = new Map();
   for (const [t, point] of [...points].sort((a, b) => a[0] - b[0])) {
@@ -224,8 +224,8 @@ export function compactHistory(history, now = Date.now()) {
   return kept;
 }
 
-export function drawdown(history, nav, now = Date.now(), peakNav = null) {
-  const points = history.filter((point) => Number.isFinite(point.nav) && point.nav >= 0 && Number.isFinite(Date.parse(point.t)) && Date.parse(point.t) <= now).sort((a, b) => a.t.localeCompare(b.t));
+export function drawdown(history, nav, now = Date.now(), peakNav = null, key = 'nav') {
+  const points = history.filter((point) => Number.isFinite(point[key]) && point[key] >= 0 && Number.isFinite(Date.parse(point.t)) && Date.parse(point.t) <= now).map((point) => ({ t: point.t, nav: point[key] })).sort((a, b) => a.t.localeCompare(b.t));
   const recent = points.filter((point) => Date.parse(point.t) >= now - 7 * DAY);
   const enoughWeek = points.length >= 2 && Date.parse(points[0].t) <= now - 7 * DAY && recent.length >= 2;
   const peak = Math.max(peakNav ?? 0, nav ?? 0, ...points.map((point) => point.nav));
@@ -238,6 +238,8 @@ export function drawdown(history, nav, now = Date.now(), peakNav = null) {
     escalateThreshold: -0.25,
   };
 }
+
+export const managedRow = (row) => !(row.venue === 'Polymarket' && row.asset === 'Outcomes');
 
 export function allocation(positions, nav, decisions = []) {
   const staked = positions.filter((row) => row.asset === 'sAVAX');
@@ -255,6 +257,8 @@ export function allocation(positions, nav, decisions = []) {
   return {
     sAVAX: { weight, cap: 0.15, overCap: weight > 0.15, excessUsd: tidy(excessUsd), trimAmount: value > 0 ? tidy(excessUsd * balance / value) : 0, trimmedAmount: tidy(decisions.filter((row) => row.asset === 'sAVAX' && row.outcome === 'execute' && ['trim', 'sell'].includes(row.action) && row.size?.asset === 'sAVAX').reduce((sum, row) => sum + row.size.amount, 0)) },
     satellites: { weight: nav > 0 ? satelliteValue / nav : 0, capEach: 0.1, capCombined: 0.4, overCap: satelliteValue > nav * 0.4, assets },
+    basis: { kind: 'managed', valueUsd: tidy(nav) },
+    tiers: { t1Usd: tidy(nav * 0.03), t2Usd: tidy(nav * 0.1), note: 'Percent limits on managed NAV; the EUR ceilings of 1k and 5k do not bind at this size.' },
     external: { weight: nav > 0 ? externalValue / nav : 0, venues: [...externalValues].map(([venue, valueUsd]) => ({ venue, valueUsd: tidy(valueUsd), weight: nav > 0 ? valueUsd / nav : 0 })) },
   };
 }
@@ -399,20 +403,24 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
       const extraValue = tidy(Object.values(extraVenues).reduce((sum, row) => sum + row.valueUsd, 0));
       const nav = tidy(avalancheValue + hlValue + extraValue);
       if (!Number.isFinite(nav) || nav < 0) throw new Error('Invalid treasury value');
-      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => ({ ...row, weight: nav > 0 ? row.valueUsd / nav : 0 }));
-      history.push({ t: at, nav });
-      const risk = drawdown(history, nav, now.valueOf(), previous?.drawdown?.peakNav);
+      // Managed NAV excludes open prediction-market positions (pUSD cash stays in). It is the single basis for
+      // weights, the sAVAX cap, tier sizes and drawdown; the full NAV is the headline total holdings.
+      const managedNav = tidy(Math.max(0, nav - (extraVenues.polymarket?.positionsValue ?? 0)));
+      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => managedRow(row) ? { ...row, weight: managedNav > 0 ? row.valueUsd / managedNav : 0 } : { ...row, weight: 0, inManagedNav: false });
+      history.push({ t: at, nav, managed: managedNav });
+      const managedPeak = previous?.drawdown?.basis === 'managed' ? previous.drawdown.peakNav : null;
+      const risk = { ...drawdown(history, managedNav, now.valueOf(), managedPeak, 'managed'), basis: 'managed', managedNav };
       const currentPrices = [...avalancheBalances, ...hl.spotBalances].filter((row) => row.balance > 0 && row.asset !== 'USDC').every((row) => prices[row.asset]?.updatedAt === at);
       treasury = {
         generatedAt: at, updatedAt: at, wallet: WALLET, currency: 'USD',
         estimated: !(avalanche.status === 'fulfilled' && hlOk && currentPrices && extrasComplete),
         note: 'Margin account equity includes open-position profit and loss. Prediction market positions are marked at current outcome prices; vaults at redeem value. Positions below $0.01 are omitted from holdings, but remain in NAV.',
-        nav, venues: {
+        nav, managedNav, venues: {
           avalanche: { valueUsd: avalancheValue, updatedAt: sources.avalanche_rpc.updatedAt },
           hyperliquid: { valueUsd: hlValue, updatedAt: sources.hyperliquid.updatedAt, accountValue: hl.accountValue, withdrawable: hl.withdrawable, spotBalances: hl.spotBalances, assetPositions: hl.assetPositions },
           ...extraVenues,
         },
-        avalancheBalances, positions, allocation: allocation(positions, nav, decisionFile.decisions), drawdown: risk,
+        avalancheBalances, positions, allocation: allocation(positions.filter(managedRow), managedNav, decisionFile.decisions), drawdown: risk,
         execution: { status: risk.sevenDay !== null && risk.sevenDay <= -0.1 ? 'paused' : 'active', escalated: risk.fromPeak !== null && risk.fromPeak <= -0.25 },
         gasAvax: gasSpent(decisionFile.decisions),
       };
@@ -421,7 +429,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
     }
   }
   if (treasury) {
-    treasury = { ...treasury, generatedAt: at, allocation: allocation(treasury.positions, treasury.nav, decisionFile.decisions), gasAvax: gasSpent(decisionFile.decisions) };
+    treasury = { ...treasury, generatedAt: at, allocation: allocation(treasury.positions.filter(managedRow), treasury.managedNav ?? treasury.nav, decisionFile.decisions), gasAvax: gasSpent(decisionFile.decisions) };
   }
   const output = {
     treasury,

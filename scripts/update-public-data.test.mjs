@@ -121,10 +121,11 @@ test('a failed venue keeps its last good equity while other sources refresh', as
 }));
 
 test('published execution state changes at exact pause and escalation thresholds', async () => temporaryData(async (dataDir) => {
-  const history = [8, 6].map((days) => ({ t: new Date(NOW - days * DAY).toISOString(), nav: 100 }));
+  const history = [8, 6].map((days) => ({ t: new Date(NOW - days * DAY).toISOString(), nav: 100, managed: 100 }));
   await writeFile(`${dataDir}/nav-history.json`, JSON.stringify(history));
   const previous = JSON.parse(await readFile(`${dataDir}/treasury.json`, 'utf8'));
   previous.drawdown.peakNav = 100;
+  previous.drawdown.basis = 'managed';
   await writeFile(`${dataDir}/treasury.json`, JSON.stringify(previous));
   const paused = await updatePublicData({ dataDir, fetcher: provider({ margin: '60' }), now: NOW });
   assert.equal(paused.treasury.nav, 90);
@@ -212,7 +213,33 @@ test('multichain venues add Polymarket, Avantis and wallet balances to NAV and c
   assert.equal(t.venues.base.valueUsd, 2);
   assert.equal(t.nav, 85.38);
   assert.equal(t.allocation.satellites.assets.length, 0);
-  assert.ok(Math.abs(t.allocation.external.weight - 21 / t.nav) < 1e-9);
-  assert.ok(Math.abs(t.allocation.sAVAX.weight - 20 / t.nav) < 1e-9);
+  assert.equal(t.managedNav, 80.38);
+  assert.ok(Math.abs(t.allocation.external.weight - 16 / 80.38) < 1e-9);
+  assert.ok(Math.abs(t.allocation.sAVAX.weight - 20 / 80.38) < 1e-9);
+  assert.equal(t.allocation.tiers.t2Usd, 8.038);
+  assert.equal(t.positions.find((row) => row.asset === 'Outcomes').inManagedNav, false);
   for (const key of ['polymarket', 'avantis', 'yo', 'evm_wallets']) assert.equal(result.sources.sources[key].status, 'ok');
+}));
+
+test('drawdown uses managed NAV without open prediction positions and starts its own peak', async () => temporaryData(async (dataDir) => {
+  // Older points carry only full NAV; the managed peak must ignore them and the previous full-NAV peak.
+  await writeFile(`${dataDir}/nav-history.json`, JSON.stringify([{ t: new Date(NOW - 8 * DAY).toISOString(), nav: 500 }]));
+  const previous = JSON.parse(await readFile(`${dataDir}/treasury.json`, 'utf8'));
+  previous.drawdown = { ...previous.drawdown, peakNav: 999 };
+  delete previous.drawdown.basis;
+  await writeFile(`${dataDir}/treasury.json`, JSON.stringify(previous));
+  const base = provider();
+  const withPrediction = (value) => async (url, options) => url.includes('polymarket.com') ? json([{ size: 100, curPrice: value / 100, currentValue: value, redeemable: false, endDate: '2027-01-01' }]) : base(url, options);
+  const first = await updatePublicData({ dataDir, fetcher: withPrediction(40), now: NOW });
+  assert.equal(first.treasury.nav, 102.38);
+  assert.equal(first.treasury.managedNav, 62.38);
+  assert.equal(first.treasury.drawdown.basis, 'managed');
+  assert.equal(first.treasury.drawdown.peakNav, 62.38);
+  assert.equal(first.treasury.drawdown.fromPeak, null);
+  // A prediction position falling to zero moves full NAV, not the managed drawdown.
+  const second = await updatePublicData({ dataDir, fetcher: withPrediction(0), now: new Date(NOW.valueOf() + 900_000) });
+  assert.equal(second.treasury.nav, 62.38);
+  assert.equal(second.treasury.drawdown.fromPeak, 0);
+  assert.equal(second.treasury.execution.escalated, false);
+  assert.equal(second['nav-history'].at(-1).managed, 62.38);
 }));
