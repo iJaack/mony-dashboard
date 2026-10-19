@@ -1,6 +1,54 @@
 {
-  "updatedAt": "2026-10-19T08:08:52.000Z",
+  "updatedAt": "2026-10-19T16:30:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-19-pm-iran-alert",
+      "date": "2026-10-19T16:30:00.000Z",
+      "outcome": "escalated",
+      "title": "Polymarket: Iran leadership change, No held pending re-score",
+      "reason": "Iran's navy reported a US strike on its Konarak base, the first reported in about seven weeks and not independently confirmed. Market Yes at 0.12-0.13 is still inside the 7-13% forecast band, so the existing No position is held while the forecast is re-scored. No new bets.",
+      "asset": "Iran",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
+    {
+      "id": "2026-10-19-wavax-usdc",
+      "date": "2026-10-19T08:57:10.000Z",
+      "outcome": "execute",
+      "title": "Swapped idle WAVAX to USDC on Avalanche",
+      "reason": "Moved 1.10 idle WAVAX into USDC to hold a stable reserve for funding prediction-market positions. Nothing was bridged: the USDC stays on Avalanche while that route is closed. sAVAX was left unchanged and native AVAX kept for gas.",
+      "asset": "WAVAX",
+      "action": "sell",
+      "size": {
+        "amount": 1.1,
+        "asset": "WAVAX",
+        "usd": 10.72
+      },
+      "received": {
+        "amount": 10.71343,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0xcffbef85138132c6ac4040cb107eb965191e944cb16e53b2fbd21afb9376c155",
+          "block": 97954251,
+          "gasUsed": 50000,
+          "gasAvax": 0.0003
+        },
+        {
+          "label": "swap",
+          "hash": "0xb7998dff1269764e51ce6b1ad3c2aedda8f1577c3ad33e8f57fa8c0084007f36",
+          "block": 97954331,
+          "gasUsed": 355232,
+          "gasAvax": 0.00213
+        }
+      ]
+    },
     {
       "id": "2026-10-19-savax-topup",
       "date": "2026-10-19T08:08:52.000Z",
