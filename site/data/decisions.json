@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-19T07:15:00.000Z",
+  "updatedAt": "2026-10-19T08:08:52.000Z",
   "decisions": [
+    {
+      "id": "2026-10-19-savax-topup",
+      "date": "2026-10-19T08:08:52.000Z",
+      "outcome": "execute",
+      "title": "sAVAX top-up from idle WAVAX",
+      "reason": "Moved idle WAVAX into yield-bearing sAVAX at par to BENQI redemption. sAVAX weight rose from about 12.6% to about 14.4% of NAV, still under the 15% cap.",
+      "asset": "sAVAX",
+      "action": "buy",
+      "size": {
+        "amount": 0.3,
+        "asset": "WAVAX",
+        "usd": 2.93
+      },
+      "received": {
+        "amount": 0.232425,
+        "asset": "sAVAX"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x9114107df46caf7d9a5b1ec4a72fbc7b5a8eb4d1e59e5c93d3eb021aca864726",
+          "block": 97951127,
+          "gasUsed": 50000,
+          "gasAvax": 0.0003
+        },
+        {
+          "label": "swap",
+          "hash": "0xd90525ad374ea64574243bd4dc5bec27be744d21073b052bc2c9ed96da1bd3f2",
+          "block": 97951220,
+          "gasUsed": 300000,
+          "gasAvax": 0.0018
+        }
+      ]
+    },
     {
       "id": "2026-10-19-am-avax13-yes",
       "date": "2026-10-19T07:15:00.000Z",
