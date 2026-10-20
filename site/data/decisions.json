@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-10-19T16:30:00.000Z",
+  "updatedAt": "2026-10-20T07:20:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-20-pm-iran-hold",
+      "date": "2026-10-20T07:20:00.000Z",
+      "outcome": "no_op",
+      "title": "Polymarket: Iran leadership change, No held after re-score",
+      "reason": "The forecast was re-scored to 8-15% Yes after the reported Konarak strike, which a US official has since called inaccurate. Market Yes at 0.12-0.13 sits inside the band, so the existing No position is held. Exit if the Yes bid rises above 0.15 or the band moves up. No new bets.",
+      "asset": "Iran",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
     {
       "id": "2026-10-19-pm-iran-alert",
       "date": "2026-10-19T16:30:00.000Z",
