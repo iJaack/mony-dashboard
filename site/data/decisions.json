@@ -1,6 +1,34 @@
 {
-  "updatedAt": "2026-10-20T07:20:00.000Z",
+  "updatedAt": "2026-10-20T16:10:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-20-exec-paused",
+      "date": "2026-10-20T16:10:00.000Z",
+      "outcome": "blocked",
+      "title": "Execution paused: trading system offline after a restart",
+      "reason": "The execution service went offline after a machine restart, so nothing can be submitted until it is restored. No Avalanche trade was due anyway: sAVAX is 14.5% of NAV, inside its band. Iran No is held, with Yes at 0.11-0.12 inside the 8-15% forecast.",
+      "asset": "AVAX",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
+    {
+      "id": "2026-10-20-pm-eth2250-yes",
+      "date": "2026-10-20T16:10:00.000Z",
+      "outcome": "blocked",
+      "title": "Polymarket: Ethereum dips to $2,250 by Dec 31, buy Yes",
+      "reason": "The forecast puts Yes at 68-78% and Yes can be bought at 0.60, an 8-point gap with enough depth. Blocked: new prediction-market bets are paused because the venue is not available from our region. A forecast re-score was requested after the ETH rally.",
+      "asset": "ETH",
+      "action": "buy",
+      "size": {
+        "amount": 8,
+        "asset": "USDC",
+        "usd": 8
+      }
+    },
     {
       "id": "2026-10-20-pm-iran-hold",
       "date": "2026-10-20T07:20:00.000Z",
