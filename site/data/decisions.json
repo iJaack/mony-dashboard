@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-21T16:05:00.000Z",
+  "updatedAt": "2026-10-21T19:14:01.028Z",
   "decisions": [
+    {
+      "id": "2026-10-21-usdc-wavax",
+      "date": "2026-10-21T19:12:58.000Z",
+      "outcome": "execute",
+      "title": "Put idle USDC to work: swapped to WAVAX on Avalanche",
+      "reason": "Redeployed all 10.71 idle USDC into WAVAX at Giacomo's direction, since prediction-market bets are off and the cash was sitting idle. sAVAX is near its 15% cap, so the AVAX exposure went to WAVAX instead. Size about 6.6% of NAV. Filled 1.0906 WAVAX at about 9.82 USDC per AVAX, in line with the market. A drawdown is handled by the normal NAV alarm rules.",
+      "asset": "WAVAX",
+      "action": "buy",
+      "size": {
+        "amount": 10.71343,
+        "asset": "USDC",
+        "usd": 10.71
+      },
+      "received": {
+        "amount": 1.090599,
+        "asset": "WAVAX"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0xe744cab0ccd155d09876e07d2387b9a5f99bd043390772f37e46fa9dc5f301c8",
+          "block": 98174627,
+          "gasUsed": 55437,
+          "gasAvax": 0.00033
+        },
+        {
+          "label": "swap",
+          "hash": "0xa0fee43d4fd67c8048afc2cb85ca8812df6e6e110a35fa5f0e325693c58bff5a",
+          "block": 98174778,
+          "gasUsed": 309002,
+          "gasAvax": 0.00185
+        }
+      ]
+    },
     {
       "id": "2026-10-21-pm-blocked",
       "date": "2026-10-21T16:05:00.000Z",
