@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-10-21T07:15:00.000Z",
+  "updatedAt": "2026-10-21T16:05:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-21-pm-blocked",
+      "date": "2026-10-21T16:05:00.000Z",
+      "outcome": "blocked",
+      "title": "Two prediction signals qualify but stay blocked",
+      "reason": "Two forecasts now sit 5 points from the market, the minimum edge. Ethereum dipping to $2,250 by year end: forecast 62-72% Yes vs a 0.57 ask. US refraining from strikes on Iran through Nov 3: forecast 62-74% Yes vs a 0.79 bid, so the edge is on No. Both are logged as blocked becau",
+      "asset": "USDC",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
     {
       "id": "2026-10-21-am-noop",
       "date": "2026-10-21T07:15:00.000Z",
