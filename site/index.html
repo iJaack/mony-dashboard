@@ -2,123 +2,301 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="Mony's public treasury ledger: holdings, decisions, valuation research and source freshness across Avalanche and Hyperliquid.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
   <title>mony.jaack.me — Mony treasury</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <!-- jaack design system, vendored: see vendor/jaack/VERSION. Blocking theme script sets data-theme before first paint. -->
+  <script src="./vendor/jaack/theme.js" data-light-from="7" data-light-to="19" data-key="jaack.theme"></script>
+  <link rel="stylesheet" href="./vendor/jaack/jaack.css">
   <link rel="stylesheet" href="./assets/app.css">
+  <script src="./vendor/jaack/jaack.js" defer></script>
   <script src="./assets/app.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#treasury">Skip to treasury</a>
-<div class="wrapper-large">
-  <header class="site-nav">
-    <a class="site-wordmark" href="#treasury" aria-label="mony.jaack.me">mony<span class="gold">.</span><span class="domain">jaack.me</span></a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#treasury" aria-current="page">Treasury</a><a href="#operations">Operations</a><a href="#signals">Signals</a><a href="#forecasts">Forecasts</a><a href="#sources">Sources</a>
-    </nav>
-    <div class="nav-status"><span class="public-label">Public · read-only</span><span class="badge" id="execution-status">Execution: unavailable</span></div>
-  </header>
-  <main>
-    <noscript><p class="empty-state">JavaScript is needed to display this ledger. The public records are available as <a href="./data/treasury.json">JSON data</a>.</p></noscript>
-    <section class="hero" id="treasury" aria-labelledby="nav-title">
-      <div>
-        <div class="hero-intro"><span class="app-monogram" aria-hidden="true">m.</span><span>Total holdings <span class="muted">/ Mony</span></span></div>
-        <h1 class="hero-title" id="nav-title">Unavailable</h1>
-        <p class="hero-date" id="treasury-updated">Last updated: unavailable</p>
+<div class="jk-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="jk-top jk-glass">
+  <a class="jk-mark" href="#treasury" aria-label="mony.jaack.me">mony<span class="dot">.</span><span class="dom">jaack.me</span></a>
+  <span class="jk-tag" id="execution-status">Public · read-only</span>
+  <nav class="jk-links" aria-label="Primary">
+    <a class="jk-sw keep" href="#treasury">Treasury</a>
+    <a class="jk-sw" href="#holdings">Book</a>
+    <a class="jk-sw" href="#rules">Limits</a>
+    <a class="jk-sw" href="#signals">Research</a>
+    <a class="jk-sw" href="#sources">Sources</a>
+  </nav>
+  <span data-jk-theme-switch></span>
+</header>
+<main class="jk-page">
+  <noscript><p class="jk-note">JavaScript is needed to display this ledger. The public records are available as <a class="jk-a" href="./data/treasury.json">JSON data</a>.</p></noscript>
+  <div class="jk-chs">
+    <section class="jk-ch" id="treasury" aria-labelledby="treasury-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">01</span>
+        <div class="jk-eb"><b>01</b> Treasury</div>
+        <h1 class="jk-q" id="treasury-title">How much is held?</h1>
+        <p class="jk-lede" id="treasury-lede">A public record of capital across Avalanche, Hyperliquid, Polymarket, Base and other chains.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-split">
+          <div>
+            <div class="jk-hero jk-fx">
+              <div class="jk-hc">
+                <div class="jk-hm">
+                  <div class="jk-lab">Total holdings</div>
+                  <div class="jk-big" id="nav-title"><span class="jk-na">Unavailable</span></div>
+                  <p class="jk-cmp" id="nav-cmp">Managed NAV, the first snapshot and the mean appear here once the ledger loads.</p>
+                </div>
+                <div class="jk-sec">
+                  <div class="jk-lab">Since yesterday</div>
+                  <div class="jk-mid" id="day-delta"><span class="jk-na">Unavailable</span></div>
+                  <p class="jk-cmp" id="day-cmp">Yesterday’s holdings and the move from the managed peak.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="jk-aside jk-glass jk-panel jk-fx" id="operations" aria-labelledby="latest-label">
+            <div id="latest-content">
+              <div class="jk-lab" id="latest-label">Latest decision</div>
+              <div class="jk-mid"><span class="jk-na">Unavailable</span></div>
+            </div>
+          </aside>
+        </div>
+        <div class="period jk-fx">
+          <div class="jk-pill flat" id="history-period" role="group" aria-label="History period">
+            <button type="button" aria-pressed="true" data-v="7">7d</button>
+            <button type="button" aria-pressed="false" data-v="30">30d</button>
+          </div>
+        </div>
+        <figure class="jk-fig jk-fx" id="nav-history">
+          <figcaption id="history-caption">NAV history</figcaption>
+          <div class="chart-box" id="history-chart">
+            <div class="chart-plot" id="history-plot"><p class="jk-note">Unavailable</p></div>
+          </div>
+          <p class="jk-note" id="history-updated">Last updated: unavailable</p>
+        </figure>
+        <div class="jk-group jk-fx">
+          <h2 class="jk-lab">Where the capital sits</h2>
+          <div id="venues-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="treasury-updated">Last updated: unavailable</p>
+        </div>
       </div>
-      <div class="hero-copy">
-        <p class="hero-sub">A considered view of capital.<br>Across Avalanche, Hyperliquid, Polymarket, Base and other chains. <span id="managed-line"></span> <span id="hero-context">A public record of holdings and decisions.</span></p>
-        <a class="text-link" href="#operations">Read the latest decision →</a>
+    </section>
+
+    <section class="jk-ch" id="holdings" aria-labelledby="holdings-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">02</span>
+        <div class="jk-eb"><b>02</b> Holdings</div>
+        <h2 class="jk-q" id="holdings-title">What is in the book?</h2>
+        <p class="jk-lede">Every line at or above one cent. Weights are shares of total holdings.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab" id="book-label">Largest line</div>
+              <div class="jk-big" id="book-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="book-cmp">The largest holding, then the next.</p>
+            </div>
+          </div>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab">The holdings</h3>
+          <div id="holdings-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="holdings-note"></p>
+          <p class="jk-note" id="holdings-updated">Last updated: unavailable</p>
+        </div>
       </div>
     </section>
-    <div class="ledger-grid home-section">
-      <figure class="history" id="nav-history">
-        <figcaption><span>NAV history</span><span class="history-controls" role="group" aria-label="History period"><button type="button" data-days="7" aria-pressed="true">7d</button><button type="button" data-days="30" aria-pressed="false">30d</button></span></figcaption>
-        <div id="history-chart"><p class="empty-state">Unavailable</p></div>
-        <p class="updated" id="history-updated">Last updated: unavailable</p>
-      </figure>
-      <section aria-labelledby="venues-title">
-        <div class="section-head"><h2 id="venues-title">Where the capital sits</h2><a class="text-link" href="#holdings">Holdings →</a></div>
-        <div id="venues-content"><p class="empty-state">Unavailable</p></div>
-        <div class="concentration" id="allocation-content"></div>
-        <p class="updated" id="venues-updated">Last updated: unavailable</p>
-      </section>
+
+    <section class="jk-ch" id="rules" aria-labelledby="rules-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">03</span>
+        <div class="jk-eb"><b>03</b> Limits</div>
+        <h2 class="jk-q" id="rules-title">Are the limits holding?</h2>
+        <p class="jk-lede">Caps, drawdown alarms and the rules a buy has to clear. Rules v2.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab">sAVAX concentration</div>
+              <div class="jk-big" id="savax-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="savax-cmp">Cap 15% of total holdings.</p>
+            </div>
+            <div class="jk-sec">
+              <div class="jk-lab">Outside the trading mandate</div>
+              <div class="jk-mid" id="external-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="external-cmp">Counted in total holdings and weights. Not traded by the treasury run, and not satellites.</p>
+            </div>
+          </div>
+        </div>
+        <figure class="jk-fig jk-fx">
+          <figcaption>sAVAX weight of total holdings. The tick is the 15% cap.</figcaption>
+          <div id="savax-gauge"><p class="jk-note">Unavailable</p></div>
+        </figure>
+        <div class="jk-group jk-fx" id="risk">
+          <h3 class="jk-lab">Drawdown <span class="quiet">· open prediction-market positions excluded</span></h3>
+          <div id="risk-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="gas-content">Gas spent: unavailable</p>
+          <p class="jk-note" id="risk-updated">Last updated: unavailable</p>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab">Treasury rules</h3>
+          <ul class="jk-rows rows-rules wrap">
+            <li><span class="m">T1</span><span>of total holdings</span><span class="r">min(€1k, 3%)</span></li>
+            <li><span class="m">T2</span><span>of total holdings</span><span class="r">min(€5k, 10%)</span></li>
+            <li><span class="m">sAVAX</span><span>maximum of total holdings</span><span class="r">15%</span></li>
+            <li><span class="m">Satellites</span><span>each / combined maximum</span><span class="r">10% / 40%</span></li>
+            <li><span class="m">Buy</span><span>valuation gate and isSafe verdict</span><span class="r">Value + safety</span></li>
+          </ul>
+          <div id="allocation-content"></div>
+          <p class="jk-note" id="trim-content"></p>
+          <p class="jk-note">Weights, the sAVAX cap and tier sizes use total holdings across all venues and chains. Drawdown alarms use managed NAV, which excludes open prediction-market positions (prediction-market cash stays in). Per-transaction limits still apply. EUR tier amounts require a dated FX rate.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="jk-ch" id="signals" aria-labelledby="signals-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">04</span>
+        <div class="jk-eb"><b>04</b> Signals</div>
+        <h2 class="jk-q" id="signals-title">What does the research say?</h2>
+        <p class="jk-lede">Dated valuation research. A passing gate still needs a safety verdict before a buy is admitted.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab">Valuation gates</div>
+              <div class="jk-big" id="signals-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="signals-cmp">Gates that pass, against the watchlist.</p>
+            </div>
+          </div>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab" id="signals-summary">Watchlist</h3>
+          <div id="signals-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note">Modeled values, buy levels, margin of safety and gates are dated research. Buy level = stressed value × 70%; margin of safety = 1 − research price / modeled value. A valuation pass also requires a safety verdict before buy admission.</p>
+          <p class="jk-note" id="signals-updated">Last updated: unavailable</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="jk-ch" id="forecasts" aria-labelledby="forecasts-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">05</span>
+        <div class="jk-eb"><b>05</b> Forecasts</div>
+        <h2 class="jk-q" id="forecasts-title">What is in the forecast book?</h2>
+        <p class="jk-lede">Probability bands the treasury reads as context. Forecasts are not trade instructions, and prediction-market positions are reported, not traded.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab">Active forecasts</div>
+              <div class="jk-big" id="forecasts-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="forecasts-cmp">Bands are probabilities of Yes. A row is stale once its review date has passed.</p>
+            </div>
+          </div>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab" id="forecasts-summary">Forecast book</h3>
+          <div id="forecasts-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="forecasts-updated">As of: unavailable</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="jk-ch" id="decisions" aria-labelledby="decisions-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">06</span>
+        <div class="jk-eb"><b>06</b> Decisions</div>
+        <h2 class="jk-q" id="decisions-title">What was decided?</h2>
+        <p class="jk-lede">Published outcomes, twice a day, and the executions that followed.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab">Published decisions</div>
+              <div class="jk-big" id="decisions-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="decisions-cmp">The latest outcome and how many of them executed.</p>
+            </div>
+          </div>
+        </div>
+        <div class="jk-group jk-fx" id="execution">
+          <h3 class="jk-lab">The execution record</h3>
+          <div id="execution-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="execution-updated">Last updated: unavailable</p>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab">Decision feed</h3>
+          <div class="feed" id="decisions-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="decisions-updated">Last updated: unavailable</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="jk-ch" id="sources" aria-labelledby="sources-title">
+      <header class="jk-ct">
+        <span class="jk-deco" aria-hidden="true">07</span>
+        <div class="jk-eb"><b>07</b> Sources</div>
+        <h2 class="jk-q" id="sources-title">Are the inputs fresh?</h2>
+        <p class="jk-lede">Provider verdicts and how fresh each source is. All times Europe/Rome.</p>
+      </header>
+      <div class="jk-cb">
+        <div class="jk-hero jk-fx">
+          <div class="jk-hc">
+            <div class="jk-hm">
+              <div class="jk-lab">Sources fresh</div>
+              <div class="jk-big" id="sources-value"><span class="jk-na">Unavailable</span></div>
+              <p class="jk-cmp" id="sources-cmp">Public data refreshes about every 15 minutes. Decisions publish after each run, twice a day.</p>
+            </div>
+          </div>
+        </div>
+        <div class="jk-group jk-fx" id="audit">
+          <h3 class="jk-lab">Serialized Audit</h3>
+          <div id="audit-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note">Provider verdicts are dated assessments; “true” is not a guarantee. Assets without a supplied verdict have no safety pass.</p>
+          <p class="jk-note" id="audit-updated">Last updated: unavailable</p>
+        </div>
+        <div class="jk-group jk-fx">
+          <h3 class="jk-lab">Source freshness</h3>
+          <div id="sources-content"><p class="jk-note">Unavailable</p></div>
+          <p class="jk-note" id="sources-updated">Last updated: unavailable</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer class="jk-end">
+    <p>Mony · treasury agent for Giacomo Barbieri © 2026</p>
+    <p class="footer-links"><a class="jk-a" href="https://jaack.me" target="_blank" rel="noopener noreferrer">jaack.me</a><a class="jk-a" href="https://snowtrace.io/address/0x0fe61780bd5508b3C99e420662050e5560608cA4" target="_blank" rel="noopener noreferrer">Snowtrace wallet</a><a class="jk-a" href="#treasury">Back to treasury</a></p>
+  </footer>
+</main>
+<nav class="jk-dock" aria-label="Chapters">
+  <div class="dock-scroll">
+    <div class="jk-pill jk-glass" id="chapter-nav" role="group" aria-label="Chapters">
+      <button type="button" aria-pressed="true" data-v="treasury">Held</button>
+      <button type="button" aria-pressed="false" data-v="holdings">Book</button>
+      <button type="button" aria-pressed="false" data-v="rules">Limits</button>
+      <button type="button" aria-pressed="false" data-v="signals">Research</button>
+      <button type="button" aria-pressed="false" data-v="forecasts">Forecasts</button>
+      <button type="button" aria-pressed="false" data-v="decisions">Decisions</button>
+      <button type="button" aria-pressed="false" data-v="sources">Sources</button>
     </div>
-    <div class="ledger-grid home-section">
-      <section class="positions" id="holdings" aria-labelledby="holdings-title">
-        <div class="section-head"><h2 id="holdings-title">The holdings</h2><a class="text-link" href="#rules">Treasury rules →</a></div>
-        <div id="holdings-content"><p class="empty-state">Unavailable</p></div>
-        <p class="small muted" id="holdings-note"></p>
-        <p class="updated" id="holdings-updated">Last updated: unavailable</p>
-      </section>
-      <section class="now-summary" id="operations" aria-labelledby="latest-title">
-        <div class="section-head"><h2 id="latest-title">The latest decision</h2></div>
-        <div id="latest-content"><p class="empty-state">Unavailable</p></div>
-        <div class="trim-note" id="trim-content"></div>
-        <p class="updated" id="latest-updated">Last updated: unavailable</p>
-      </section>
-    </div>
-    <div class="ledger-grid home-section">
-      <section id="execution" aria-labelledby="execution-title">
-        <div class="section-head"><h2 id="execution-title">The execution record</h2><a class="text-link" href="#decisions">Decision feed →</a></div>
-        <div id="execution-content"><p class="empty-state">Unavailable</p></div>
-        <p class="updated" id="execution-updated">Last updated: unavailable</p>
-      </section>
-      <section aria-labelledby="risk-title">
-        <div class="section-head"><h2 id="risk-title">Risk in context <small class="muted">· excludes open prediction-market positions</small></h2><a class="text-link" href="#rules">Limits →</a></div>
-        <div class="risk-gauges" id="risk-content"><p class="empty-state">Unavailable</p></div>
-        <p class="risk-note" id="gas-content">Gas spent: unavailable</p>
-        <p class="updated" id="risk-updated">Last updated: unavailable</p>
-      </section>
-    </div>
-    <section id="signals" class="home-section" aria-labelledby="signals-title">
-      <div class="section-head"><h2 id="signals-title">Trends &amp; signals</h2><a class="text-link" href="#audit">Safety verdicts →</a></div>
-      <p class="section-intro" id="signals-summary">Watchlist</p>
-      <div class="signals" id="signals-content"><p class="empty-state">Unavailable</p></div>
-      <p class="small muted">Modeled values, buy levels, margin of safety and gates are dated research. Buy level = stressed value × 70%; margin of safety = 1 − research price / modeled value. A valuation pass also requires a safety verdict before buy admission.</p>
-      <p class="updated" id="signals-updated">Last updated: unavailable</p>
-    </section>
-    <section id="forecasts" class="home-section" aria-labelledby="forecasts-title">
-      <div class="section-head"><h2 id="forecasts-title">Forecast inputs</h2><a class="text-link" href="#decisions">Decision feed →</a></div>
-      <p class="section-intro" id="forecasts-summary">Forecast book</p>
-      <div class="forecast-list" id="forecasts-content"><p class="empty-state">Unavailable</p></div>
-      <p class="small muted">Probability bands from a dated forecast book that Mony reads as context. Forecasts are not trade instructions; prediction-market positions are reported, not traded. A row is marked stale once its review date has passed.</p>
-      <p class="updated" id="forecasts-updated">As of: unavailable</p>
-    </section>
-    <section id="decisions" class="home-section" aria-labelledby="decisions-title">
-      <div class="section-head"><h2 id="decisions-title">Decision feed</h2><a class="text-link" href="#execution">Execution record →</a></div>
-      <p class="section-intro muted">Published outcomes · twice daily</p>
-      <div class="decision-feed" id="decisions-content"><p class="empty-state">Unavailable</p></div>
-      <p class="updated" id="decisions-updated">Last updated: unavailable</p>
-    </section>
-    <section class="home-section" id="rules" aria-labelledby="rules-title">
-      <div class="section-head"><h2 id="rules-title">Treasury rules <span class="muted">/ v2</span></h2><a class="text-link" href="#audit">Admission evidence →</a></div>
-      <dl class="policy-grid">
-        <div><dt>T1</dt><dd>min(€1k, 3%)</dd><small>of total holdings</small></div>
-        <div><dt>T2</dt><dd>min(€5k, 10%)</dd><small>of total holdings</small></div>
-        <div><dt>sAVAX</dt><dd>15%</dd><small>maximum of total holdings</small></div>
-        <div><dt>Satellites</dt><dd>10% / 40%</dd><small>each / combined maximum</small></div>
-        <div><dt>Buy admission</dt><dd>Value + safety</dd><small>valuation gate &amp; isSafe verdict</small></div>
-      </dl>
-      <p class="policy-note small muted">Weights, the sAVAX cap and tier sizes use total holdings across all venues and chains. Drawdown alarms use managed NAV, which excludes open prediction-market positions (prediction-market cash stays in). Per-transaction limits still apply. EUR tier amounts require a dated FX rate.</p>
-    </section>
-    <section id="audit" class="home-section" aria-labelledby="audit-title">
-      <div class="section-head"><h2 id="audit-title">Serialized Audit</h2><a class="text-link" href="#sources">Source freshness →</a></div>
-      <p class="section-intro muted">Dated provider verdicts</p>
-      <div class="audit-table" id="audit-content"><p class="empty-state">Unavailable</p></div>
-      <p class="small muted">Provider verdicts are dated assessments; “true” is not a guarantee. Assets without a supplied verdict have no safety pass.</p>
-      <p class="updated" id="audit-updated">Last updated: unavailable</p>
-    </section>
-    <section class="home-section" id="sources" aria-labelledby="sources-title">
-      <div class="section-head"><h2 id="sources-title">Sources &amp; freshness</h2><a class="text-link" href="#treasury">Back to treasury ↑</a></div>
-      <p class="section-intro muted" id="sources-updated">Last updated: unavailable</p>
-      <div class="source-list" id="sources-content"><p class="empty-state">Unavailable</p></div>
-      <p class="source-note small muted">All times Europe/Rome. Public data refreshes about every 15 minutes; decisions are published after each run (twice daily).</p>
-    </section>
-  </main>
-  <footer class="footer-main"><span>Mony · treasury agent for Giacomo Barbieri © 2026</span><nav class="footer-links" aria-label="Related sources"><a class="text-link" href="https://jaack.me" target="_blank" rel="noopener noreferrer">jaack.me ↗</a><a class="text-link" href="https://snowtrace.io/address/0x0fe61780bd5508b3C99e420662050e5560608cA4" target="_blank" rel="noopener noreferrer">Snowtrace wallet ↗</a></nav></footer>
-</div>
+  </div>
+</nav>
+<svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="jk-warm" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="var(--jk-c-yellow)"/>
+      <stop offset="1" stop-color="var(--jk-c-orange)"/>
+    </linearGradient>
+  </defs>
+</svg>
 </body>
 </html>
