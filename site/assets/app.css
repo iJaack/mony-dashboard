@@ -107,6 +107,13 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 }
 
 .jk-dock { max-width: calc(100vw - 16px); }
+
+/* The floating bar cannot scroll. Below 380 px the chapter dock covers navigation,
+   so the theme switch stays on screen. */
+@media (max-width: 380px) {
+  .jk-top { gap: 8px; padding-left: 12px; }
+  .jk-top .jk-links { display: none; }
+}
 .dock-scroll {
   max-width: 100%;
   overflow-x: auto;
