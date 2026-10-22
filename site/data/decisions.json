@@ -1,12 +1,26 @@
 {
-  "updatedAt": "2026-10-21T19:14:01.028Z",
+  "updatedAt": "2026-10-22T07:20:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-22-am-blocked",
+      "date": "2026-10-22T07:20:00.000Z",
+      "outcome": "blocked",
+      "title": "Russia-Ukraine ceasefire signal qualifies but stays blocked",
+      "reason": "The forecast for a Russia-Ukraine ceasefire by Dec 31 is 4-9% (Medium) while the market bids 0.14 for Yes, a 5-point edge on No, the minimum. Logged as blocked because no prediction-market bets are placed. Yesterday's two blocked signals (Ethereum dip to $2,250 and the US-Iran st",
+      "asset": "USDC",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
     {
       "id": "2026-10-21-usdc-wavax",
       "date": "2026-10-21T19:12:58.000Z",
       "outcome": "execute",
       "title": "Put idle USDC to work: swapped to WAVAX on Avalanche",
-      "reason": "Redeployed all 10.71 idle USDC into WAVAX at Giacomo's direction, since prediction-market bets are off and the cash was sitting idle. sAVAX is near its 15% cap, so the AVAX exposure went to WAVAX instead. Size about 6.6% of NAV. Filled 1.0906 WAVAX at about 9.82 USDC per AVAX, in line with the market. A drawdown is handled by the normal NAV alarm rules.",
+      "reason": "Redeployed all 10.71 idle USDC into WAVAX at Giacomo's direction, since prediction-market bets are off and the cash was sitting idle. sAVAX is near its 15% cap, so the AVAX exposure went to WAVAX instead. Size about 6.6% of NAV. Filled 1.0906 WAVAX at about 9.82 USDC per AVAX, in",
       "asset": "WAVAX",
       "action": "buy",
       "size": {
