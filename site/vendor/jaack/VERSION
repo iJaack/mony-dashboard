@@ -5,6 +5,7 @@ package-sha256: 392f8949b5a5f7c7c5e459fcb431ed536fe6aaa90513e7e179cd49e2c6f5094a
 package-bytes: 4329220
 published: runtime and sources. demo.html, demo.js and screenshots/ stay out of the public site (placeholder demo).
 clock: light from 07:00 inclusive to 19:00 exclusive (theme.js data-light-from=7 data-light-to=19).
+local: narrow-header fix in components/topbar.css, components/themeswitch.css and jaack.css (same bundle for the other sites). Package sha above is the original zip.
 
 202adb97c0a021d3d3e52184997098a1709f00b4b8564856031a58e0be65209c  README.md
 6fe992029cb58575c99ff3f9a8d183d62932e2c64c0ad178a12c96d1c3e0c851  build.sh
@@ -27,14 +28,14 @@ f445bf4b2c955f4fdbe833608075d87db0c78531d45fa2e39da2d644330f61d1  components/row
 9300d779c944011d2091557b4da0427f326ab5cdbbe1759ad870471cbc7012c0  components/sheet.js
 5ac2de6f1e64a19386db600706b13b655fa9e4921d8c0392dc013f57c39cc4ca  components/stats.css
 fadc665aa5cb59d16fcf55cd323c3d9ed3a3104341c2d75c9a7b47709aa9bbe9  components/stats.html
-96ea1e851136360e49b3f1bf99faa2d48f5e8e1f6bfc5ca63cadd4ec6169a0a5  components/themeswitch.css
+766fba4356042ff9a8b5bae0007a657f83ebcbbc13a2cb9b1b0a613973b280df  components/themeswitch.css
 e7f264a6affe5db299051870b0d694fe079bf3d1fb3e355195f4c4ce99a28cb4  components/themeswitch.html
 44576fdd60b5f6035f1d217aad922eb01c28ecc476cf265d70863b5e1e316c88  components/tooltip.css
 4587c3b3f01638b900f3aec1292a24b2ec65c3461ce54f9c223dfa14c43f9b79  components/tooltip.html
 b960dcab8ffecf16118b9e1f19c3549e60a679535c1c5f23a56208839a6eb6d0  components/tooltip.js
-730924891c5d3e52cde1d98eaf9a38573461e2b9f9492d6216872f530855c94b  components/topbar.css
+48c4daaae3c921cb8808cb359dd588d6c8c220c645785a365a2b00cd629e5fb4  components/topbar.css
 db0dcd133bf692a5ff9b5c8037be5c9c709abe80b97ade2a6fa7d757719d2467  components/topbar.html
-851ddfee589baec6b338dc2316835fc9315cdb5333dd5d5539dcaa0217273aba  jaack.css
+5e458f88824d7cec117319bfd602d311eaa80ecc94edd3bab931622faf391876  jaack.css
 ae7b50a6e19ac602101b0a8cf2094aa5466efabff2a952bf7785832c9062a622  jaack.js
 dac5df08bd80274badb4b58b603b7153d2842387dc134bed060c1ab8a998666a  theme.js
 2dce38b92a02aa90bbf0c8b7c54b81fd80638bee5bc62262363f3811a6aece3f  tokens.css

@@ -420,6 +420,20 @@
     updated('sources-updated', data.generatedAt);
   }
 
+  function hintScroll(node) {
+    if (!node) return;
+    const update = () => {
+      const overflow = node.scrollWidth > node.clientWidth + 1;
+      node.classList.toggle('can-scroll', overflow);
+      node.classList.toggle('at-start', node.scrollLeft <= 1);
+      node.classList.toggle('at-end', !overflow || node.scrollLeft + node.clientWidth >= node.scrollWidth - 1);
+    };
+    node.addEventListener('scroll', update, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(node);
+    addEventListener('resize', update);
+    update();
+  }
+
   function revealDock(button) {
     const scroller = button.closest('.dock-scroll');
     if (!scroller) return;
@@ -431,6 +445,8 @@
   }
 
   async function main() {
+    hintScroll(document.querySelector('.jk-links'));
+    hintScroll(document.querySelector('.dock-scroll'));
     const [treasury, prices, historyData, sources, decisions, valuation, audits, forecasts] = await Promise.all(['treasury', 'prices', 'nav-history', 'sources', 'decisions', 'valuation', 'audits', 'forecasts'].map(load));
     const history = validHistory(historyData);
     let days = 7;
