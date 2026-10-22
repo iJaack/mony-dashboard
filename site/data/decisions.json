@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-22T07:20:00.000Z",
+  "updatedAt": "2026-10-22T18:55:56.000Z",
   "decisions": [
+    {
+      "id": "2026-10-22-wavax-usdc",
+      "date": "2026-10-22T18:55:56.000Z",
+      "outcome": "execute",
+      "title": "Trend-flip exit: sold all WAVAX for USDC on Avalanche",
+      "reason": "AVAX turned to a confirmed downtrend: the daily close is below its 20-day average and the 10-day average is below the 20-day. Mony sold all 1.11 WAVAX for 10.133 USDC at about 9.13 per AVAX, about 6% of NAV, at a cost of 0.07-0.16% with gas. Buys back when the trend turns up.",
+      "asset": "WAVAX",
+      "action": "sell",
+      "size": {
+        "amount": 1.110001,
+        "asset": "WAVAX",
+        "usd": 10.13
+      },
+      "received": {
+        "amount": 10.13308,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x60e77f59198c5bfdb69b774f0e7d5fd3e12212e0c8aae5c58fc41c11be1e165b",
+          "block": 98265427,
+          "gasUsed": 50000,
+          "gasAvax": 0.00016
+        },
+        {
+          "label": "swap",
+          "hash": "0xdaf1b2542311cdfe2a87dd02f261cc37cf428b1d71c36b6b8046c6e4391d3167",
+          "block": 98265487,
+          "gasUsed": 346424,
+          "gasAvax": 0.00108
+        }
+      ]
+    },
     {
       "id": "2026-10-22-am-blocked",
       "date": "2026-10-22T07:20:00.000Z",
