@@ -1,21 +1,40 @@
-/* Treasury presentation on the vendored jaack design system.
-   Colour, type and spacing come from --jk-* tokens. This file only adds
-   ledger-specific layout: open tables, gauges, the NAV chart and the dock. */
+/* Mony's ledger adaptation of Forma.
+   Shared and unchanged: token names, the type scale, the 4 px spacing scale,
+   and the clock theme (light 07:00–19:00, Auto / Chiaro / Scuro).
+   Specific to this treasury: a ruling-line slate instead of the demo gold,
+   a stone-and-slate wash, tighter chapter rhythm, tabular figures, and one
+   ink NAV stroke. Status green and coral stay distinct from the accent.
+   Accent text is #143e54 on #f2f0ea (10.0:1) and #8eb4c9 on #10110e (8.6:1). */
 
+:root {
+  --jk-chapter-gap: 48px;
+  --jk-chapter-gap-m: 32px;
+  --jk-group-gap: 20px;
+  --jk-hero-gap: 16px;
+}
+
+html[data-theme="light"],
 html:not([data-theme]) {
   color-scheme: light;
-  --jk-bg: #f7f5f0;
-  --jk-surface: #ffffff;
-  --jk-ink: #121210;
-  --jk-ink-2: #4f4b44;
-  --jk-t2: rgba(18, 18, 16, .70);
-  --jk-t3: rgba(18, 18, 16, .64);
-  --jk-hair: rgba(18, 18, 16, .11);
-  --jk-accent: #b8921a;
-  --jk-accent-text: #7a5c00;
-  --jk-ok: #256b2d;
-  --jk-fail: #a33a22;
-  --jk-amb: #8a5300;
+  --jk-bg: #f2f0ea;
+  --jk-surface: #fbfaf7;
+  --jk-surface-2: #e7e3da;
+  --jk-ink: #16140f;
+  --jk-ink-2: #4a4843;
+  --jk-t2: rgba(22, 20, 15, .70);
+  --jk-t3: rgba(22, 20, 15, .64);
+  --jk-hair: rgba(22, 20, 15, .12);
+  --jk-accent: #1a4f6e;
+  --jk-accent-text: #143e54;
+  --jk-on-accent: #f4f2ec;
+  --jk-accent-wash: rgba(26, 79, 110, .10);
+  --jk-bg-1: rgba(168, 160, 142, .22);
+  --jk-bg-1b: rgba(168, 160, 142, .08);
+  --jk-bg-2: rgba(78, 120, 146, .16);
+  --jk-bg-2b: rgba(78, 120, 146, .06);
+  --jk-bg-3: rgba(150, 158, 148, .12);
+  --jk-bg-3b: rgba(150, 158, 148, .05);
+  --jk-drop: 0 24px 60px -28px rgba(22, 20, 15, .28), 0 2px 6px -2px rgba(22, 20, 15, .10);
   --jk-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, system-ui, sans-serif;
   --jk-fs-xs: 12.5px;
   --jk-fs-sm: 13px;
@@ -30,8 +49,28 @@ html:not([data-theme]) {
   --jk-track-label: .06em;
   --jk-topbar-h: 72px;
   --jk-page-x: clamp(16px, 4.4vw, 88px);
-  --jk-chapter-gap: 64px;
-  --jk-chapter-gap-m: 40px;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --jk-bg: #10110e;
+  --jk-surface: #161714;
+  --jk-surface-2: #1c1e19;
+  --jk-ink: #f0ede6;
+  --jk-ink-2: #c8c3ba;
+  --jk-t2: rgba(240, 237, 230, .70);
+  --jk-t3: rgba(240, 237, 230, .56);
+  --jk-hair: rgba(240, 237, 230, .12);
+  --jk-accent: #8eb4c9;
+  --jk-accent-text: #8eb4c9;
+  --jk-on-accent: #10110e;
+  --jk-accent-wash: rgba(142, 180, 201, .14);
+  --jk-bg-1: rgba(176, 168, 148, .08);
+  --jk-bg-1b: rgba(176, 168, 148, .03);
+  --jk-bg-2: rgba(90, 130, 155, .12);
+  --jk-bg-2b: rgba(90, 130, 155, .05);
+  --jk-bg-3: rgba(140, 148, 138, .07);
+  --jk-bg-3b: rgba(140, 148, 138, .03);
 }
 
 html { scroll-padding-top: 84px; scroll-padding-bottom: 96px; }
@@ -79,8 +118,37 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .period { margin-top: var(--jk-group-gap); }
 .jk-pill.flat .jk-ind { background: var(--jk-bg); }
 
-.jk-aside .jk-mid { white-space: normal; }
 .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
+
+/* Editorial chapter numerals belong to the demo. The eyebrow keeps the index. */
+.jk-deco { display: none; }
+
+.jk-q { font-weight: 650; letter-spacing: -.02em; }
+
+/* Figures are ledger type: between the mid and poster steps, tabular, not 800-weight. */
+.jk-big, .jk-mid, .num, .jk-rows .r, .sig dd, .gauge strong, .chart-plot text {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.jk-big {
+  font-size: clamp(40px, 4.6vw, 72px);
+  font-weight: 650;
+  letter-spacing: -.035em;
+  line-height: 1;
+}
+.jk-sec .jk-mid { font-weight: 650; }
+.jk-sec .jk-mark.pos { background: var(--jk-ok); }
+.jk-sec .jk-mark.neg { background: var(--jk-fail); }
+
+.decision-title {
+  margin: 8px 0 0;
+  color: var(--jk-ink);
+  font-size: var(--jk-fs-lede);
+  font-weight: 650;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+}
+.ledger-status { margin: 10px 0 0; }
+.ledger-status .outcome::before { margin-right: 8px; }
 
 .outcome {
   font-size: var(--jk-fs-xs);
@@ -106,8 +174,6 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .outcome.warn::before { border-radius: 1px; transform: rotate(45deg); }
 .outcome.neutral { color: var(--jk-ink-2); }
 .pos { color: var(--jk-ok); }
-.jk-mid .outcome { font-size: inherit; font-weight: 750; letter-spacing: -.03em; text-transform: none; }
-.jk-mid .outcome::before { width: 14px; height: 14px; margin-right: 12px; }
 .outcome.neutral::before { border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
 
 .sub {
@@ -198,6 +264,9 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .chart-plot { min-height: 160px; }
 .chart-plot svg { display: block; width: 100%; height: auto; }
 .chart-plot text { font-family: var(--jk-font); }
+.nav-area { fill: var(--jk-accent); opacity: .08; }
+html[data-theme="dark"] .nav-area { opacity: .16; }
+.nav-line { stroke: var(--jk-accent); }
 
 .feed article { border-top: 1px solid var(--jk-hair); padding: 8px 0 10px; }
 .feed article:last-child { border-bottom: 1px solid var(--jk-hair); }
@@ -233,7 +302,7 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 }
 
 @container (max-width: 460px) {
-  .jk-hm .jk-big { font-size: clamp(40px, 18cqi, 72px); }
+  .jk-big { font-size: clamp(32px, 14cqi, 48px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

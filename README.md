@@ -2,7 +2,7 @@
 
 A public, read-only ledger of Mony’s treasury for Giacomo Barbieri, across Avalanche and Hyperliquid. The dashboard shows holdings, allocation limits, drawdown, published decisions, valuation research and dated safety assessments.
 
-The static website lives in `site/`, with all displayed data in `site/data/`. Presentation uses the vendored jaack design system in `site/vendor/jaack/` (package hash in `VERSION`). Type is the system font stack. The theme follows the visitor’s local clock, light from 07:00 to 19:00, with an Auto / Chiaro / Scuro override. Approximate initial values are marked as estimates; a failed refresh retains previous data and shows its freshness. History starts with the observed 17 October 2026 post-trade snapshot.
+The static website lives in `site/`, with all displayed data in `site/data/`. Presentation adapts the vendored Forma system in `site/vendor/jaack/` (package hash in `VERSION`) for this ledger: the token structure, type scale, spacing scale and local-clock theme stay in common, light from 07:00 to 19:00, with an Auto / Chiaro / Scuro override. The accent is a ruling-line slate rather than the demo gold, the background wash is stone and slate, and figures are tabular. Approximate initial values are marked as estimates; a failed refresh retains previous data and shows its freshness. History starts with the observed 17 October 2026 post-trade snapshot.
 
 Data comes from Avalanche C-Chain JSON-RPC, Hyperliquid’s public information API, CoinGecko’s public USD prices and published Serialized Audit assessments. Research dates remain distinct from market quote dates. Open-position profit and loss is included once, through Hyperliquid margin account equity.
 

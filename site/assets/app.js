@@ -120,9 +120,9 @@
       el('day-cmp').textContent = history && history.length ? 'No reading from a day earlier yet.' : 'History has not loaded.';
     }
     const concentration = data.allocation.sAVAX;
-    el('treasury-lede').textContent = concentration.overCap
-      ? 'sAVAX is above its 15% cap. Weights use total holdings; drawdown uses managed NAV.'
-      : 'Weights, caps and tiers use total holdings. Drawdown alarms use managed NAV, excluding open prediction-market positions.';
+    if (concentration.overCap) {
+      el('treasury-lede').textContent = 'A considered view of capital. sAVAX is above its 15% cap. Weights use total holdings; drawdown uses managed NAV.';
+    }
     updated('treasury-updated', data.updatedAt);
     const venues = data.venues;
     const avalancheNames = data.positions.filter((row) => row.venue === 'Avalanche').map((row) => row.asset).join(', ') || 'no holdings';
@@ -180,7 +180,7 @@
   }
 
   function gauge({ label, width, tick, past, scale }) {
-    const fill = past ? 'none' : 'url(#jk-warm)';
+    const fill = past ? 'none' : 'var(--jk-accent)';
     const stroke = past ? 'var(--jk-fail)' : 'none';
     const dash = past ? '3 2' : '';
     return `<div class="gauge"><svg viewBox="0 0 100 14" preserveAspectRatio="none" role="img" aria-label="${escape(label)}"><rect x="0" y="4" width="100" height="6" rx="3" fill="var(--jk-hair)"></rect><rect x="0" y="3" width="${width.toFixed(2)}" height="8" rx="4" fill="${fill}" stroke="${stroke}" stroke-dasharray="${dash}" vector-effect="non-scaling-stroke"></rect><line x1="${tick}" x2="${tick}" y1="0" y2="14" stroke="var(--jk-ink)" stroke-width="1.25" vector-effect="non-scaling-stroke"></line></svg><div class="gauge-scale">${scale.map((item) => `<span>${escape(item)}</span>`).join('')}</div></div>`;
@@ -201,7 +201,7 @@
     const sizeLine = latest.received
       ? `${amount(latest.size.amount)} ${escape(latest.size.asset)} → ${amount(latest.received.amount)} ${escape(latest.received.asset)}${finite(latest.size.usd) ? ` · ${money(latest.size.usd)}` : ''}`
       : `${escape(latest.action)} · ${amount(latest.size.amount)} ${escape(latest.size.asset)}${finite(latest.size.usd) ? ` · ${money(latest.size.usd)}` : ''}`;
-    el('latest-content').innerHTML = `<div class="jk-lab" id="latest-label">Latest decision</div><div class="jk-mid">${outcomeMark(latest.outcome)}</div><p class="jk-cmp"><b>${escape(latest.title)}</b></p><p class="jk-note">${escape(latest.reason)}</p><p class="jk-cmp">${sizeLine}</p><div class="receipts">${(latest.txs ?? []).map((tx) => receipt(tx)).join('')}</div><p class="jk-note">${time(latest.date)}</p><p class="jk-cmp"><a class="jk-a" href="#decisions">Decision feed</a></p>`;
+    el('latest-content').innerHTML = `<div class="jk-lab" id="latest-label">The latest decision</div><p class="ledger-status">${outcomeMark(latest.outcome)}</p><p class="decision-title">${escape(latest.title)}</p><p class="jk-note">${escape(latest.reason)}</p><p class="jk-cmp">${sizeLine}</p><div class="receipts">${(latest.txs ?? []).map((tx) => receipt(tx)).join('')}</div><p class="jk-note">${time(latest.date)}</p><p class="jk-cmp"><a class="jk-a" href="#decisions">Decision feed</a></p>`;
     const execution = executed[0];
     el('execution-content').innerHTML = execution ? `<article class="tx"><div class="spread"><h3><span class="outcome ok">Executed</span> ${escape(execution.title)}</h3><span class="quiet">${time(execution.date)}</span></div><p>${amount(execution.size.amount)} ${escape(execution.asset)}${finite(execution.size.usd) ? ` · ${money(execution.size.usd)}` : ''}${execution.received ? ` → ${amount(execution.received.amount)} ${escape(execution.received.asset)}` : ''}</p><p>${escape(execution.reason)}</p></article><div>${(execution.txs ?? []).map((tx, index) => `<article class="tx"><div class="spread"><h3>${String(index + 1).padStart(2, '0')} <span class="quiet">/ ${escape(tx.label)}</span></h3>${receipt(tx)}</div><p>Block ${amount(tx.block, 0)} · gas ${amount(tx.gasUsed, 0)} · ${amount(tx.gasAvax, 9)} AVAX</p></article>`).join('')}</div>` : empty('No published executions');
     el('decisions-content').innerHTML = rows.map((row) => `<article><div class="spread">${outcomeMark(row.outcome)}<span class="quiet">${time(row.date)}</span></div><h3>${escape(row.title)}</h3><p>${escape(row.reason)}</p><p>${escape(row.action)} · ${amount(row.size.amount)} ${escape(row.size.asset)}${finite(row.size.usd) ? ` · ${money(row.size.usd)}` : ''}${row.received ? ` → ${amount(row.received.amount)} ${escape(row.received.asset)}` : ''}</p><div class="receipts">${(row.txs ?? []).map((tx) => receipt(tx)).join('')}</div></article>`).join('');
@@ -244,11 +244,6 @@
     const xOf = (index) => index / (rows.length - 1) * (width - padRight);
     const yOf = (value) => padTop + (height - padTop - padBottom) * (1 - (value - y0) / (y1 - y0));
     const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}`, width, height, role: 'img', 'aria-label': `${days}-day treasury NAV, ${money(low)} to ${money(high)}, ${rows.length} readings` });
-    const defs = svgEl('defs', {});
-    const gradient = svgEl('linearGradient', { id: 'jk-nav-line', x1: '0', y1: '0', x2: '1', y2: '0' });
-    gradient.append(svgEl('stop', { offset: '0', 'stop-color': 'var(--jk-c-yellow)' }), svgEl('stop', { offset: '1', 'stop-color': 'var(--jk-c-orange)' }));
-    defs.append(gradient);
-    svg.append(defs);
     [low, (low + high) / 2, high].forEach((value) => {
       const y = yOf(value);
       svg.append(svgEl('line', { x1: '0', x2: String(width - padRight), y1: y.toFixed(1), y2: y.toFixed(1), stroke: 'var(--jk-hair)' }));
@@ -256,13 +251,19 @@
       label.textContent = `$${Math.round(value).toLocaleString('en-US')}`;
       svg.append(label);
     });
+    const line = rows.map((row, index) => `${index ? 'L' : 'M'}${xOf(index).toFixed(1)} ${yOf(row.nav).toFixed(1)}`).join(' ');
+    const baseline = (height - padBottom).toFixed(1);
+    svg.append(svgEl('path', {
+      d: `${line} L${xOf(rows.length - 1).toFixed(1)} ${baseline} L${xOf(0).toFixed(1)} ${baseline} Z`,
+      class: 'nav-area',
+    }));
     const path = svgEl('path', {
-      d: rows.map((row, index) => `${index ? 'L' : 'M'}${xOf(index).toFixed(1)} ${yOf(row.nav).toFixed(1)}`).join(' '),
-      fill: 'none', stroke: 'url(#jk-nav-line)', 'stroke-width': '3.5', 'stroke-linejoin': 'round', 'stroke-linecap': 'round', class: 'nav-line',
+      d: line,
+      fill: 'none', stroke: 'var(--jk-accent)', 'stroke-width': '2.25', 'stroke-linejoin': 'round', 'stroke-linecap': 'round', class: 'nav-line',
     });
     svg.append(path);
     const last = rows.at(-1);
-    svg.append(svgEl('circle', { cx: xOf(rows.length - 1).toFixed(1), cy: yOf(last.nav).toFixed(1), r: '5', fill: 'var(--jk-c-orange)', stroke: 'var(--jk-bg)', 'stroke-width': '2' }));
+    svg.append(svgEl('circle', { cx: xOf(rows.length - 1).toFixed(1), cy: yOf(last.nav).toFixed(1), r: '3.5', fill: 'var(--jk-accent)', stroke: 'var(--jk-bg)', 'stroke-width': '2' }));
     const marks = width < 520 ? [0, rows.length - 1] : [0, Math.round((rows.length - 1) / 2), rows.length - 1];
     marks.forEach((index, nth) => {
       const label = svgEl('text', { x: Math.max(8, Math.min(width - padRight - 8, xOf(index))).toFixed(1), y: String(height - 8), 'text-anchor': nth === 0 ? 'start' : nth === marks.length - 1 ? 'end' : 'middle', 'font-size': '12', fill: 'var(--jk-t2)' });
@@ -345,7 +346,7 @@
       const reading = finite(value) ? percent(value) : 'insufficient history';
       const state = !finite(value) ? 'No reading yet' : past ? `Past the ${thresholdText}` : `Within the ${thresholdText}`;
       const width = finite(value) ? Math.min(100, Math.max(0, -value * 100 / max * 100)) : 0;
-      return `<div class="gauge"><div class="spread"><span>${label}</span><strong>${finite(value) ? percent(value) : na()}</strong></div><svg viewBox="0 0 100 14" preserveAspectRatio="none" role="img" aria-label="${escape(label)}: ${escape(reading)}; ${escape(state)}"><rect x="0" y="4" width="100" height="6" rx="3" fill="var(--jk-hair)"></rect><rect x="0" y="3" width="${width.toFixed(2)}" height="8" rx="4" fill="${past ? 'none' : 'url(#jk-warm)'}" stroke="${past ? 'var(--jk-fail)' : 'none'}" stroke-dasharray="${past ? '3 2' : ''}" vector-effect="non-scaling-stroke"></rect><line x1="${(Math.abs(threshold) / max * 100).toFixed(2)}" x2="${(Math.abs(threshold) / max * 100).toFixed(2)}" y1="0" y2="14" stroke="var(--jk-ink)" stroke-width="1.25" vector-effect="non-scaling-stroke"></line></svg><div class="gauge-scale"><span>0%</span><span>${escape(thresholdText)}</span><span>${escape(end)}</span></div><p class="jk-note">${escape(state)}</p></div>`;
+      return `<div class="gauge"><div class="spread"><span>${label}</span><strong>${finite(value) ? percent(value) : na()}</strong></div><svg viewBox="0 0 100 14" preserveAspectRatio="none" role="img" aria-label="${escape(label)}: ${escape(reading)}; ${escape(state)}"><rect x="0" y="4" width="100" height="6" rx="3" fill="var(--jk-hair)"></rect><rect x="0" y="3" width="${width.toFixed(2)}" height="8" rx="4" fill="${past ? 'none' : 'var(--jk-accent)'}" stroke="${past ? 'var(--jk-fail)' : 'none'}" stroke-dasharray="${past ? '3 2' : ''}" vector-effect="non-scaling-stroke"></rect><line x1="${(Math.abs(threshold) / max * 100).toFixed(2)}" x2="${(Math.abs(threshold) / max * 100).toFixed(2)}" y1="0" y2="14" stroke="var(--jk-ink)" stroke-width="1.25" vector-effect="non-scaling-stroke"></line></svg><div class="gauge-scale"><span>0%</span><span>${escape(thresholdText)}</span><span>${escape(end)}</span></div><p class="jk-note">${escape(state)}</p></div>`;
     };
     el('risk-content').innerHTML = basis + row('7-day drawdown', sevenDay, 25, -10, '−10% pause line', '−25%', finite(sevenDay) && sevenDay <= -0.10) + row('From peak', fromPeak, 30, -25, '−25% escalate line', '−30%', finite(fromPeak) && fromPeak <= -0.25);
     updated('risk-updated', history?.at(-1)?.t ?? treasury.updatedAt);
@@ -390,7 +391,7 @@
       const isStale = row.staleAfter && today > row.staleAfter;
       const linked = typeof row.treasuryLink === 'string' && row.treasuryLink;
       const width = Math.max(0.8, (hi - lo) * 100);
-      return `<li><span class="t">${day(row.horizon)}</span><span>${escape(row.title)}<small class="sub">${escape(row.market)} · ${escape(row.confidence)} confidence${row.lastReviewed ? ` · reviewed ${dayLabel.format(new Date(`${row.lastReviewed}T00:00:00Z`))}` : ''}${isStale ? ' · stale' : ''}</small>${linked ? `<small class="sub"><span class="outcome neutral">Treasury</span> ${escape(row.treasuryLink)}</small>` : ''}</span><span class="r">${pct(lo)}–${pct(hi)}${isStale ? '<small class="sub"><span class="outcome warn">Stale</span></small>' : ''}</span><span class="jk-opt band"><svg viewBox="0 0 100 8" preserveAspectRatio="none" role="img" aria-label="Probability band ${pct(lo)} to ${pct(hi)}"><rect x="0" y="2" width="100" height="4" rx="2" fill="var(--jk-hair)"></rect><rect x="${(lo * 100).toFixed(2)}" y="1" width="${width.toFixed(2)}" height="6" rx="3" fill="${isStale ? 'none' : 'url(#jk-warm)'}" stroke="${isStale ? 'var(--jk-c-orange)' : 'none'}" stroke-dasharray="${isStale ? '2 1.5' : ''}"></rect></svg></span></li>`;
+      return `<li><span class="t">${day(row.horizon)}</span><span>${escape(row.title)}<small class="sub">${escape(row.market)} · ${escape(row.confidence)} confidence${row.lastReviewed ? ` · reviewed ${dayLabel.format(new Date(`${row.lastReviewed}T00:00:00Z`))}` : ''}${isStale ? ' · stale' : ''}</small>${linked ? `<small class="sub"><span class="outcome neutral">Treasury</span> ${escape(row.treasuryLink)}</small>` : ''}</span><span class="r">${pct(lo)}–${pct(hi)}${isStale ? '<small class="sub"><span class="outcome warn">Stale</span></small>' : ''}</span><span class="jk-opt band"><svg viewBox="0 0 100 8" preserveAspectRatio="none" role="img" aria-label="Probability band ${pct(lo)} to ${pct(hi)}"><rect x="0" y="2" width="100" height="4" rx="2" fill="var(--jk-hair)"></rect><rect x="${(lo * 100).toFixed(2)}" y="1" width="${width.toFixed(2)}" height="6" rx="3" fill="${isStale ? 'none' : 'var(--jk-accent)'}" stroke="${isStale ? 'var(--jk-amb)' : 'none'}" stroke-dasharray="${isStale ? '2 1.5' : ''}"></rect></svg></span></li>`;
     }).join('')}</ul>` : empty('No active forecasts');
     el('forecasts-updated').innerHTML = `As of: ${day(data.asOf)} <span class="quiet">/ bands are probabilities of Yes</span>`;
   }
