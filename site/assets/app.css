@@ -108,11 +108,29 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 
 .jk-dock { max-width: calc(100vw - 16px); }
 
-/* The floating bar cannot scroll. Below 380 px the chapter dock covers navigation,
-   so the theme switch stays on screen. */
-@media (max-width: 380px) {
-  .jk-top { gap: 8px; padding-left: 12px; }
-  .jk-top .jk-links { display: none; }
+/* Up to 1024 the status line yields its space. Section links scroll inside the bar;
+   the theme switch stays a fixed sibling, icon-sized, so it cannot leave the screen. */
+@media (max-width: 1024px) {
+  .jk-top .jk-tag { display: none; }
+  .jk-top .jk-mark { min-width: 0; margin-right: 0; }
+  .jk-top .jk-links {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 4.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .jk-top .jk-links::-webkit-scrollbar { display: none; }
+  .jk-top .jk-links .jk-sw { flex: none; }
+  .jk-top .jk-links .jk-sw:not(.keep) { display: inline-block; }
+  .jk-thsw .i { display: inline; }
+  .jk-thsw .l { display: none; }
+  .jk-thsw button { min-width: 36px; min-height: 36px; padding: 0 6px; }
+}
+@media (max-width: 359px) {
+  .jk-top { gap: 6px; padding: 4px 4px 4px 12px; }
+  .jk-mark .dom { display: none; }
 }
 .dock-scroll {
   max-width: 100%;
@@ -120,7 +138,32 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   scrollbar-width: none;
 }
 .dock-scroll::-webkit-scrollbar { display: none; }
-.dock-scroll .jk-pill { width: max-content; }
+.dock-scroll .jk-pill { width: max-content; background: var(--jk-surface); box-shadow: none; border: 1px solid var(--jk-hair); }
+.can-scroll:not(.at-end) {
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 22px), transparent);
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 22px), transparent);
+}
+.can-scroll:not(.at-start) {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 22px, #000 100%);
+  mask-image: linear-gradient(to right, transparent, #000 22px, #000 100%);
+}
+.can-scroll:not(.at-start):not(.at-end) {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+}
+
+/* The latest decision and the chapter bar are plain. The header is the one glass panel. */
+#operations {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+@container (max-width: 859px) {
+  #operations { border-top: 1px solid var(--jk-hair); }
+}
+@container (min-width: 860px) {
+  #operations { border-left: 1px solid var(--jk-hair); padding-left: var(--jk-s6); }
+}
 
 .period { margin-top: var(--jk-group-gap); }
 .jk-pill.flat .jk-ind { background: var(--jk-bg); }
@@ -196,6 +239,18 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 
 .rows-venues { --jk-cols: minmax(0, 1fr) auto; }
 .rows-rules { --jk-cols: 112px minmax(0, 1fr) auto; }
+.rows-rules li > span:not(.m):not(.r) {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  overflow-wrap: break-word;
+}
+@container (max-width: 340px) {
+  .rows-rules li { grid-template-columns: max-content minmax(0, 1fr); }
+  .rows-rules .m { grid-column: 1; grid-row: 1; }
+  .rows-rules .r { grid-column: 2; grid-row: 1; justify-self: end; white-space: normal; }
+  .rows-rules li > span:not(.m):not(.r) { grid-column: 1 / -1; grid-row: 2; }
+}
 .rows-forecast { --jk-cols: 92px minmax(0, 1fr) auto minmax(88px, 140px); }
 .band { min-width: 0; }
 .band svg { display: block; width: 100%; height: 8px; }
