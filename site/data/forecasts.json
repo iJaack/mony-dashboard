@@ -1,17 +1,17 @@
 {
-  "asOf": "2026-10-22",
+  "asOf": "2026-10-23",
   "source": "Forecast book",
   "rows": [
     {
       "title": "Fed holds 3.75–4.00% at Oct 27–28 FOMC",
       "band": [
-        0.8,
-        0.9
+        0.88,
+        0.95
       ],
-      "confidence": "Medium",
+      "confidence": "High",
       "horizon": "2026-10-28",
-      "staleAfter": "2026-10-23",
-      "lastReviewed": "2026-10-22",
+      "staleAfter": "2026-10-27",
+      "lastReviewed": "2026-10-23",
       "market": "CME FedWatch"
     },
     {
@@ -185,14 +185,14 @@
     {
       "title": "US–Iran ceasefire holds through the Nov 3 midterms (no US strike)",
       "band": [
-        0.62,
-        0.74
+        0.66,
+        0.78
       ],
       "confidence": "Medium",
       "horizon": "2026-11-03",
-      "staleAfter": "2026-10-23",
-      "lastReviewed": "2026-10-22",
-      "market": "Polymarket Yes 0.70"
+      "staleAfter": "2026-10-27",
+      "lastReviewed": "2026-10-23",
+      "market": "Polymarket Yes 0.735"
     },
     {
       "title": "Democrats win the US House in the 2026 midterms",
@@ -252,7 +252,7 @@
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-27",
       "lastReviewed": "2026-10-19",
-      "market": "Polymarket Yes 0.145",
+      "market": "Polymarket Yes 0.125",
       "treasuryLink": "Holds No · ~69.2 shares, ~$61"
     },
     {
