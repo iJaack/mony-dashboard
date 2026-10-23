@@ -215,8 +215,20 @@
   }
 
   let chartWidth = 0;
+  let chartViewport = 0;
   let chartAnimated = false;
   let chartObserver = null;
+  function chartHeight(width, viewportHeight) {
+    // Forma: max(160, min(27% of the viewport, 24% of the width, 300)).
+    // On the inner display the chapter is only ~550–850px wide, so 24% of
+    // width pins the line to the 160 floor while a ~950px-tall canvas sits
+    // empty. Let the width share rise there. A short folded landscape stays
+    // under about a third of the viewport.
+    const short = viewportHeight < 520;
+    const widthShare = width < 900 ? 0.42 : 0.24;
+    const viewportCap = viewportHeight * (short ? 0.30 : 0.27);
+    return Math.round(Math.max(short ? 140 : 160, Math.min(viewportCap, width * widthShare, short ? 176 : 300)));
+  }
   function renderChart(history, days) {
     const plot = el('history-plot');
     const box = el('history-chart');
@@ -232,15 +244,17 @@
     const width = Math.round(plot.clientWidth);
     if (width < 40) return;
     chartWidth = width;
+    chartViewport = window.innerHeight;
     const low = Math.min(...rows.map((row) => row.nav));
     const high = Math.max(...rows.map((row) => row.nav));
     const span = high - low || Math.max(1, high * 0.02);
     const y0 = low - span * 0.12;
     const y1 = high + span * 0.12;
-    const height = Math.round(Math.max(160, Math.min(window.innerHeight * 0.27, width * 0.24, 300)));
+    const height = chartHeight(width, chartViewport);
     const padBottom = 28;
     const padTop = 14;
-    const padRight = 56;
+    const padRight = width < 420 ? 48 : 56;
+    box.dataset.padRight = String(padRight);
     const xOf = (index) => index / (rows.length - 1) * (width - padRight);
     const yOf = (value) => padTop + (height - padTop - padBottom) * (1 - (value - y0) / (y1 - y0));
     const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}`, width, height, role: 'img', 'aria-label': `${days}-day treasury NAV, ${money(low)} to ${money(high)}, ${rows.length} readings` });
@@ -305,11 +319,15 @@
     hair.className = 'jk-hair';
     box.append(tip, hair);
     const hide = () => { tip.classList.remove('on'); hair.classList.remove('on'); };
-    const move = (event) => {
+    const move = (clientX) => {
       const points = box._points || [];
-      if (!points.length) return hide();
-      const rect = box.getBoundingClientRect();
-      const index = Math.max(0, Math.min(points.length - 1, Math.floor((event.clientX - rect.left) / rect.width * points.length)));
+      if (points.length < 2) return hide();
+      const plot = el('history-plot');
+      const svg = plot && plot.querySelector('svg');
+      const svgRect = svg ? svg.getBoundingClientRect() : box.getBoundingClientRect();
+      const pad = Number(box.dataset.padRight) || 0;
+      const plotWidth = Math.max(1, svgRect.width - pad);
+      const index = Math.max(0, Math.min(points.length - 1, Math.round((clientX - svgRect.left) / plotWidth * (points.length - 1))));
       const row = points[index];
       tip.replaceChildren();
       const when = document.createElement('div');
@@ -326,13 +344,15 @@
       }
       tip.classList.add('on');
       hair.classList.add('on');
-      const x = (index + 0.5) / points.length * rect.width;
+      const x = index / (points.length - 1) * plotWidth;
       hair.style.transform = `translateX(${x}px)`;
       const tipWidth = tip.offsetWidth;
-      tip.style.transform = `translate(${Math.max(0, Math.min(rect.width - tipWidth, x - tipWidth / 2))}px, 8px)`;
+      tip.style.transform = `translate(${Math.max(0, Math.min(svgRect.width - tipWidth, x - tipWidth / 2))}px, 8px)`;
     };
-    box.addEventListener('pointermove', move);
+    box.addEventListener('pointerdown', (event) => move(event.clientX));
+    box.addEventListener('pointermove', (event) => move(event.clientX));
     box.addEventListener('pointerleave', hide);
+    box.addEventListener('pointercancel', hide);
   }
 
   function renderRisk(history, treasury) {
@@ -492,12 +512,15 @@
     }
     const redraw = () => {
       const plot = el('history-plot');
-      if (!plot || Math.abs(plot.clientWidth - chartWidth) < 2) return;
+      if (!plot) return;
+      const vh = window.innerHeight;
+      if (Math.abs(plot.clientWidth - chartWidth) < 2 && Math.abs(vh - chartViewport) < 12) return;
       chartAnimated = true;
       safeRender(['history-plot'], () => renderChart(history, days));
     };
     if ('ResizeObserver' in window) new ResizeObserver(redraw).observe(el('history-plot'));
     addEventListener('resize', redraw);
+    if (window.visualViewport) visualViewport.addEventListener('resize', redraw);
     document.documentElement.dataset.ready = 'true';
   }
   main();
