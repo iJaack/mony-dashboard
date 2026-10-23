@@ -47,12 +47,13 @@ html:not([data-theme]) {
   --jk-s6: 24px;
   --jk-s8: 32px;
   --jk-track-label: .06em;
-  --jk-topbar-h: 72px;
+  --jk-topbar-h: 84px;
   --jk-page-x: clamp(16px, 4.4vw, 88px);
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
+  --jk-topbar-h: 84px;
   --jk-bg: #10110e;
   --jk-surface: #161714;
   --jk-surface-2: #1c1e19;
@@ -73,8 +74,28 @@ html[data-theme="dark"] {
   --jk-bg-3b: rgba(140, 148, 138, .03);
 }
 
-html { scroll-padding-top: 84px; scroll-padding-bottom: 96px; }
-.jk-ch { scroll-margin-top: 84px; }
+html {
+  scroll-padding-top: calc(84px + env(safe-area-inset-top, 0px));
+  scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+.jk-ch { scroll-margin-top: calc(84px + env(safe-area-inset-top, 0px)); }
+
+/* The floating bar and the page already clear the Dynamic Island.
+   Horizontal insets matter when the folded phone is landscape and the
+   island sits in the side margin. 100dvh tracks the live fold. */
+body { min-height: 100dvh; }
+.jk-page {
+  padding-left: max(var(--jk-page-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--jk-page-x), env(safe-area-inset-right, 0px));
+}
+.jk-top {
+  width: min(calc(100% - 20px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)), 1180px);
+  left: calc(50% + (env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 2);
+}
+.jk-sheet { max-height: min(80dvh, 720px); }
+@media (max-width: 767px) {
+  .jk-sheet { margin-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+}
 
 .skip {
   position: absolute;
@@ -106,7 +127,19 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   }
 }
 
-.jk-dock { max-width: calc(100vw - 16px); }
+.jk-dock {
+  max-width: calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+}
+.jk-top a.jk-sw,
+.jk-dock .jk-pill button,
+.jk-pill.flat button,
+.jk-thsw button {
+  min-height: 44px;
+}
+.jk-top a.jk-sw {
+  display: inline-flex;
+  align-items: center;
+}
 
 /* Up to 1024 the status line yields its space. Section links scroll inside the bar;
    the theme switch stays a fixed sibling, icon-sized, so it cannot leave the screen. */
@@ -126,7 +159,7 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   .jk-top .jk-links .jk-sw:not(.keep) { display: inline-block; }
   .jk-thsw .i { display: inline; }
   .jk-thsw .l { display: none; }
-  .jk-thsw button { min-width: 36px; min-height: 36px; padding: 0 6px; }
+  .jk-thsw button { min-width: 44px; min-height: 44px; padding: 0 6px; }
 }
 @media (max-width: 359px) {
   .jk-top { gap: 6px; padding: 4px 4px 4px 12px; }
@@ -163,6 +196,45 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 }
 @container (min-width: 860px) {
   #operations { border-left: 1px solid var(--jk-hair); padding-left: var(--jk-s6); }
+  .jk-split > .jk-aside { top: calc(88px + env(safe-area-inset-top, 0px)); }
+}
+
+/* Inner display and folded landscape (chapter roughly 540–860px): the latest
+   decision sits beside the NAV. Narrower than that — the folded portrait,
+   about 410px of chapter — they stack. Wider than 860px, Forma’s sticky
+   aside takes over and this block no longer matches. */
+@container (min-width: 540px) and (max-width: 859px) {
+  .jk-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    column-gap: var(--jk-s6);
+    align-items: start;
+  }
+  .jk-split > * { min-width: 0; }
+  #operations {
+    margin-top: 0;
+    border-top: 0;
+    border-left: 1px solid var(--jk-hair);
+    padding-left: var(--jk-s6);
+  }
+}
+
+/* Secondary hero figure beside the primary one when the hero is wide enough
+   for two readings, and still under the desktop split column (~780px), where
+   Forma keeps the number stacked. Forma’s own side-by-side rule stays at 820px. */
+@container (min-width: 520px) and (max-width: 700px) {
+  .jk-hero > .jk-hc {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    column-gap: var(--jk-s6);
+    align-items: end;
+  }
+  .jk-hero .jk-hm,
+  .jk-hero .jk-sec { min-width: 0; }
+  .jk-hero .jk-sec {
+    padding: 0 0 4px var(--jk-s6);
+    border-top: 0;
+    border-left: 1px solid var(--jk-hair);
+  }
 }
 
 .period { margin-top: var(--jk-group-gap); }
@@ -255,10 +327,23 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .band { min-width: 0; }
 .band svg { display: block; width: 100%; height: 8px; }
 @container (max-width: 640px) {
-  .rows-forecast { --jk-cols: 72px minmax(0, 1fr) auto !important; }
-  .rows-forecast .jk-opt { display: none; }
   .rows-rules { --jk-cols: 88px minmax(0, 1fr) auto !important; }
   .rows-venues { --jk-cols: minmax(0, 1fr) auto !important; }
+}
+/* The probability band is the chart. Below ~560px it cannot keep a fourth
+   column, so it takes the full width of the row instead of disappearing. */
+@container (max-width: 560px) {
+  .rows-forecast { --jk-cols: minmax(0, 1fr) auto !important; }
+  .rows-forecast .t { grid-column: 1; grid-row: 1; align-self: center; }
+  .rows-forecast .r { grid-column: 2; grid-row: 1; align-self: center; white-space: nowrap; }
+  .rows-forecast li > span:not(.t):not(.r):not(.jk-opt) { grid-column: 1 / -1; grid-row: 2; }
+  .rows-forecast .jk-opt.band {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 4px;
+  }
+  .rows-forecast .band svg { height: 12px; }
 }
 
 .sheet { width: 100%; border-collapse: collapse; font-size: var(--jk-fs-body); line-height: 1.4; }
@@ -284,29 +369,53 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .sheet td:last-child, .sheet th:last-child { padding-right: 0; }
 .num { font-variant-numeric: tabular-nums; }
 
-@container (max-width: 720px) {
+/* Folded portrait is about 410px of chapter: a fixed table still fits, and a
+   ledger is easier to scan than a stacked card with a dangling last field.
+   Classic phones (under ~400px of chapter) keep one labelled field per line. */
+@container (max-width: 720px) and (min-width: 400px) {
+  .sheet { table-layout: fixed; font-size: 14px; }
+  .sheet th, .sheet td { padding-right: 8px; }
+  .sheet thead th { font-size: 11px; letter-spacing: .04em; }
+  .sheet thead th:nth-child(1) { width: 40%; text-align: left; }
+  .sheet thead th:nth-child(2) { width: 24%; }
+  .sheet thead th:nth-child(3) { width: 22%; }
+  .sheet thead th:nth-child(4) { width: 14%; }
+  .sheet td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sheet tbody th { white-space: normal; overflow-wrap: anywhere; }
+  .sheet tbody th .sub { display: block; }
+}
+@container (max-width: 399px) {
   .sheet thead { display: none; }
   .sheet, .sheet tbody, .sheet tr, .sheet th, .sheet td { display: block; }
   .sheet tr {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 2px 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
     border-top: 1px solid var(--jk-hair);
     padding: 8px 0 10px;
   }
   .sheet tr:last-child { border-bottom: 1px solid var(--jk-hair); }
   .sheet tbody th, .sheet td { border: 0; padding: 0; text-align: right; }
-  .sheet tbody th { grid-column: 1 / -1; text-align: left; }
+  .sheet tbody th { text-align: left; }
+  .sheet td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
   .sheet td::before {
     content: attr(data-label);
-    float: left;
     color: var(--jk-t3);
     font: 700 var(--jk-fs-xs)/1.4 var(--jk-font);
     letter-spacing: var(--jk-track-label);
     text-transform: uppercase;
   }
-  .sheet td.wide { grid-column: 1 / -1; text-align: left; }
-  .sheet td.wide::before { float: none; display: block; margin-bottom: 2px; }
+  .sheet td.wide { text-align: left; }
+  .sheet td.wide::before { display: block; margin-bottom: 2px; }
 }
 
 .gauge svg { display: block; width: 100%; height: 14px; overflow: visible; }
@@ -322,8 +431,8 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .gauge + .gauge { margin-top: var(--jk-s4); }
 .risk-basis { margin: 0 0 var(--jk-s3); }
 
-.chart-box { position: relative; }
-.chart-plot { min-height: 160px; }
+.chart-box { position: relative; touch-action: pan-y; }
+.chart-plot { min-height: 0; }
 .chart-plot svg { display: block; width: 100%; height: auto; }
 .chart-plot text { font-family: var(--jk-font); }
 .nav-area { fill: var(--jk-accent); opacity: .08; }
@@ -339,7 +448,7 @@ html[data-theme="dark"] .nav-area { opacity: .16; }
 .tx { border-top: 1px solid var(--jk-hair); padding: 8px 0; }
 .tx h3 { margin: 0; font-size: var(--jk-fs-body); font-weight: 650; }
 
-.sig { border-top: 1px solid var(--jk-hair); padding: 8px 0 10px; }
+.sig { border-top: 1px solid var(--jk-hair); padding: 8px 0 10px; container-type: inline-size; }
 .sig:last-child { border-bottom: 1px solid var(--jk-hair); }
 .sig header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .sig header .name { font-weight: 650; }
@@ -347,9 +456,33 @@ html[data-theme="dark"] .nav-area { opacity: .16; }
 .sig dt { margin: 0; color: var(--jk-t2); font-size: var(--jk-fs-xs); font-weight: 700; letter-spacing: var(--jk-track-label); text-transform: uppercase; }
 .sig dd { margin: 2px 0 0; font-weight: 650; font-variant-numeric: tabular-nums; }
 .sig .jk-note { margin-top: 4px; }
-@container (max-width: 560px) {
+@container (max-width: 680px) {
   .sig dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Near-square inner display, and the wide-but-short folded landscape.
+   Desktop chapters stay one column so the measure does not split at 1440. */
+@container (min-width: 540px) and (max-width: 1100px) {
+  #signals-content,
+  #audit-content,
+  #sources-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--jk-s8);
+    align-items: start;
+  }
+  #signals-content > .sig,
+  #audit-content > .sig,
+  #sources-content > .sig { min-width: 0; }
+  #risk-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--jk-s8);
+    align-items: start;
+  }
+  #risk-content > .risk-basis { grid-column: 1 / -1; }
+}
+.feed p, .tx p { max-width: 68ch; }
 
 .sr-only {
   position: absolute;
