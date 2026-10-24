@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-22T18:55:56.000Z",
+  "updatedAt": "2026-10-24T09:07:54.000Z",
   "decisions": [
+    {
+      "id": "2026-10-24-savax-usdc",
+      "date": "2026-10-24T09:07:54.000Z",
+      "outcome": "execute",
+      "title": "Downtrend exit: sold all sAVAX for USDC on Avalanche",
+      "reason": "AVAX and sAVAX are in a confirmed downtrend: the daily close is below the 20-day average and the 10-day is below the 20-day. Mony sold all 1.84 sAVAX for 21.10 USDC at about 11.47 each, at its redemption value, for about 0.13% with gas. Buys back on a trend flip up.",
+      "asset": "sAVAX",
+      "action": "sell",
+      "size": {
+        "amount": 1.839832,
+        "asset": "sAVAX",
+        "usd": 21.1
+      },
+      "received": {
+        "amount": 21.099442,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x350c4c21a65e8e9ff07a0474a5fd6bb6104fda9ecd946ca55056294c1953a906",
+          "block": 98412752,
+          "gasUsed": 55863,
+          "gasAvax": 0.00017
+        },
+        {
+          "label": "swap",
+          "hash": "0xd38003aaa68ef02d22738db85391d892b9bd1208eccfd8d8c71ceed0a8271dfc",
+          "block": 98412794,
+          "gasUsed": 710606,
+          "gasAvax": 0.00222
+        }
+      ]
+    },
     {
       "id": "2026-10-22-wavax-usdc",
       "date": "2026-10-22T18:55:56.000Z",
