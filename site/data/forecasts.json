@@ -1,7 +1,19 @@
 {
-  "asOf": "2026-10-23",
+  "asOf": "2026-10-25",
   "source": "Forecast book",
   "rows": [
+    {
+      "title": "Yashar wins the most Knesset seats in Israel's Oct 27 election",
+      "band": [
+        0.55,
+        0.7
+      ],
+      "confidence": "Low",
+      "horizon": "2026-10-30",
+      "staleAfter": "2026-10-28",
+      "lastReviewed": "2026-10-25",
+      "market": "Polymarket Yes 0.705"
+    },
     {
       "title": "Fed holds 3.75–4.00% at Oct 27–28 FOMC",
       "band": [
@@ -11,7 +23,7 @@
       "confidence": "High",
       "horizon": "2026-10-28",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-23",
+      "lastReviewed": "2026-10-25",
       "market": "CME FedWatch"
     },
     {
@@ -29,13 +41,13 @@
     {
       "title": "US spot BTC ETFs net positive for October",
       "band": [
-        0.7,
-        0.82
+        0.3,
+        0.45
       ],
-      "confidence": "Medium",
+      "confidence": "Low",
       "horizon": "2026-10-30",
-      "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-22",
+      "staleAfter": "2026-10-28",
+      "lastReviewed": "2026-10-25",
       "market": "Flow data, no traded price"
     },
     {
@@ -59,7 +71,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-10-22",
+      "lastReviewed": "2026-10-25",
       "market": "None"
     },
     {
@@ -191,8 +203,8 @@
       "confidence": "Medium",
       "horizon": "2026-11-03",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-23",
-      "market": "Polymarket Yes 0.735"
+      "lastReviewed": "2026-10-25",
+      "market": "Polymarket Yes 0.80"
     },
     {
       "title": "Democrats win the US House in the 2026 midterms",
@@ -251,8 +263,8 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-19",
-      "market": "Polymarket Yes 0.125",
+      "lastReviewed": "2026-10-25",
+      "market": "Polymarket Yes 0.145",
       "treasuryLink": "Holds No · ~69.2 shares, ~$61"
     },
     {
