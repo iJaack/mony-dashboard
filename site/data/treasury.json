@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-10-26T12:56:12.997Z",
-  "updatedAt": "2026-10-26T12:56:12.997Z",
+  "generatedAt": "2026-10-26T13:27:39.507Z",
+  "updatedAt": "2026-10-26T13:27:39.507Z",
   "wallet": "0x0fe61780bd5508b3C99e420662050e5560608cA4",
   "currency": "USD",
   "estimated": false,
   "note": "Margin account equity includes open-position profit and loss. Prediction market positions are marked at current outcome prices; vaults at redeem value. Positions below $0.01 are omitted from holdings, but remain in NAV.",
-  "nav": 155.332807474274,
-  "managedNav": 94.023407474274,
+  "nav": 155.311730158489,
+  "managedNav": 94.002330158489,
   "venues": {
     "avalanche": {
-      "valueUsd": 37.62335169533,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 37.606556360863,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "hyperliquid": {
       "valueUsd": 32.375424,
-      "updatedAt": "2026-10-26T12:56:12.997Z",
+      "updatedAt": "2026-10-26T13:27:39.507Z",
       "accountValue": 32.375424,
       "withdrawable": 32.375424,
       "spotBalances": [],
@@ -44,18 +44,18 @@
           "endDate": "2026-07-31"
         }
       ],
-      "valueUsd": 62.473629288624,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 62.4737177812,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "avantis": {
       "label": "Avantis",
       "chain": "Base",
       "shares": 14.559205,
-      "redeemUsdc": 19.977641,
+      "redeemUsdc": 19.978205,
       "openTrades": 0,
       "limitOrders": 0,
-      "valueUsd": 19.975123817234,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 19.97720608975,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "yo": {
       "label": "YO",
@@ -74,8 +74,8 @@
           "underlying": "WETH"
         }
       ],
-      "valueUsd": 0.01921757828,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 0.019219039,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "base": {
       "label": "Base",
@@ -106,8 +106,8 @@
           "decimals": 18
         }
       ],
-      "valueUsd": 0.76873510484,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 0.766967730789,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "polygon": {
       "label": "Polygon",
@@ -138,8 +138,8 @@
           "decimals": 18
         }
       ],
-      "valueUsd": 1.974068534661,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 1.969935701071,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "ethereum": {
       "label": "Ethereum",
@@ -166,7 +166,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "arbitrum": {
       "label": "Arbitrum",
@@ -197,8 +197,8 @@
           "decimals": 18
         }
       ],
-      "valueUsd": 0.123257455305,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "valueUsd": 0.122703455816,
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "optimism": {
       "label": "Optimism",
@@ -230,7 +230,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     },
     "bnb": {
       "label": "BNB Chain",
@@ -257,7 +257,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-10-26T12:56:12.997Z"
+      "updatedAt": "2026-10-26T13:27:39.507Z"
     }
   },
   "avalancheBalances": [
@@ -302,25 +302,25 @@
       "asset": "AVAX",
       "venue": "Avalanche",
       "balance": 0.6407716721671279,
-      "priceUsd": 8.95,
-      "valueUsd": 5.734906465896,
-      "weight": 0.03692012369534882
+      "priceUsd": 8.92,
+      "valueUsd": 5.715683315731,
+      "weight": 0.03680136271676575
     },
     {
       "asset": "USDC",
       "venue": "Avalanche",
       "balance": 31.232522,
-      "priceUsd": 0.999874,
-      "valueUsd": 31.228586702228,
-      "weight": 0.20104308426537668
+      "priceUsd": 0.99995,
+      "valueUsd": 31.2309603739,
+      "weight": 0.20108565104535334
     },
     {
       "asset": "USDt",
       "venue": "Avalanche",
       "balance": 0.660293,
-      "priceUsd": 0.999342,
-      "valueUsd": 0.659858527206,
-      "weight": 0.004248030650674262
+      "priceUsd": 0.999424,
+      "valueUsd": 0.659912671232,
+      "weight": 0.004248955765019082
     },
     {
       "asset": "USDC",
@@ -328,7 +328,7 @@
       "balance": 32.375424,
       "priceUsd": 1,
       "valueUsd": 32.375424,
-      "weight": 0.20842618199224897
+      "weight": 0.2084544674569156
     },
     {
       "asset": "Outcomes",
@@ -336,88 +336,88 @@
       "balance": 2,
       "priceUsd": null,
       "valueUsd": 61.3094,
-      "weight": 0.3946970443455995,
+      "weight": 0.39475060858208433,
       "inManagedNav": false
     },
     {
       "asset": "pUSD",
       "venue": "Polymarket",
       "balance": 1.164376,
-      "priceUsd": 0.999874,
-      "valueUsd": 1.164229288624,
-      "weight": 0.007495063712260643
+      "priceUsd": 0.99995,
+      "valueUsd": 1.1643177812,
+      "weight": 0.0074966506394067165
     },
     {
       "asset": "avUSDC",
       "venue": "Avantis",
       "balance": 14.559205,
-      "priceUsd": 1.371992757656,
-      "valueUsd": 19.975123817234,
-      "weight": 0.12859565304993442
+      "priceUsd": 1.372135778688,
+      "valueUsd": 19.97720608975,
+      "weight": 0.12862651178609696
     },
     {
       "asset": "yoUSD",
       "venue": "YO",
       "balance": 0.017987,
-      "priceUsd": 1.06841487074,
-      "valueUsd": 0.01921757828,
-      "weight": 0.00012371873393959477
+      "priceUsd": 1.068496080503,
+      "valueUsd": 0.019219039,
+      "weight": 0.0001237449288626673
     },
     {
       "asset": "ETH",
       "venue": "Base",
       "balance": 0.000138666347623781,
-      "priceUsd": 2324.29,
-      "valueUsd": 0.322300805118,
-      "weight": 0.00207490491132325
+      "priceUsd": 2311.3,
+      "valueUsd": 0.320499529263,
+      "weight": 0.00206358868667514
     },
     {
       "asset": "USDC",
       "venue": "Base",
       "balance": 0.446485,
-      "priceUsd": 0.999874,
-      "valueUsd": 0.44642874289,
-      "weight": 0.0028740145121238275
+      "priceUsd": 0.99995,
+      "valueUsd": 0.44646267575,
+      "weight": 0.002874623026183559
     },
     {
       "asset": "POL",
       "venue": "Polygon",
       "balance": 8.962569848930087,
-      "priceUsd": 0.090293,
-      "valueUsd": 0.809257319369,
-      "weight": 0.005209828706038343
+      "priceUsd": 0.089822,
+      "valueUsd": 0.805035948971,
+      "weight": 0.0051833557462111525
     },
     {
       "asset": "USDC.e",
       "venue": "Polygon",
       "balance": 1.129057,
-      "priceUsd": 0.999874,
-      "valueUsd": 1.128914738818,
-      "weight": 0.007267716055444175
+      "priceUsd": 0.99995,
+      "valueUsd": 1.12900054715,
+      "weight": 0.007269254846352578
     },
     {
       "asset": "USDC",
       "venue": "Polygon",
       "balance": 0.035901,
-      "priceUsd": 0.999874,
-      "valueUsd": 0.035896476474,
-      "weight": 0.00023109397852057187
+      "priceUsd": 0.99995,
+      "valueUsd": 0.03589920495,
+      "weight": 0.00023114290796558888
     },
     {
       "asset": "ETH",
       "venue": "Arbitrum",
       "balance": 0.000042787455681216,
-      "priceUsd": 2324.29,
-      "valueUsd": 0.099450455365,
-      "weight": 0.0006402411504824623
+      "priceUsd": 2311.3,
+      "valueUsd": 0.098894646316,
+      "weight": 0.0006367493698968019
     },
     {
       "asset": "USDC",
       "venue": "Arbitrum",
       "balance": 0.02381,
-      "priceUsd": 0.999874,
-      "valueUsd": 0.02380699994,
-      "weight": 0.00015326446696679245
+      "priceUsd": 0.99995,
+      "valueUsd": 0.0238088095,
+      "weight": 0.0001532969175973001
     }
   ],
   "allocation": {
@@ -438,42 +438,42 @@
     },
     "basis": {
       "kind": "full",
-      "valueUsd": 155.332807474274
+      "valueUsd": 155.311730158489
     },
     "tiers": {
-      "t1Usd": 4.659984224228,
-      "t2Usd": 15.533280747427,
+      "t1Usd": 4.659351904755,
+      "t2Usd": 15.531173015849,
       "note": "Percent limits on full NAV; the EUR ceilings of 1k and 5k do not bind at this size. Per-transaction caps still apply."
     },
     "external": {
-      "weight": 0.5309114798417343,
+      "weight": 0.5309975159364507,
       "venues": [
         {
           "venue": "Polymarket",
-          "valueUsd": 62.473629288624,
-          "weight": 0.40219210805786015
+          "valueUsd": 62.4737177812,
+          "weight": 0.402247259221491
         },
         {
           "venue": "Avantis",
-          "valueUsd": 19.975123817234,
-          "weight": 0.12859565304993442
+          "valueUsd": 19.97720608975,
+          "weight": 0.12862651178609696
         },
         {
           "venue": "YO",
-          "valueUsd": 0.01921757828,
-          "weight": 0.00012371873393959477
+          "valueUsd": 0.019219039,
+          "weight": 0.0001237449288626673
         }
       ]
     }
   },
   "drawdown": {
-    "sevenDay": -0.040457680876,
-    "fromPeak": -0.040457680876,
+    "sevenDay": -0.040672782381,
+    "fromPeak": -0.040672782381,
     "peakNav": 97.987765208823,
     "pauseThreshold": -0.1,
     "escalateThreshold": -0.25,
     "basis": "managed",
-    "managedNav": 94.023407474274
+    "managedNav": 94.002330158489
   },
   "execution": {
     "status": "active",
