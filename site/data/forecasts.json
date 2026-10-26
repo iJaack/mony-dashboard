@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-10-25",
+  "asOf": "2026-10-26",
   "source": "Forecast book",
   "rows": [
     {
@@ -11,7 +11,7 @@
       "confidence": "Low",
       "horizon": "2026-10-30",
       "staleAfter": "2026-10-28",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "Polymarket Yes 0.705"
     },
     {
@@ -23,7 +23,7 @@
       "confidence": "High",
       "horizon": "2026-10-28",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "CME FedWatch"
     },
     {
@@ -47,7 +47,7 @@
       "confidence": "Low",
       "horizon": "2026-10-30",
       "staleAfter": "2026-10-28",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "Flow data, no traded price"
     },
     {
@@ -71,7 +71,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "None"
     },
     {
@@ -113,13 +113,13 @@
     {
       "title": "Ethereum Glamsterdam upgrade live on mainnet by Dec 31",
       "band": [
-        0.55,
-        0.7
+        0.1,
+        0.22
       ],
-      "confidence": "Low",
+      "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-30",
-      "lastReviewed": "2026-10-18",
+      "lastReviewed": "2026-10-26",
       "market": "None"
     },
     {
@@ -203,7 +203,7 @@
       "confidence": "Medium",
       "horizon": "2026-11-03",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "Polymarket Yes 0.80"
     },
     {
@@ -263,7 +263,7 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-10-25",
+      "lastReviewed": "2026-10-26",
       "market": "Polymarket Yes 0.145",
       "treasuryLink": "Holds No · ~69.2 shares, ~$61"
     },
