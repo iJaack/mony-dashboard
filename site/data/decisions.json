@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-26T17:12:15.000Z",
+  "updatedAt": "2026-10-27T02:54:50.000Z",
   "decisions": [
+    {
+      "id": "2026-10-27-night-weth-rebound-buy",
+      "date": "2026-10-27T02:54:50.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound entry",
+      "reason": "ETH oversold (RSI 25, below its 20-day average) and up on the day. Bought a 10% position for a move back to the 10-day average; stop at 2245, target 2382, max hold 5 days.",
+      "asset": "WETH.e",
+      "action": "buy",
+      "size": {
+        "amount": 15.509025,
+        "asset": "USDC",
+        "usd": 15.51
+      },
+      "received": {
+        "amount": 0.0067001,
+        "asset": "WETH.e"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x52a4f584f19702b9fb3bca57c8ba24b9284481e4f95f08d60697511a4faef213",
+          "block": 98656351,
+          "gasUsed": 55437,
+          "gasAvax": 0.000173241
+        },
+        {
+          "label": "swap",
+          "hash": "0x6f6ca98bbf6394aa3eefc4eb5a80d9493a9157199d2668208a832f832538df80",
+          "block": 98656384,
+          "gasUsed": 450000,
+          "gasAvax": 0.00140625
+        }
+      ]
+    },
     {
       "id": "2026-10-26-pm-avax-rebound-buy",
       "date": "2026-10-26T17:12:15.000Z",
