@@ -1,6 +1,74 @@
 {
-  "updatedAt": "2026-10-27T02:54:50.000Z",
+  "updatedAt": "2026-10-30T14:54:03.000Z",
   "decisions": [
+    {
+      "id": "2026-10-30-avax-rebound-stop-exit",
+      "date": "2026-10-30T14:54:03.000Z",
+      "outcome": "execute",
+      "title": "AVAX rebound stop exit",
+      "reason": "AVAX fell through the rebound stop (8.32 vs 8.49). Sold the whole position back to USDC; the exit filled near 8.29, below the stop, because scans had paused. Realized about -7.6%.",
+      "asset": "WAVAX",
+      "action": "sell",
+      "size": {
+        "amount": 1.7335126,
+        "asset": "WAVAX",
+        "usd": 14.37
+      },
+      "received": {
+        "amount": 14.365667,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x0ca4cf03b70126c2bf3fc056388fd795cd632f86739f6434d1a1d901248e2152",
+          "block": 98963474,
+          "gasUsed": 50000,
+          "gasAvax": 0.00015625
+        },
+        {
+          "label": "swap",
+          "hash": "0xac6c5853769272a241c612389f9b1a2292c4abc20b6dbf81fffb817ccc4ddf0f",
+          "block": 98963504,
+          "gasUsed": 450000,
+          "gasAvax": 0.001417635
+        }
+      ]
+    },
+    {
+      "id": "2026-10-30-weth-rebound-stop-exit",
+      "date": "2026-10-30T14:52:30.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound stop exit",
+      "reason": "ETH fell through the rebound stop (2232 vs 2245). Sold the whole position back to USDC as planned. Realized about -3.7% on the trade.",
+      "asset": "WETH.e",
+      "action": "sell",
+      "size": {
+        "amount": 0.0067001,
+        "asset": "WETH.e",
+        "usd": 14.97
+      },
+      "received": {
+        "amount": 14.940996,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x4684ad4c17e7fc0994cd2accceaf8efbea44a6c217cd1cfff7db9363fd9350c3",
+          "block": 98963354,
+          "gasUsed": 50000,
+          "gasAvax": 0.00015641
+        },
+        {
+          "label": "swap",
+          "hash": "0x96623be1c04b4ec09394f548dd769c9b04493bb0595f469219671d0d12339035",
+          "block": 98963384,
+          "gasUsed": 450000,
+          "gasAvax": 0.001423561
+        }
+      ]
+    },
     {
       "id": "2026-10-27-night-weth-rebound-buy",
       "date": "2026-10-27T02:54:50.000Z",
