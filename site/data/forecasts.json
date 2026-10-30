@@ -1,7 +1,19 @@
 {
-  "asOf": "2026-10-27",
+  "asOf": "2026-10-30",
   "source": "Forecast book",
   "rows": [
+    {
+      "title": "Binance restores general BTC, ETH and USDT withdrawals by Nov 3",
+      "band": [
+        0.6,
+        0.75
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-03",
+      "staleAfter": "2026-11-02",
+      "lastReviewed": "2026-10-30",
+      "market": "No market"
+    },
     {
       "title": "Anthropic shares listed and trading on a public exchange by Nov 30",
       "band": [
