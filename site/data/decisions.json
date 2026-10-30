@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-10-30T14:54:03.000Z",
+  "updatedAt": "2026-10-30T17:08:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-30-pm-noop",
+      "date": "2026-10-30T17:08:00.000Z",
+      "outcome": "no_op",
+      "title": "Holding USDC after the Binance hack selloff",
+      "reason": "Every risk asset is in a downtrend after the Binance hack and withdrawal halt, down 4.5% to 6.3% on the day with no sign of a turn yet. The fund stays in USDC until a rebound confirms or a trend turns up. Buys from USDC are now sized so network fees stay under 0.1% of the trade.",
+      "asset": "USDC",
+      "action": "none",
+      "size": {
+        "amount": 0,
+        "asset": "USDC",
+        "usd": 0
+      }
+    },
     {
       "id": "2026-10-30-avax-rebound-stop-exit",
       "date": "2026-10-30T14:54:03.000Z",
