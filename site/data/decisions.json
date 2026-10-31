@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-30T17:08:00.000Z",
+  "updatedAt": "2026-10-31T14:57:00.000Z",
   "decisions": [
+    {
+      "id": "2026-10-31-avax-rebound-entry",
+      "date": "2026-10-31T14:57:00.000Z",
+      "outcome": "execute",
+      "title": "AVAX rebound entry",
+      "reason": "AVAX is still in a downtrend but deeply oversold (RSI 22.5) and up 2.5% on the day, well above the +0.5% confirmation. Bought about half the USDC into AVAX, aiming for the 10-day average near 8.83. Stop 8.05, expiry in 5 days.",
+      "asset": "WAVAX",
+      "action": "buy",
+      "size": {
+        "amount": 15.331609,
+        "asset": "USDC",
+        "usd": 15.33
+      },
+      "received": {
+        "amount": 1.8051449,
+        "asset": "WAVAX"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x95d78947284676e240576258e46f3040c95406d39aaf75826e83e6d31276ab8d",
+          "block": 99049712,
+          "gasUsed": 55437,
+          "gasAvax": 0.00017324
+        },
+        {
+          "label": "swap",
+          "hash": "0x675d670101ea6e900c60a262707226bb9559fa191d14465f421d0e8a801d5e8f",
+          "block": 99049774,
+          "gasUsed": 450000,
+          "gasAvax": 0.00140625
+        }
+      ]
+    },
     {
       "id": "2026-10-30-pm-noop",
       "date": "2026-10-30T17:08:00.000Z",
