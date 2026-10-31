@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-10-31T14:57:00.000Z",
+  "updatedAt": "2026-10-31T21:00:35.000Z",
   "decisions": [
+    {
+      "id": "2026-10-31-eth-rebound-entry",
+      "date": "2026-10-31T21:00:35.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound entry",
+      "reason": "ETH is still in a downtrend but oversold (RSI 31) and up 0.7% on the day, above the +0.5% confirmation. Put the remaining USDC into WETH.e, aiming for the 10-day average near 2322. Stop 2185, expiry in 5 days.",
+      "asset": "WETH.e",
+      "action": "buy",
+      "size": {
+        "amount": 14.157693,
+        "asset": "USDC",
+        "usd": 14.16
+      },
+      "received": {
+        "amount": 0.0062870137,
+        "asset": "WETH.e"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x934ab822efc51e21bdd9b9d627383414325f93ccdf667b54a649f88235c09011",
+          "block": 99071898,
+          "gasUsed": 55437,
+          "gasAvax": 0.00017324
+        },
+        {
+          "label": "swap",
+          "hash": "0x2335948f8864a89a48a7031dcb109a977dbafb87bf77badc3b9129decc5bd77d",
+          "block": 99071925,
+          "gasUsed": 538181,
+          "gasAvax": 0.00168182
+        }
+      ]
+    },
     {
       "id": "2026-10-31-avax-rebound-entry",
       "date": "2026-10-31T14:57:00.000Z",
