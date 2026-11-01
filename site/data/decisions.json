@@ -1,6 +1,74 @@
 {
-  "updatedAt": "2026-10-31T21:00:35.000Z",
+  "updatedAt": "2026-11-01T08:07:44.000Z",
   "decisions": [
+    {
+      "id": "2026-11-01-btc-rebound-entry",
+      "date": "2026-11-01T08:07:44.000Z",
+      "outcome": "execute",
+      "title": "BTC rebound entry",
+      "reason": "BTC is still in a downtrend but oversold (RSI 33) and up 0.8% on the day, above the +0.5% confirmation. Moved the USDC from the AVAX take-profit into BTC.b, aiming for the 10-day average near 79,450. Stop 75,535, expiry in 5 days.",
+      "asset": "BTC.b",
+      "action": "buy",
+      "size": {
+        "amount": 15.54,
+        "asset": "USDC",
+        "usd": 15.54
+      },
+      "received": {
+        "amount": 0.00019951,
+        "asset": "BTC.b"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x80d51fcb877ebe173f1fe385b628d3b76f8bb6943a3921e3b7886cb602258008",
+          "block": 99113386,
+          "gasUsed": 55437,
+          "gasAvax": 0.00017324
+        },
+        {
+          "label": "swap",
+          "hash": "0xdfc0b8e3cae986f5af310a849def037c457115ae360c66186f2a8ad73c3cd876",
+          "block": 99113414,
+          "gasUsed": 450000,
+          "gasAvax": 0.00140625
+        }
+      ]
+    },
+    {
+      "id": "2026-11-01-avax-rebound-exit",
+      "date": "2026-11-01T08:05:09.000Z",
+      "outcome": "execute",
+      "title": "AVAX rebound take-profit",
+      "reason": "AVAX reached the rebound target (10-day average near 8.83) after a +5% day. Sold the whole WAVAX rebound position back to USDC at about 8.83, for +4.0% (+$0.61) on the 31 Oct entry at 8.49.",
+      "asset": "WAVAX",
+      "action": "sell",
+      "size": {
+        "amount": 1.805145,
+        "asset": "WAVAX",
+        "usd": 15.99
+      },
+      "received": {
+        "amount": 15.946446,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x38594f71884bb494b46e11bc24eba585418b13862f7ef1481155a0fa16c11e55",
+          "block": 99113206,
+          "gasUsed": 50000,
+          "gasAvax": 0.00015625
+        },
+        {
+          "label": "swap",
+          "hash": "0xef4ba87f6a5519560763b336c403bc54d7eaa07a3027bb58d6313dc39b303024",
+          "block": 99113247,
+          "gasUsed": 450000,
+          "gasAvax": 0.00140625
+        }
+      ]
+    },
     {
       "id": "2026-10-31-eth-rebound-entry",
       "date": "2026-10-31T21:00:35.000Z",
