@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-02",
+  "asOf": "2026-11-03",
   "source": "Forecast book",
   "rows": [
     {
@@ -95,7 +95,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-02",
+      "lastReviewed": "2026-11-03",
       "market": "None"
     },
     {
@@ -226,9 +226,9 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-11-03",
-      "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-11-02",
-      "market": "Polymarket Yes 0.875"
+      "staleAfter": "2026-11-04",
+      "lastReviewed": "2026-11-03",
+      "market": "Resolved No (US strike on Qeshm, 2 Nov)"
     },
     {
       "title": "Democrats win the US House in the 2026 midterms",
@@ -238,21 +238,21 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-11-04",
-      "staleAfter": "2026-11-02",
-      "lastReviewed": "2026-11-02",
-      "market": "Polymarket Yes 0.905"
+      "staleAfter": "2026-11-04",
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.945"
     },
     {
       "title": "Democrats win the US Senate in the 2026 midterms",
       "band": [
-        0.62,
-        0.72
+        0.67,
+        0.77
       ],
       "confidence": "Low",
       "horizon": "2026-11-04",
-      "staleAfter": "2026-11-02",
-      "lastReviewed": "2026-11-02",
-      "market": "Polymarket Yes 0.645"
+      "staleAfter": "2026-11-04",
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.775"
     },
     {
       "title": "Next Google Gemini Pro model released by Nov 30",
@@ -288,7 +288,7 @@
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-27",
       "lastReviewed": "2026-11-02",
-      "market": "Polymarket Yes 0.145",
+      "market": "Polymarket Yes 0.135",
       "treasuryLink": "Holds No · ~69.2 shares, ~$61"
     },
     {
@@ -318,14 +318,14 @@
     {
       "title": "Israel–Iran ceasefire holds through Dec 31 (no strikes)",
       "band": [
-        0.4,
-        0.55
+        0.3,
+        0.42
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.485"
+      "staleAfter": "2026-11-05",
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.34"
     },
     {
       "title": "US recession by end of 2026 (Polymarket test)",
@@ -354,26 +354,26 @@
     {
       "title": "Next Astra model (6.1+) released by Dec 31",
       "band": [
-        0.5,
-        0.7
+        0.88,
+        0.96
       ],
-      "confidence": "Low",
+      "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-19",
-      "market": "Polymarket Yes 0.915"
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.974"
     },
     {
       "title": "AVAX reaches $13 by Dec 31",
       "band": [
-        0.3,
-        0.4
+        0.08,
+        0.16
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.145"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.075"
     },
     {
       "title": "Bitcoin reaches $100k by Dec 31",
@@ -402,26 +402,26 @@
     {
       "title": "Ethereum reaches $3,000 by Dec 31",
       "band": [
-        0.26,
-        0.36
+        0.12,
+        0.22
       ],
-      "confidence": "Low",
+      "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.335"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.155"
     },
     {
       "title": "Solana dips to $80 by Dec 31",
       "band": [
-        0.28,
-        0.38
+        0.47,
+        0.57
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.295"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.515"
     },
     {
       "title": "XRP dips to $1.00 by Dec 31",
@@ -432,32 +432,32 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.335"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.355"
     },
     {
       "title": "Hyperliquid (HYPE) reaches $100 by Dec 31",
       "band": [
-        0.34,
-        0.44
+        0.39,
+        0.49
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.375"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.445"
     },
     {
       "title": "Zcash dips to $700 by Dec 31",
       "band": [
-        0.33,
-        0.45
+        0.21,
+        0.31
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.3"
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.21"
     },
     {
       "title": "BNB reaches $1,000 by Dec 31",
@@ -542,6 +542,18 @@
       "staleAfter": "2026-11-15",
       "lastReviewed": "2026-10-18",
       "market": "Polymarket Yes 0.075"
+    },
+    {
+      "title": "US and Iran both accept a Strait of Hormuz shipping agreement by Nov 30",
+      "band": [
+        0.17,
+        0.45
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-11-10",
+      "lastReviewed": "2026-11-03",
+      "market": "Polymarket Yes 0.255"
     }
   ]
 }
