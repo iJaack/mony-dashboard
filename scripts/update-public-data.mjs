@@ -148,9 +148,14 @@ export async function fetchChain(key, fetcher = fetch) {
 
 export async function fetchPolymarket(fetcher = fetch) {
   const [rows, cash] = await Promise.all([
-    request(`${POLYMARKET_DATA}/positions?user=${WALLET}&sizeThreshold=0&limit=500`, null, (data) => {
-      if (!Array.isArray(data)) throw new Error('Invalid positions');
-      return data.map((row) => ({ size: numeric(row.size), price: numeric(row.curPrice), valueUsd: numeric(row.currentValue), redeemable: row.redeemable === true, endDate: typeof row.endDate === 'string' && /^\d{4}-\d{2}-\d{2}/.test(row.endDate) ? row.endDate.slice(0, 10) : null }));
+    // Data API v1 /positions was retired (Nov 2026); v2 returns { data: [...] } with snake_case fields.
+    request(`${POLYMARKET_DATA}/v2/positions?user=${WALLET}&sizeThreshold=0&limit=500`, null, (data) => {
+      const list = Array.isArray(data) ? data : data?.data;
+      if (!Array.isArray(list)) throw new Error('Invalid positions');
+      return list.map((row) => {
+        const endDate = row.end_date ?? row.endDate;
+        return { size: numeric(row.current_size ?? row.size), price: numeric(row.current_price ?? row.curPrice), valueUsd: numeric(row.current_value ?? row.currentValue), redeemable: row.redeemable === true, endDate: typeof endDate === 'string' && /^\d{4}-\d{2}-\d{2}/.test(endDate) ? endDate.slice(0, 10) : null };
+      });
     }, fetcher),
     evmBatch(CHAINS.polygon.rpcs, [balanceCall('pusd', PUSD)], fetcher).then((byId) => units(byId.get('pusd'), 6)),
   ]);
