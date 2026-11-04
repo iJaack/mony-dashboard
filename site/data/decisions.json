@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-01T08:07:44.000Z",
+  "updatedAt": "2026-11-04T11:13:55.000Z",
   "decisions": [
+    {
+      "id": "2026-11-04-eth-rebound-take-profit",
+      "date": "2026-11-04T11:13:55.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound take-profit",
+      "reason": "ETH reached the rebound target (10-day average near 2,322) at about 2,328, so the WETH.e bought on 31 Oct was sold back to USDC. Gain about +0.48 USDC (+3.4%) on the 14.16 USDC entry. No new rebound entry qualifies right now, so the cash stays in USDC.",
+      "asset": "WETH.e",
+      "action": "sell",
+      "size": {
+        "amount": 0.006287,
+        "asset": "WETH.e",
+        "usd": 14.65
+      },
+      "received": {
+        "amount": 14.636078,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x03397f02f08cf1b2bca2d7dd799f2c2b1b8d2c5e32e3a406cde38a43973acf61",
+          "block": 99397948,
+          "gasUsed": 50000,
+          "gasAvax": 0.00015625
+        },
+        {
+          "label": "swap",
+          "hash": "0x30d7db5332fba3b4ff2d65b3cd11063b5b7e56421ca0e9c0ffef60d1934e6fba",
+          "block": 99397978,
+          "gasUsed": 450000,
+          "gasAvax": 0.00141147
+        }
+      ]
+    },
     {
       "id": "2026-11-01-btc-rebound-entry",
       "date": "2026-11-01T08:07:44.000Z",
