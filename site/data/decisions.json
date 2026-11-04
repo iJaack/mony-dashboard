@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-04T11:13:55.000Z",
+  "updatedAt": "2026-11-04T15:16:44.000Z",
   "decisions": [
+    {
+      "id": "2026-11-04-btc-rebound-take-profit",
+      "date": "2026-11-04T15:16:44.000Z",
+      "outcome": "execute",
+      "title": "BTC rebound take-profit",
+      "reason": "BTC reached the rebound target (79,447) at about 80,700, so the BTC.b bought on 1 Nov was sold back to USDC. Gain about +0.56 USDC (+3.6%) on the 15.54 USDC entry. No new rebound entry qualifies right now, so the cash stays in USDC.",
+      "asset": "BTC.b",
+      "action": "sell",
+      "size": {
+        "amount": 0.00019951,
+        "asset": "BTC.b",
+        "usd": 16.11
+      },
+      "received": {
+        "amount": 16.102632,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0xf27ed6669f10267e2034de7d900fb124dc2123db5965430253e6aaba8586c0a6",
+          "block": 99413980,
+          "gasUsed": 50000,
+          "gasAvax": 0.00028225
+        },
+        {
+          "label": "swap",
+          "hash": "0x80b1e2755754d4b353cc17d0a40351e843f7a4c659fa8b04fba3f3133e91296f",
+          "block": 99414013,
+          "gasUsed": 450000,
+          "gasAvax": 0.0020791
+        }
+      ]
+    },
     {
       "id": "2026-11-04-eth-rebound-take-profit",
       "date": "2026-11-04T11:13:55.000Z",
