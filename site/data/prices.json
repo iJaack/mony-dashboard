@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-11-05T14:56:58.906Z",
-  "updatedAt": "2026-11-05T14:56:58.906Z",
+  "generatedAt": "2026-11-05T15:12:05.655Z",
+  "updatedAt": "2026-11-05T15:12:05.655Z",
   "prices": {
     "AVAX": {
-      "priceUsd": 8.55,
-      "change24h": -3.3201953094785424,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 8.42,
+      "change24h": -7.186787562986234,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "NEAR": {
-      "priceUsd": 3.87,
-      "change24h": -6.49254224154924,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 3.79,
+      "change24h": -10.727855418187117,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "ZEC": {
-      "priceUsd": 1273.26,
-      "change24h": -3.4420415142909846,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 1244.24,
+      "change24h": -7.433592877764185,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "VVV": {
-      "priceUsd": 21.25,
-      "change24h": -9.270856047657968,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 20.91,
+      "change24h": -12.341832860922977,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "PHAR": {
-      "priceUsd": 0.051333,
-      "change24h": -3.9193500830841166,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.050416,
+      "change24h": -6.865826778513694,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "p33": {
@@ -39,105 +39,105 @@
       "source": "Research"
     },
     "AAVE": {
-      "priceUsd": 129.45,
-      "change24h": -2.7383359266794103,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 127.34,
+      "change24h": -6.6324808049734285,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "HYPE": {
-      "priceUsd": 80.32,
-      "change24h": -6.600415152268879,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 79.51,
+      "change24h": -9.564181786672547,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "sAVAX": {
-      "priceUsd": 11.06,
-      "change24h": -3.0578128391196917,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 10.87,
+      "change24h": -6.190805213067073,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "WAVAX": {
-      "priceUsd": 8.55,
-      "change24h": -3.3201953094785424,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 8.42,
+      "change24h": -7.186787562986234,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "USDC": {
-      "priceUsd": 0.999846,
-      "change24h": 0.0419863842595069,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.999862,
+      "change24h": 0.036034847435735776,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "USDt": {
-      "priceUsd": 0.999531,
-      "change24h": 0.0569769336145806,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.99945,
+      "change24h": 0.03825522827255674,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "BTC.b": {
-      "priceUsd": 78532,
-      "change24h": -0.7795963615650621,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 77237,
+      "change24h": -4.066875618925252,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "WETH.e": {
-      "priceUsd": 2349.9,
-      "change24h": -0.7979743050685659,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 2300.14,
+      "change24h": -5.3485446235502625,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "BTC": {
-      "priceUsd": 78532,
-      "change24h": -0.7795963615650621,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 77237,
+      "change24h": -4.066875618925252,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "ETH": {
-      "priceUsd": 2349.9,
-      "change24h": -0.7979743050685659,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 2300.14,
+      "change24h": -5.3485446235502625,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "WETH": {
-      "priceUsd": 2349.9,
-      "change24h": -0.7979743050685659,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 2300.14,
+      "change24h": -5.3485446235502625,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "USDC.e": {
-      "priceUsd": 0.999846,
-      "change24h": 0.0419863842595069,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.999862,
+      "change24h": 0.036034847435735776,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "USDbC": {
-      "priceUsd": 0.999846,
-      "change24h": 0.0419863842595069,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.999862,
+      "change24h": 0.036034847435735776,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "USDT": {
-      "priceUsd": 0.999531,
-      "change24h": 0.0569769336145806,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.99945,
+      "change24h": 0.03825522827255674,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "pUSD": {
-      "priceUsd": 0.999846,
-      "change24h": 0.0419863842595069,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.999862,
+      "change24h": 0.036034847435735776,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "POL": {
-      "priceUsd": 0.09508,
-      "change24h": 0.25393449393375694,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 0.093649,
+      "change24h": -1.655006901005215,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     },
     "BNB": {
-      "priceUsd": 703.74,
-      "change24h": -0.5837637475779432,
-      "updatedAt": "2026-11-05T14:56:58.906Z",
+      "priceUsd": 694.35,
+      "change24h": -3.18578995958792,
+      "updatedAt": "2026-11-05T15:12:05.655Z",
       "source": "CoinGecko"
     }
   }
