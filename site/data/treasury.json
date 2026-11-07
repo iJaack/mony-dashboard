@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-07T17:04:58.606Z",
-  "updatedAt": "2026-11-07T17:04:58.606Z",
+  "generatedAt": "2026-11-07T17:05:29.099Z",
+  "updatedAt": "2026-11-07T17:05:29.099Z",
   "wallet": "0x0fe61780bd5508b3C99e420662050e5560608cA4",
   "currency": "USD",
   "estimated": false,
@@ -10,11 +10,11 @@
   "venues": {
     "avalanche": {
       "valueUsd": 36.907624087584,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "hyperliquid": {
       "valueUsd": 32.375424,
-      "updatedAt": "2026-11-07T17:04:58.606Z",
+      "updatedAt": "2026-11-07T17:05:29.099Z",
       "accountValue": 32.375424,
       "withdrawable": 32.375424,
       "spotBalances": [],
@@ -30,7 +30,7 @@
       "redeemableValue": 0,
       "positions": [],
       "valueUsd": 60.67192873016,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "avantis": {
       "label": "Avantis",
@@ -40,7 +40,7 @@
       "openTrades": 0,
       "limitOrders": 0,
       "valueUsd": 20.333572341825,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "yo": {
       "label": "YO",
@@ -60,7 +60,7 @@
         }
       ],
       "valueUsd": 0.019248860605,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "base": {
       "label": "Base",
@@ -92,7 +92,7 @@
         }
       ],
       "valueUsd": 0.751829716946,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "polygon": {
       "label": "Polygon",
@@ -124,7 +124,7 @@
         }
       ],
       "valueUsd": 4.097379568019,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "ethereum": {
       "label": "Ethereum",
@@ -151,7 +151,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "arbitrum": {
       "label": "Arbitrum",
@@ -183,7 +183,7 @@
         }
       ],
       "valueUsd": 0.119370663114,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "optimism": {
       "label": "Optimism",
@@ -215,7 +215,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     },
     "bnb": {
       "label": "BNB Chain",
@@ -242,7 +242,7 @@
         }
       ],
       "valueUsd": 0,
-      "updatedAt": "2026-11-07T17:04:58.606Z"
+      "updatedAt": "2026-11-07T17:05:29.099Z"
     }
   },
   "avalancheBalances": [
