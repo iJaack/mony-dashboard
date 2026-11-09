@@ -308,6 +308,28 @@
     }, { threshold: 0.3 });
     chartObserver.observe(box);
   }
+  // Keep empty/hidden tooltips out of the accessibility tree, and give the
+  // populated tooltip a name. Same local fix as Predictie; vendor stays exact.
+  function fixChartTooltip(tip) {
+    const sync = () => {
+      const name = Array.from(tip.childNodes, (node) => node.textContent).join(' ').trim().replace(/\s+/g, ' ');
+      if (tip.classList.contains('on') && name) {
+        tip.setAttribute('aria-label', name);
+        tip.removeAttribute('aria-hidden');
+        tip.setAttribute('role', 'tooltip');
+      } else {
+        tip.setAttribute('aria-hidden', 'true');
+        tip.removeAttribute('role');
+        tip.removeAttribute('aria-label');
+      }
+    };
+    new MutationObserver(sync).observe(tip, {
+      childList: true, characterData: true, subtree: true,
+      attributes: true, attributeFilter: ['class'],
+    });
+    sync();
+  }
+
   function bindScrub(box) {
     if (box._scrub) return;
     box._scrub = true;
@@ -318,6 +340,7 @@
     const hair = document.createElement('div');
     hair.className = 'jk-hair';
     box.append(tip, hair);
+    fixChartTooltip(tip);
     const hide = () => { tip.classList.remove('on'); hair.classList.remove('on'); };
     const move = (clientX) => {
       const points = box._points || [];
@@ -523,5 +546,15 @@
     if (window.visualViewport) visualViewport.addEventListener('resize', redraw);
     document.documentElement.dataset.ready = 'true';
   }
+  // Preserve the visible canonical label at the start of its accessible name.
+  // theme.js mounts the switch in its earlier DOMContentLoaded listener.
+  document.addEventListener('DOMContentLoaded', () => {
+    const lang = document.documentElement.lang.startsWith('it') ? 'it' : 'en';
+    document.querySelectorAll('.jk-thsw button').forEach((button) => {
+      const label = button.querySelector('.l');
+      const suffix = button.querySelector(`.lang-${lang}`);
+      if (label && suffix) button.setAttribute('aria-label', label.textContent + suffix.textContent);
+    });
+  });
   main();
 })();

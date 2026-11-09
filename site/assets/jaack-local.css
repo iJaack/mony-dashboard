@@ -1,0 +1,53 @@
+/* Canonical theme suffixes need clipping on this English page; share the
+   utility with the existing screen-reader-only table captions. */
+.visually-hidden, .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* Expose only the suffix matching the document language in accessible names. */
+html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
+
+/* Forma v2 removes decorative glass gradients from this ledger. Keep the
+   canonical material untouched and use a flat surface. */
+.jk-glass, .jk-glass.hi { background: var(--jk-surface); }
+/* The canonical rim and glow pseudo-elements would restore decoration. */
+.jk-glass::before, .jk-glass::after { display: none; }
+
+/* Up to 1024 the status line yields its space. Section links scroll inside the bar;
+   the theme switch stays a fixed sibling, icon-sized, so it cannot leave the screen. */
+@media (max-width: 1024px) {
+  .jk-top .jk-tag { display: none; }
+  .jk-top .jk-mark { min-width: 0; margin-right: 0; }
+  .jk-top .jk-links {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 4.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .jk-top .jk-links::-webkit-scrollbar { display: none; }
+  .jk-top .jk-links .jk-sw { flex: none; }
+  .jk-top .jk-links .jk-sw:not(.keep) { display: inline-block; }
+  .jk-thsw .i { display: inline; }
+  .jk-thsw button { min-width: 44px; min-height: 44px; padding: 0 6px; }
+  /* The three 44px targets must not overflow a shrinking switch container. */
+  .jk-top [data-jk-theme-switch], .jk-top .jk-thsw { flex-shrink: 0; }
+}
+/* At 360px the full-size wordmark collides with Treasury. Compact this site's
+   header while preserving all three 44px theme targets and scrolling links. */
+@media (max-width: 480px) {
+  .jk-top { gap: 6px; padding: 6px 6px 6px 10px; }
+  .jk-top .jk-mark { font-size: 14px; }
+}
+/* At 320px the domain yields space to the primary navigation and theme targets. */
+@media (max-width: 359px) {
+  .jk-mark .dom { display: none; }
+}
