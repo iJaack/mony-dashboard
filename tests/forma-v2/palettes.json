@@ -1,0 +1,26 @@
+{
+  "mony": {
+    "light": {
+      "bg": "#f2f0ea",
+      "surface": "#fbfaf7",
+      "ink": "#16140f",
+      "ink2": "#4d4a42",
+      "t2": "rgba(22,20,15,0.72)",
+      "t3": "rgba(22,20,15,0.64)",
+      "accent": "#1a4f6e",
+      "accentText": "#143e54",
+      "onAccent": "#fbfaf7"
+    },
+    "dark": {
+      "bg": "#13120e",
+      "surface": "#1a1915",
+      "ink": "#f0ede6",
+      "ink2": "#cac5bb",
+      "t2": "rgba(240,237,230,0.72)",
+      "t3": "rgba(240,237,230,0.58)",
+      "accent": "#8eb4c9",
+      "accentText": "#a9c8d9",
+      "onAccent": "#13120e"
+    }
+  }
+}
