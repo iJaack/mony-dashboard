@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-07",
+  "asOf": "2026-11-09",
   "source": "Forecast book",
   "rows": [
     {
@@ -17,13 +17,13 @@
     {
       "title": "Anthropic shares listed and trading on a public exchange by Nov 30",
       "band": [
-        0.43,
-        0.67
+        0.6,
+        0.84
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-10",
-      "lastReviewed": "2026-11-06",
+      "staleAfter": "2026-11-11",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.90"
     },
     {
@@ -95,7 +95,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-07",
+      "lastReviewed": "2026-11-09",
       "market": "None"
     },
     {
@@ -185,37 +185,37 @@
     {
       "title": "AVAX dips to $7 by Dec 31 (Binance 1-min low)",
       "band": [
-        0.42,
-        0.55
+        0.53,
+        0.83
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.385"
     },
     {
       "title": "Bitcoin dips to $70k by Dec 31",
       "band": [
-        0.4,
-        0.5
+        0.52,
+        0.82
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.355"
     },
     {
       "title": "MSCI removes Strategy (MSTR) from MSCI World or USA by Dec 31",
       "band": [
-        0.88,
-        0.95
+        0.84,
+        0.97
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-11",
-      "lastReviewed": "2026-10-18",
+      "staleAfter": "2026-11-12",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.935"
     },
     {
@@ -319,12 +319,12 @@
       "title": "Israel–Iran ceasefire holds through Dec 31 (no strikes)",
       "band": [
         0.35,
-        0.47
+        0.65
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-05",
-      "lastReviewed": "2026-11-05",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.34"
     },
     {
@@ -366,25 +366,25 @@
     {
       "title": "AVAX reaches $13 by Dec 31",
       "band": [
-        0.1,
-        0.18
+        0.01,
+        0.19
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-05",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.075"
     },
     {
       "title": "Bitcoin reaches $100k by Dec 31",
       "band": [
-        0.06,
-        0.12
+        0.01,
+        0.11
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.225"
     },
     {
@@ -402,109 +402,109 @@
     {
       "title": "Ethereum reaches $3,000 by Dec 31",
       "band": [
-        0.12,
-        0.22
+        0.01,
+        0.21
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.155"
     },
     {
       "title": "Solana dips to $80 by Dec 31",
       "band": [
-        0.47,
-        0.57
+        0.56,
+        0.86
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.515"
     },
     {
       "title": "XRP dips to $1.00 by Dec 31",
       "band": [
-        0.29,
-        0.39
+        0.53,
+        0.83
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.355"
     },
     {
       "title": "Hyperliquid (HYPE) reaches $100 by Dec 31",
       "band": [
-        0.42,
-        0.52
+        0.05,
+        0.35
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.445"
     },
     {
       "title": "Zcash dips to $700 by Dec 31",
       "band": [
-        0.21,
-        0.31
+        0.05,
+        0.35
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.21"
     },
     {
       "title": "BNB reaches $1,000 by Dec 31",
       "band": [
-        0.02,
+        0.01,
         0.05
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.185"
     },
     {
       "title": "Dogecoin dips to $0.06 by Dec 31",
       "band": [
-        0.3,
-        0.4
+        0.43,
+        0.73
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.42"
     },
     {
       "title": "Chainlink dips to $8 by Dec 31",
       "band": [
-        0.17,
-        0.27
+        0.18,
+        0.48
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.495"
     },
     {
       "title": "Uniswap (UNI) reaches $11 by Dec 31",
       "band": [
-        0.24,
-        0.34
+        0.07,
+        0.37
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.28"
     },
     {
@@ -546,14 +546,26 @@
     {
       "title": "US and Iran both accept a Strait of Hormuz shipping agreement by Nov 30",
       "band": [
-        0.17,
-        0.45
+        0.03,
+        0.27
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-10",
-      "lastReviewed": "2026-11-03",
+      "staleAfter": "2026-11-13",
+      "lastReviewed": "2026-11-09",
       "market": "Polymarket Yes 0.255"
+    },
+    {
+      "title": "Jensen Huang resignation or removal as NVIDIA CEO announced by Dec 31",
+      "band": [
+        0.01,
+        0.27
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-16",
+      "lastReviewed": "2026-11-09",
+      "market": "Polymarket"
     }
   ]
 }
