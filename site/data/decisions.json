@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-04T15:16:44.000Z",
+  "updatedAt": "2026-11-10T07:12:50.000Z",
   "decisions": [
+    {
+      "id": "2026-11-10-eth-rebound-entry",
+      "date": "2026-11-10T07:12:50.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound entry",
+      "reason": "ETH is still in a downtrend but oversold (RSI 33) and up 0.6% on the day, above the +0.5% confirmation. Bought 15.44 USDC of WETH.e, aiming for the 10-day average near 2,230. Stop 2,033, expiry in 5 days.",
+      "asset": "WETH.e",
+      "action": "buy",
+      "size": {
+        "amount": 15.44,
+        "asset": "USDC",
+        "usd": 15.44
+      },
+      "received": {
+        "amount": 0.007297201985504551,
+        "asset": "WETH.e"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x44b8173c865d9dab5f60ccd920dcc99bb1f7d85132243a63c7b04d5a0230c452",
+          "block": 99917180,
+          "gasUsed": 55437,
+          "gasAvax": 0.00052382
+        },
+        {
+          "label": "swap",
+          "hash": "0xd393be279c95437fafdf76e0655c90ceb713f8163a0bc682aafc9f4fa8e164e2",
+          "block": 99917209,
+          "gasUsed": 450000,
+          "gasAvax": 0.00421875
+        }
+      ]
+    },
     {
       "id": "2026-11-04-btc-rebound-take-profit",
       "date": "2026-11-04T15:16:44.000Z",
