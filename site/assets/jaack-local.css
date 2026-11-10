@@ -69,8 +69,11 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   #treasury .jk-hc { row-gap: 12px; }
   #treasury .jk-sec { padding-top: 8px; }
   #treasury .jk-cmp { margin-top: 4px; line-height: 1.4; }
-  #operations { margin-top: 16px; padding: 12px 0 var(--jk-dock-clearance); }
+  #operations { margin-top: 16px; padding: 12px 0; }
   #operations .ledger-status, #operations .decision-title { margin-top: 4px; }
+  /* Push the size line and receipts below the fold; they sit after the body,
+     inside this aside, so padding on #operations itself cannot clear them. */
+  #operations .decision-title + .jk-note { padding-bottom: calc(var(--jk-dock-clearance) + 16px); }
   /* Fit more complete labels per swipe without shrinking text or the 44px targets. */
   .jk-dock .jk-pill button { flex: none; padding-inline: 12px; }
 }
