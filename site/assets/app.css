@@ -101,8 +101,10 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   }
 }
 
+/* Give the fixed dock a definite intrinsic width, capped inside both safe areas. */
 .jk-dock {
-  max-width: calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+  width: max-content;
+  max-width: calc(100vw - 2 * max(8px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
 }
 .jk-top a.jk-sw,
 .jk-dock .jk-pill button,
@@ -115,13 +117,15 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   align-items: center;
 }
 
+/* Clip scrolling labels inside the pill and expose a scrollbar as an overflow cue. */
 .dock-scroll {
   max-width: 100%;
   overflow-x: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  border-radius: var(--jk-r-pill);
 }
-.dock-scroll::-webkit-scrollbar { display: none; }
-.dock-scroll .jk-pill { width: max-content; background: var(--jk-surface); box-shadow: none; border: 1px solid var(--jk-hair); }
+/* A block flex row avoids inline baseline space while retaining every label's width. */
+.dock-scroll .jk-pill { display: flex; width: max-content; background: var(--jk-surface); box-shadow: none; border: 1px solid var(--jk-hair); }
 .can-scroll:not(.at-end) {
   -webkit-mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
   mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
