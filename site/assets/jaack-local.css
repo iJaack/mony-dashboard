@@ -52,12 +52,25 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   .jk-mark .dom { display: none; }
 }
 
-/* Reserve the dock's 44px targets, pill padding/border and scrollbar (within 80px),
-   plus its 16px bottom offset and home-indicator inset, so content can scroll clear. */
+/* Reserve each fixed bar's height + edge offset + safe area + 14px breathing room.
+   The 80px dock allowance includes its 44px targets, pill border and scrollbar. */
 .jk-page {
-  padding-bottom: calc(80px + 16px + env(safe-area-inset-bottom, 0px));
+  --jk-top-clearance: calc(60px + 10px + env(safe-area-inset-top, 0px) + 14px);
+  --jk-dock-clearance: calc(80px + 16px + env(safe-area-inset-bottom, 0px) + 14px);
+  padding-top: var(--jk-top-clearance);
+  padding-bottom: var(--jk-dock-clearance);
 }
 @media (max-width: 390px) {
+  /* Bring the decision title and opening body above the dock on the 390×844 fold.
+     End-of-page padding alone cannot clear this first-screen content. */
+  #treasury .jk-ct { padding-top: 0; }
+  #treasury .jk-lede { margin-top: 4px; line-height: 1.4; }
+  #treasury .jk-hero { margin-top: 16px; }
+  #treasury .jk-hc { row-gap: 12px; }
+  #treasury .jk-sec { padding-top: 8px; }
+  #treasury .jk-cmp { margin-top: 4px; line-height: 1.4; }
+  #operations { margin-top: 16px; padding: 12px 0; }
+  #operations .ledger-status, #operations .decision-title { margin-top: 4px; }
   /* Fit more complete labels per swipe without shrinking text or the 44px targets. */
   .jk-dock .jk-pill button { flex: none; padding-inline: 12px; }
 }
