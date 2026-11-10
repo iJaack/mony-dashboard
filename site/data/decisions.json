@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-10T07:12:50.000Z",
+  "updatedAt": "2026-11-10T08:18:21.000Z",
   "decisions": [
+    {
+      "id": "2026-11-10-btc-rebound-entry",
+      "date": "2026-11-10T08:18:21.000Z",
+      "outcome": "execute",
+      "title": "BTC rebound entry",
+      "reason": "BTC is still in a downtrend but oversold (RSI 33) and up 1.2% on the day, above the +0.5% confirmation. Bought 15.44 USDC of BTC.b, aiming for the 10-day average near 76,510. Stop 72,496, expiry in 5 days.",
+      "asset": "BTC.b",
+      "action": "buy",
+      "size": {
+        "amount": 15.44,
+        "asset": "USDC",
+        "usd": 15.44
+      },
+      "received": {
+        "amount": 0.00020656,
+        "asset": "BTC.b"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0xe1b4e2085f36b689dfd23f55ed2b147eff7ecce494e940a3489926f831e7fda4",
+          "block": 99921068,
+          "gasUsed": 55437,
+          "gasAvax": 0.00051972
+        },
+        {
+          "label": "swap",
+          "hash": "0xc047ca6d0a086a8eec3f10fb98292682325fe21522e7f39968271a202cf27e27",
+          "block": 99921099,
+          "gasUsed": 450000,
+          "gasAvax": 0.00421875
+        }
+      ]
+    },
     {
       "id": "2026-11-10-eth-rebound-entry",
       "date": "2026-11-10T07:12:50.000Z",
