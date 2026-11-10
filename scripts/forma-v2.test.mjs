@@ -27,17 +27,25 @@ test('Forma v2 shipped CSS has no pure black or infinite animations', async () =
   }
 });
 
-test('shipped page CSS reserves the fixed dock and bottom safe area', async () => {
+test('shipped site-local CSS clears both fixed bars, safe areas and a 14px gap', async () => {
   const html = await read('site/index.html');
   const stylesheets = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="\.\/([^"]+)"/g)];
+  assert.ok(stylesheets.some(([, path]) => path === 'assets/jaack-local.css'), 'site-local CSS is shipped');
+  const local = (await read('site/assets/jaack-local.css')).replace(/\/\*[\s\S]*?\*\//g, '');
   const css = (await Promise.all(stylesheets.map(([, path]) => read(`site/${path}`))))
     .join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
   const pageRules = [...css.matchAll(/(?:^|[}\s])\.jk-page\s*\{([^}]+)\}/g)];
-  const padding = pageRules.flatMap(([, block]) => [...block.matchAll(/padding-bottom\s*:\s*([^;]+);/g)]).at(-1)?.[1];
-  assert.ok(padding, 'the shipped .jk-page rule reserves bottom space');
-  const reserve = padding.match(/^calc\(\s*(\d+)px\s*\+\s*16px\s*\+\s*env\(safe-area-inset-bottom,\s*0px\)\s*\)$/);
-  assert.ok(reserve, 'reserve includes the 16px dock offset and bottom safe area');
-  assert.ok(Number(reserve[1]) >= 44 + 8 + 2 + 16, 'reserve covers targets, pill padding/border and a scrollbar');
+  for (const [edge, token, offset, minimumHeight] of [
+    ['top', '--jk-top-clearance', 10, 44 + 16],
+    ['bottom', '--jk-dock-clearance', 16, 44 + 8 + 2 + 16],
+  ]) {
+    const padding = pageRules.flatMap(([, block]) => [...block.matchAll(new RegExp(`padding-${edge}\\s*:\\s*([^;]+);`, 'g'))]).at(-1)?.[1];
+    assert.equal(padding?.trim(), `var(${token})`, `shipped ${edge} padding uses its clearance token`);
+    const value = local.match(new RegExp(`${token}\\s*:\\s*([^;]+);`))?.[1];
+    const reserve = value?.match(new RegExp(`^calc\\(\\s*(\\d+)px\\s*\\+\\s*${offset}px\\s*\\+\\s*env\\(safe-area-inset-${edge},\\s*0px\\)\\s*\\+\\s*14px\\s*\\)$`));
+    assert.ok(reserve, `${edge} clearance includes its fixed offset, safe area and 14px gap`);
+    assert.ok(Number(reserve[1]) >= minimumHeight, `${edge} clearance covers the bar's targets and padding`);
+  }
 });
 
 test('Mony light and dark tokens match the authoritative palette fixture', async () => {
