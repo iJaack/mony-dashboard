@@ -69,7 +69,7 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   #treasury .jk-hc { row-gap: 12px; }
   #treasury .jk-sec { padding-top: 8px; }
   #treasury .jk-cmp { margin-top: 4px; line-height: 1.4; }
-  #operations { margin-top: 16px; padding: 12px 0; }
+  #operations { margin-top: 16px; padding: 12px 0 var(--jk-dock-clearance); }
   #operations .ledger-status, #operations .decision-title { margin-top: 4px; }
   /* Fit more complete labels per swipe without shrinking text or the 44px targets. */
   .jk-dock .jk-pill button { flex: none; padding-inline: 12px; }
