@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-10T08:18:21.000Z",
+  "updatedAt": "2026-11-10T17:25:23.000Z",
   "decisions": [
+    {
+      "id": "2026-11-10-eth-rebound-stop",
+      "date": "2026-11-10T17:25:23.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound stop exit",
+      "reason": "ETH kept falling after this morning's rebound entry and broke the stop (2,033) at about 2,020, so the WETH.e was sold back to USDC. Loss about -0.70 USDC (-4.5%) on the 15.44 USDC entry. The BTC rebound leg stays open with its own stop and target; the rest of the cash stays in US",
+      "asset": "WETH.e",
+      "action": "sell",
+      "size": {
+        "amount": 0.0072972,
+        "asset": "WETH.e",
+        "usd": 14.76
+      },
+      "received": {
+        "amount": 14.737698,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x6c421fc0a7d3e47b15440d60e3f91bda8a39871e0cac472521c91f5e536c458c",
+          "block": 99955315,
+          "gasUsed": 50000,
+          "gasAvax": 0.00047157
+        },
+        {
+          "label": "swap",
+          "hash": "0x0ebccac44e906d4895885a7c5567f99d0e9f6ceb616c462c493dd603f150ec05",
+          "block": 99955440,
+          "gasUsed": 450000,
+          "gasAvax": 0.00421875
+        }
+      ]
+    },
     {
       "id": "2026-11-10-btc-rebound-entry",
       "date": "2026-11-10T08:18:21.000Z",
