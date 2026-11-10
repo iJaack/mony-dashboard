@@ -27,6 +27,19 @@ test('Forma v2 shipped CSS has no pure black or infinite animations', async () =
   }
 });
 
+test('shipped page CSS reserves the fixed dock and bottom safe area', async () => {
+  const html = await read('site/index.html');
+  const stylesheets = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="\.\/([^"]+)"/g)];
+  const css = (await Promise.all(stylesheets.map(([, path]) => read(`site/${path}`))))
+    .join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
+  const pageRules = [...css.matchAll(/(?:^|[}\s])\.jk-page\s*\{([^}]+)\}/g)];
+  const padding = pageRules.flatMap(([, block]) => [...block.matchAll(/padding-bottom\s*:\s*([^;]+);/g)]).at(-1)?.[1];
+  assert.ok(padding, 'the shipped .jk-page rule reserves bottom space');
+  const reserve = padding.match(/^calc\(\s*(\d+)px\s*\+\s*16px\s*\+\s*env\(safe-area-inset-bottom,\s*0px\)\s*\)$/);
+  assert.ok(reserve, 'reserve includes the 16px dock offset and bottom safe area');
+  assert.ok(Number(reserve[1]) >= 44 + 8 + 2 + 16, 'reserve covers targets, pill padding/border and a scrollbar');
+});
+
 test('Mony light and dark tokens match the authoritative palette fixture', async () => {
   const { mony } = JSON.parse(await readFile(new URL('palettes.json', fixture), 'utf8'));
   const css = await read('site/assets/app.css');

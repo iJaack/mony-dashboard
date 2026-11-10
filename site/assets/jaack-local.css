@@ -51,3 +51,13 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
 @media (max-width: 359px) {
   .jk-mark .dom { display: none; }
 }
+
+/* Reserve the dock's 44px targets, pill padding/border and scrollbar (within 80px),
+   plus its 16px bottom offset and home-indicator inset, so content can scroll clear. */
+.jk-page {
+  padding-bottom: calc(80px + 16px + env(safe-area-inset-bottom, 0px));
+}
+@media (max-width: 390px) {
+  /* Fit more complete labels per swipe without shrinking text or the 44px targets. */
+  .jk-dock .jk-pill button { flex: none; padding-inline: 12px; }
+}
