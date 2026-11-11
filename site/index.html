@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="./assets/jaack-local.css">
   <link rel="stylesheet" href="./assets/app.css">
   <script src="./vendor/jaack/jaack.js" defer></script>
+  <script src="./assets/menu.js" defer></script>
   <script src="./assets/app.js" defer></script>
 </head>
 <body>
@@ -21,7 +22,8 @@
 <header class="jk-top jk-glass">
   <a class="jk-mark" href="#treasury" aria-label="mony.jaack.me">mony<span class="dot">.</span><span class="dom">jaack.me</span></a>
   <span class="jk-tag" id="execution-status">Public · read-only</span>
-  <nav class="jk-links" aria-label="Primary">
+  <button type="button" class="mony-menu-toggle" aria-expanded="false" aria-controls="mony-menu">Menu</button>
+  <nav class="jk-links" id="mony-menu" aria-label="Primary">
     <a class="jk-sw keep" href="#treasury">Treasury</a>
     <a class="jk-sw" href="#holdings">Book</a>
     <a class="jk-sw" href="#rules">Limits</a>
@@ -35,7 +37,6 @@
   <div class="jk-chs">
     <section class="jk-ch" id="treasury" aria-labelledby="treasury-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">01</span>
         <div class="jk-eb"><b>01</b> Treasury</div>
         <h1 class="jk-q" id="treasury-title">Total holdings</h1>
         <p class="jk-lede" id="treasury-lede">A considered view of capital, across Avalanche, Hyperliquid, Polymarket, Base and other chains.</p>
@@ -88,7 +89,6 @@
 
     <section class="jk-ch" id="holdings" aria-labelledby="holdings-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">02</span>
         <div class="jk-eb"><b>02</b> Holdings</div>
         <h2 class="jk-q" id="holdings-title">The holdings</h2>
         <p class="jk-lede">Every line at or above one cent. Weights are shares of total holdings.</p>
@@ -114,7 +114,6 @@
 
     <section class="jk-ch" id="rules" aria-labelledby="rules-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">03</span>
         <div class="jk-eb"><b>03</b> Limits</div>
         <h2 class="jk-q" id="rules-title">Treasury rules</h2>
         <p class="jk-lede">Caps, drawdown alarms and the rules a buy has to clear. Rules v2.</p>
@@ -162,7 +161,6 @@
 
     <section class="jk-ch" id="signals" aria-labelledby="signals-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">04</span>
         <div class="jk-eb"><b>04</b> Signals</div>
         <h2 class="jk-q" id="signals-title">Trends &amp; signals</h2>
         <p class="jk-lede">Dated valuation research. A passing gate still needs a safety verdict before a buy is admitted.</p>
@@ -188,7 +186,6 @@
 
     <section class="jk-ch" id="forecasts" aria-labelledby="forecasts-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">05</span>
         <div class="jk-eb"><b>05</b> Forecasts</div>
         <h2 class="jk-q" id="forecasts-title">Forecast inputs</h2>
         <p class="jk-lede">Probability bands the treasury reads as context. Forecasts are not trade instructions, and prediction-market positions are reported, not traded.</p>
@@ -213,7 +210,6 @@
 
     <section class="jk-ch" id="decisions" aria-labelledby="decisions-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">06</span>
         <div class="jk-eb"><b>06</b> Decisions</div>
         <h2 class="jk-q" id="decisions-title">Decision feed</h2>
         <p class="jk-lede">Published outcomes, twice a day, and the executions that followed.</p>
@@ -243,7 +239,6 @@
 
     <section class="jk-ch" id="sources" aria-labelledby="sources-title">
       <header class="jk-ct">
-        <span class="jk-deco" aria-hidden="true">07</span>
         <div class="jk-eb"><b>07</b> Sources</div>
         <h2 class="jk-q" id="sources-title">Sources &amp; freshness</h2>
         <p class="jk-lede">Provider verdicts and how fresh each source is. All times Europe/Rome.</p>

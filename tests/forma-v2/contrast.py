@@ -9,7 +9,7 @@ def parse(c):
     if m: return tuple(int(m.group(i)) for i in (1,2,3))+(float(m.group(4)),)
     c=c.lstrip('#'); return (int(c[0:2],16),int(c[2:4],16),int(c[4:6],16),1.0)
 def over(fg,bg):
-    a=fg[3]; return tuple(round(fg[i]*a+bg[i]*(1-a)) for i in range(3))+(1.0,)
+    a=fg[3]; return tuple(fg[i]*a+bg[i]*(1-a) for i in range(3))+(1.0,)
 def lum(c):
     def ch(v):
         v/=255; return v/12.92 if v<=0.03928 else ((v+0.055)/1.055)**2.4
@@ -19,8 +19,8 @@ def ratio(fg,bg):
     fg=over(parse(fg),bg)
     a,b=sorted((lum(fg),lum(bg)),reverse=True); return (a+0.05)/(b+0.05)
 TEXT=[('ink','bg'),('ink','surface'),('ink2','bg'),('ink2','surface'),('t2','bg'),('t3','bg'),('t3','surface'),
-      ('accentText','bg'),('accentText','surface'),('onAccent','accent')]
-MARK=[('accent','bg'),('focus','bg')]
+      ('accentText','bg'),('accentText','surface'),('onAccent','accent'),('t3','surface2'),('accentText','surface2'),('ink','surface2')]
+MARK=[('accent','bg'),('focus','bg'),('accent','surface2')]
 data=json.loads(pathlib.Path(__file__).with_name('palettes.json').read_text())
 fail=0; out=[]
 for name,themes in data.items():

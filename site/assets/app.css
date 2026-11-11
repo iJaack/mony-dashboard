@@ -27,32 +27,35 @@ html:not([data-theme]) {
   --jk-s6: 24px;
   --jk-s8: 32px;
   --jk-track-label: .06em;
-  --jk-topbar-h: 84px;
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --jk-topbar-h: 84px;
-  --jk-bg: #13120e;
-  --jk-surface: #1a1915;
-  --jk-surface-2: #231f19;
-  --jk-ink: #f0ede6;
-  --jk-ink-2: #cac5bb;
-  --jk-t2: rgba(240,237,230,0.72);
-  --jk-t3: rgba(240,237,230,0.58);
-  --jk-hair: rgba(240, 237, 230, .12);
-  --jk-accent: #8eb4c9;
-  --jk-accent-text: #a9c8d9;
-  --jk-on-accent: #13120e;
-  --jk-accent-wash: rgba(142, 180, 201, .14);
-  --jk-drop: 0 28px 70px -30px rgba(8,6,4,.8), 0 2px 8px -2px rgba(8,6,4,.45);
+  /* Ombra (one warm dark, hue 60); accent from light #1a4f6e,
+     with L raised to 4.6:1 on surface-2. */
+  --jk-bg: #130e0b;
+  --jk-surface: #1c1713;
+  --jk-surface-2: #26201c;
+  --jk-ink: #e9e4da;
+  --jk-ink-2: #b6b0a8;
+  --jk-t2: rgba(233,228,218,.72);
+  --jk-t3: rgba(233,228,218,.58);
+  --jk-hair: rgba(233,228,218,.12);
+  --jk-hair-2: rgba(233,228,218,.20);
+  --jk-edge: rgba(233,228,218,.39);
+  --jk-accent: #708ea2;
+  --jk-accent-text: #708ea2;
+  --jk-on-accent: #130e0b;
+  --jk-accent-wash: rgba(112,142,162,.12);
+  --jk-focus: var(--jk-accent-text);
+  --jk-drop: 0 28px 70px -30px rgba(8,5,4,.8), 0 2px 8px -2px rgba(8,5,4,.45);
 }
 
 html {
-  scroll-padding-top: calc(84px + env(safe-area-inset-top, 0px));
-  scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-top: var(--jk-top-clearance);
+  scroll-padding-bottom: var(--jk-dock-clearance);
 }
-.jk-ch { scroll-margin-top: calc(84px + env(safe-area-inset-top, 0px)); }
+.jk-ch { scroll-margin-top: var(--jk-top-clearance); }
 
 /* The floating bar and the page already clear the Dynamic Island.
    Horizontal insets matter when the folded phone is landscape and the
@@ -126,15 +129,15 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 }
 /* A block flex row avoids inline baseline space while retaining every label's width. */
 .dock-scroll .jk-pill { display: flex; width: max-content; background: var(--jk-surface); box-shadow: none; border: 1px solid var(--jk-hair); }
-.can-scroll:not(.at-end) {
+:where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-end) {
   -webkit-mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
   mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
 }
-.can-scroll:not(.at-start) {
+:where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-start) {
   -webkit-mask-image: linear-gradient(to right, transparent, #fff 22px, #fff 100%);
   mask-image: linear-gradient(to right, transparent, #fff 22px, #fff 100%);
 }
-.can-scroll:not(.at-start):not(.at-end) {
+:where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-start):not(.at-end) {
   -webkit-mask-image: linear-gradient(to right, transparent, #fff 22px, #fff calc(100% - 22px), transparent);
   mask-image: linear-gradient(to right, transparent, #fff 22px, #fff calc(100% - 22px), transparent);
 }
@@ -195,9 +198,6 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 .jk-pill.flat .jk-ind { background: var(--jk-bg); }
 
 .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
-
-/* Editorial chapter numerals belong to the demo. The eyebrow keeps the index. */
-.jk-deco { display: none; }
 
 .jk-q { font-weight: 650; letter-spacing: -.02em; }
 
