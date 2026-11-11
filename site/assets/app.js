@@ -526,26 +526,43 @@
 
   function hintScroll(node) {
     if (!node) return;
+    const nav = node.querySelector('#chapter-nav');
     const update = () => {
       const overflow = node.scrollWidth > node.clientWidth + 1;
       node.classList.toggle('can-scroll', overflow);
       node.classList.toggle('at-start', node.scrollLeft <= 1);
       node.classList.toggle('at-end', !overflow || node.scrollLeft + node.clientWidth >= node.scrollWidth - 1);
     };
+    const refresh = () => {
+      const active = nav?.querySelector('button[aria-pressed="true"]');
+      if (active) revealDock(active);
+      update();
+    };
     node.addEventListener('scroll', update, { passive: true });
-    if ('ResizeObserver' in window) new ResizeObserver(update).observe(node);
-    addEventListener('resize', update);
-    update();
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(refresh);
+      observer.observe(node);
+      if (nav) observer.observe(nav);
+    }
+    if (nav) new MutationObserver(refresh).observe(nav, { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
+    addEventListener('resize', refresh);
+    if (document.fonts?.ready) document.fonts.ready.then(refresh);
+    refresh();
   }
 
   function revealDock(button) {
     const scroller = button.closest('.dock-scroll');
     if (!scroller) return;
-    const left = button.offsetLeft;
-    const right = left + button.offsetWidth;
+    // Rects account for the nested pill's offset and border. Move only this
+    // scroller, reserving the same 24px as the masks at either hidden edge.
     const view = scroller.scrollLeft;
-    if (left >= view && right <= view + scroller.clientWidth) return;
-    scroller.scrollTo({ left: Math.max(0, left - (scroller.clientWidth - button.offsetWidth) / 2), behavior: reduced() ? 'auto' : 'smooth' });
+    const rect = button.getBoundingClientRect();
+    const left = rect.left - scroller.getBoundingClientRect().left - scroller.clientLeft + view;
+    const right = left + rect.width;
+    let target = view;
+    if (left < view + 24) target = left - 24;
+    else if (right > view + scroller.clientWidth - 24) target = right - scroller.clientWidth + 24;
+    scroller.scrollLeft = Math.max(0, Math.min(scroller.scrollWidth - scroller.clientWidth, target));
   }
 
   async function main() {

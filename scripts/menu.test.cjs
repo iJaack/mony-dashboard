@@ -60,6 +60,20 @@ test('Menu CSS and JavaScript share the measured breakpoint and disable reduced-
   assert.match(css, /min-height:44px;padding:0 14px/);
 });
 
+test('mobile menu rows are flat even when current or pressed, with separators and interaction-only fills', () => {
+  const css = fs.readFileSync('site/assets/jaack-local.css', 'utf8');
+  const mobile = css.slice(css.indexOf('@media (max-width:716.98px){'), css.indexOf('/* Leave the vendor switch'));
+  const rows = mobile.match(/\.jk-top.has-menu \.jk-links a\.jk-sw,([^{}]+)\{([^}]+)\}/);
+  assert.ok(rows);
+  assert.match(rows[1], /a\.jk-sw\[aria-current\]/);
+  assert.match(rows[1], /a\.jk-sw\[aria-pressed="true"\]/);
+  for (const declaration of ['background:transparent', 'border:0', 'border-radius:0', 'box-shadow:none', 'min-height:44px', 'padding:0 14px', 'align-items:center', 'justify-content:flex-start', 'text-align:left']) assert.ok(rows[2].includes(declaration), declaration);
+  assert.match(mobile, /a\.jk-sw \+ a\.jk-sw\{border-top:1px solid var\(--jk-hair-2\)\}/);
+  assert.match(mobile, /a\.jk-sw:is\(:hover,:focus-visible,:active\)\{background:var\(--jk-tint-hi\)\}/);
+  assert.match(mobile, /a\.jk-sw:focus-visible\{outline:2px solid var\(--jk-focus\)/);
+  assert.match(mobile, /padding:6px;background:var\(--jk-surface-2\);border:1px solid var\(--jk-hair-2\);border-radius:14px/);
+});
+
 test('open exposes the sheet, updates expanded state and focuses the first link', () => {
   const p = load();
   assert.ok(p.classes.has('has-menu'));

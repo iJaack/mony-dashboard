@@ -4,6 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { runInNewContext } from 'node:vm';
 
 const root = new URL('../', import.meta.url);
 const vendor = new URL('site/vendor/jaack/', root);
@@ -149,4 +150,128 @@ test('Mony palette passes the offline WCAG contrast checker', () => {
   const result = spawnSync('python3', [fileURLToPath(new URL('contrast.py', fixture))], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.error?.message || result.stdout + result.stderr);
   assert.match(result.stderr, /FAIL: 0\b/);
+});
+
+test('dock and bar use the same section names, in the intended order', async () => {
+  const html = await read('site/index.html');
+  const dock = html.match(/id="chapter-nav"[^>]*>([\s\S]*?)<\/div>/)[1];
+  const bar = html.match(/id="mony-menu"[^>]*>([\s\S]*?)<\/nav>/)[1];
+  const buttons = [...dock.matchAll(/data-v="([^"]+)">([^<]+)<\/button>/g)];
+  assert.deepEqual(buttons.map(([, , label]) => label), ['Treasury', 'Book', 'Limits', 'Research', 'Forecasts', 'Decisions', 'Sources']);
+  const names = new Map(buttons.map(([, id, label]) => [id, label]));
+  for (const [, id, label] of bar.matchAll(/href="#([^"]+)">([^<]+)<\/a>/g)) assert.equal(names.get(id), label);
+});
+
+test('all dock and fallback bar fade masks use 24px and the edge token stays .39', async () => {
+  const css = await read('site/assets/app.css');
+  const rules = [...css.matchAll(/:where\(\.dock-scroll, \.jk-top:not\(\.has-menu\) \.jk-links\)([^{}]+)\{([^}]+)\}/g)];
+  assert.equal(rules.length, 3);
+  assert.deepEqual(rules.map(([, selector]) => selector.trim()), [
+    '.can-scroll:not(.at-end)', '.can-scroll:not(.at-start)', '.can-scroll:not(.at-start):not(.at-end)',
+  ]);
+  for (const [, , block] of rules) {
+    const masks = [...block.matchAll(/(?:-webkit-)?mask-image:\s*([^;]+);/g)];
+    assert.equal(masks.length, 2);
+    assert.equal(masks[0][1], masks[1][1]);
+    assert.match(masks[0][1], /24px/);
+    assert.doesNotMatch(masks[0][1], /22px/);
+  }
+  assert.match(css, /--jk-edge:\s*rgba\(233,228,218,\.39\);/);
+});
+
+test('sheet text and numeric column headers align with their cells at desktop widths', async () => {
+  const css = await read('site/assets/app.css');
+  const desktop = css.slice(0, css.indexOf('@container (max-width: 720px)'));
+  assert.match(desktop, /\.sheet th, \.sheet td\s*\{[^}]*text-align:\s*right;/);
+  assert.match(desktop, /\.sheet th:first-child, \.sheet td:first-child\s*\{\s*text-align:\s*left;/);
+  const app = await read('site/assets/app.js');
+  const tables = [...app.matchAll(/<table class="sheet">([\s\S]*?)<\/table>/g)];
+  assert.equal(tables.length, 1, 'audit every generated sheet table');
+  const table = tables[0][1];
+  assert.deepEqual([...table.matchAll(/<th scope="col">([^<]+)<\/th>/g)].map(([, label]) => label), ['Asset', 'Balance', 'Value', 'Weight']);
+  assert.match(table, /<tbody>[^]*?<tr><th scope="row">/);
+  assert.deepEqual([...table.matchAll(/<td class="num" data-label="([^"]+)">/g)].map(([, label]) => label), ['Balance', 'Value', 'Weight']);
+  assert.doesNotMatch(await read('site/index.html'), /class="sheet"/, 'no additional static sheet tables to audit');
+});
+
+async function dockHarness({ view = 0, width = 200, total = 600, left = 260, buttonWidth = 80 } = {}) {
+  const app = await read('site/assets/app.js');
+  const source = app.slice(app.indexOf('  function hintScroll('), app.indexOf('  async function main()'));
+  const callbacks = {}, observers = {}, classes = new Set(), writes = [];
+  const nav = { querySelector: () => button };
+  const scroller = {
+    scrollWidth: total, clientWidth: width, clientLeft: 2,
+    get scrollLeft() { return view; },
+    set scrollLeft(value) { writes.push(value); view = value; },
+    getBoundingClientRect: () => ({ left: 100 }),
+    querySelector: () => nav,
+    classList: { toggle(name, on) { if (on) classes.add(name); else classes.delete(name); } },
+    addEventListener(name, fn, options) { assert.equal(name, 'scroll'); assert.equal(options.passive, true); callbacks.scroll = fn; },
+    scrollTo() { assert.fail('use scrollLeft directly'); },
+  };
+  const button = {
+    closest: () => scroller,
+    getBoundingClientRect: () => ({ left: 102 + left - view, width: buttonWidth }),
+    scrollIntoView() { assert.fail('must not scroll the page'); },
+  };
+  const window = { ResizeObserver: true, scrollY: 777, scrollTo() { assert.fail('must not scroll the page'); } };
+  const api = runInNewContext(source + '\n({hintScroll, revealDock})', {
+    window,
+    document: { fonts: { ready: { then(fn) { callbacks.fonts = fn; } } } },
+    addEventListener(name, fn) { callbacks[name] = fn; },
+    ResizeObserver: class { constructor(fn) { callbacks.observer = fn; observers.resize = []; } observe(node) { observers.resize.push(node); } },
+    MutationObserver: class { constructor(fn) { callbacks.mutation = fn; } observe(node, options) { observers.mutation = { node, options }; } },
+  });
+  return { ...api, scroller, button, nav, window, callbacks, observers, classes, writes, move(value) { left = value; } };
+}
+
+test('active dock reveal sets only horizontal scrollLeft, with 24px fade clearance', async () => {
+  for (const [options, expected] of [
+    [{ left: 260 }, 164],
+    [{ view: 200, left: 170 }, 146],
+    [{ view: 100, left: 130 }, 100],
+    [{ view: 80, left: 4 }, 0],
+    [{ left: 514 }, 400],
+    [{ total: 180, left: 4 }, 0],
+  ]) {
+    const h = await dockHarness(options);
+    h.revealDock(h.button);
+    assert.equal(h.scroller.scrollLeft, expected, JSON.stringify(options));
+    assert.equal(h.window.scrollY, 777);
+    assert.equal(h.writes.length, 1);
+  }
+});
+
+test('dock fades track manual scrolling; active reveal runs on load, pressed changes, resizing and fonts', async () => {
+  const h = await dockHarness({ left: 4 });
+  h.hintScroll(h.scroller);
+  assert.equal(h.scroller.scrollLeft, 0);
+  assert.ok(h.classes.has('can-scroll'));
+  assert.ok(h.classes.has('at-start'));
+  assert.ok(!h.classes.has('at-end'));
+  assert.deepEqual(h.observers.resize, [h.scroller, h.nav]);
+  assert.equal(h.observers.mutation.node, h.nav);
+  assert.equal(h.observers.mutation.options.subtree, true);
+  assert.equal(h.observers.mutation.options.attributes, true);
+  assert.deepEqual(Array.from(h.observers.mutation.options.attributeFilter), ['aria-pressed']);
+  for (const [view, atStart, atEnd] of [[1, true, false], [2, false, false], [100, false, false], [398, false, false], [399, false, true], [400, false, true]]) {
+    h.scroller.scrollLeft = view;
+    h.callbacks.scroll();
+    assert.equal(h.scroller.scrollLeft, view, 'manual scrolling does not snap back to active');
+    assert.equal(h.classes.has('at-start'), atStart);
+    assert.equal(h.classes.has('at-end'), atEnd);
+  }
+  for (const callback of ['mutation', 'resize', 'observer', 'fonts']) {
+    h.scroller.scrollLeft = 0;
+    h.move(260);
+    h.callbacks[callback]();
+    assert.equal(h.scroller.scrollLeft, 164, callback);
+    assert.ok(!h.classes.has('at-start') && !h.classes.has('at-end'), 'both fades in the middle');
+    assert.equal(h.window.scrollY, 777);
+  }
+  h.scroller.scrollWidth = 180;
+  h.move(4);
+  h.callbacks.observer();
+  assert.ok(!h.classes.has('can-scroll'));
+  assert.ok(h.classes.has('at-start') && h.classes.has('at-end'));
 });

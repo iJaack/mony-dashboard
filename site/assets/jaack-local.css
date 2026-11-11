@@ -99,9 +99,16 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   }
   .jk-top.has-menu.is-menu-open .jk-links,.jk-top.has-menu.is-menu-closing .jk-links{visibility:visible}
   .jk-top.has-menu.is-menu-open .jk-links{opacity:1;pointer-events:auto}
-  .jk-top.has-menu .jk-links a.jk-sw{
+  .jk-top.has-menu .jk-links a.jk-sw,
+  .jk-top.has-menu .jk-links a.jk-sw[aria-current],
+  .jk-top.has-menu .jk-links a.jk-sw[aria-pressed="true"]{
     display:inline-flex;align-items:center;width:100%;min-height:44px;padding:0 14px;
+    justify-content:flex-start;text-align:left;
+    background:transparent;border:0;border-radius:0;box-shadow:none;
   }
+  .jk-top.has-menu .jk-links a.jk-sw + a.jk-sw{border-top:1px solid var(--jk-hair-2)}
+  .jk-top.has-menu .jk-links a.jk-sw:is(:hover,:focus-visible,:active){background:var(--jk-tint-hi)}
+  .jk-top.has-menu .jk-links a.jk-sw:focus-visible{outline:2px solid var(--jk-focus);outline-offset:-2px}
 }
 /* Leave the vendor switch targets intact; recover space from the mark at 320px. */
 @media (max-width:340px){

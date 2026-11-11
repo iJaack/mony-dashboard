@@ -130,16 +130,16 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 /* A block flex row avoids inline baseline space while retaining every label's width. */
 .dock-scroll .jk-pill { display: flex; width: max-content; background: var(--jk-surface); box-shadow: none; border: 1px solid var(--jk-hair); }
 :where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-end) {
-  -webkit-mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
-  mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 22px), transparent);
+  -webkit-mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, #fff 0, #fff calc(100% - 24px), transparent);
 }
 :where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-start) {
-  -webkit-mask-image: linear-gradient(to right, transparent, #fff 22px, #fff 100%);
-  mask-image: linear-gradient(to right, transparent, #fff 22px, #fff 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent, #fff 24px, #fff 100%);
+  mask-image: linear-gradient(to right, transparent, #fff 24px, #fff 100%);
 }
 :where(.dock-scroll, .jk-top:not(.has-menu) .jk-links).can-scroll:not(.at-start):not(.at-end) {
-  -webkit-mask-image: linear-gradient(to right, transparent, #fff 22px, #fff calc(100% - 22px), transparent);
-  mask-image: linear-gradient(to right, transparent, #fff 22px, #fff calc(100% - 22px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #fff 24px, #fff calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, transparent, #fff 24px, #fff calc(100% - 24px), transparent);
 }
 
 /* The latest decision and the chapter bar are plain. The header is the one glass panel. */
@@ -321,6 +321,7 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
   white-space: nowrap;
 }
 .sheet tbody th { text-align: left; font-weight: 650; }
+.sheet th:first-child, .sheet td:first-child { text-align: left; }
 .sheet tr:last-child th, .sheet tr:last-child td { border-bottom: 1px solid var(--jk-hair); }
 .sheet td:last-child, .sheet th:last-child { padding-right: 0; }
 .num { font-variant-numeric: tabular-nums; }
