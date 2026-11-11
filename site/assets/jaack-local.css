@@ -20,20 +20,19 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
 /* The canonical rim and glow pseudo-elements would restore decoration. */
 .jk-glass::before, .jk-glass::after { display: none; }
 
-/* Up to 1024 the status line yields its space. Section links scroll inside the bar;
-   the theme switch stays a fixed sibling, icon-sized, so it cannot leave the screen. */
+/* Up to 1024 the status line yields its space. Without the menu enhancement,
+   section links scroll inside the bar; the theme switch stays a fixed sibling. */
 @media (max-width: 1024px) {
   .jk-top .jk-tag { display: none; }
   .jk-top .jk-mark { min-width: 0; margin-right: 0; }
+  .jk-top:not(.has-menu) .jk-mark { flex: none; }
   .jk-top .jk-links {
     display: flex;
     flex: 1 1 0;
     min-width: 4.5rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
   }
-  .jk-top .jk-links::-webkit-scrollbar { display: none; }
+  .jk-top:not(.has-menu) .jk-links { min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .jk-top:not(.has-menu) .jk-links::-webkit-scrollbar { display: none; }
   .jk-top .jk-links .jk-sw { flex: none; }
   .jk-top .jk-links .jk-sw:not(.keep) { display: inline-block; }
   .jk-thsw .i { display: inline; }
@@ -41,22 +40,19 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   /* The three 44px targets must not overflow a shrinking switch container. */
   .jk-top [data-jk-theme-switch], .jk-top .jk-thsw { flex-shrink: 0; }
 }
-/* At 360px the full-size wordmark collides with Treasury. Compact this site's
-   header while preserving all three 44px theme targets and scrolling links. */
+/* Compact the wordmark and preserve clearance from the rounded bar end. */
 @media (max-width: 480px) {
-  .jk-top { gap: 6px; padding: 6px 6px 6px 10px; }
+  .jk-top { gap: 6px; padding: 6px 6px 6px 16px; }
   .jk-top .jk-mark { font-size: 14px; }
 }
-/* At 320px the domain yields space to the primary navigation and theme targets. */
+/* Keep the scrolling fallback compact; the menu makes room for the domain. */
 @media (max-width: 359px) {
-  .jk-mark .dom { display: none; }
+  .jk-top:not(.has-menu) .jk-mark .dom { display: none; }
+  .jk-top.has-menu .jk-mark { font-size: 13px; }
 }
 
-/* Reserve each fixed bar's height + edge offset + safe area + 14px breathing room.
-   The 80px dock allowance includes its 44px targets, pill border and scrollbar. */
+/* Root measurements override the vendor clearance fallbacks. */
 .jk-page {
-  --jk-top-clearance: calc(60px + 10px + env(safe-area-inset-top, 0px) + 14px);
-  --jk-dock-clearance: calc(80px + 16px + env(safe-area-inset-bottom, 0px) + 14px);
   padding-top: var(--jk-top-clearance);
   padding-bottom: var(--jk-dock-clearance);
 }
@@ -76,4 +72,49 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
   #operations .decision-title + .jk-note { padding-bottom: calc(var(--jk-dock-clearance) + 16px); }
   /* Fit more complete labels per swipe without shrinking text or the 44px targets. */
   .jk-dock .jk-pill button { flex: none; padding-inline: 12px; }
+}
+
+.mony-menu-toggle{display:none}
+/* Measured link-fit breakpoint with the menu script blocked. Enhancement only:
+   without .has-menu the section links retain their existing bar layout. */
+@media (max-width:716.98px){
+  .jk-top.has-menu{gap:4px}
+  .jk-top.has-menu .jk-mark,.jk-top.has-menu [data-jk-theme-switch]{flex:none}
+  .jk-top.has-menu .jk-mark{margin-right:auto}
+  .jk-top.has-menu .mony-menu-toggle{
+    display:inline-flex;align-items:center;justify-content:center;flex:none;
+    min-width:44px;min-height:44px;padding:6px;
+    border:0;border-radius:var(--jk-r-pill);background:transparent;
+    color:var(--jk-ink-2);font:600 13px/1 var(--jk-font);cursor:pointer;
+  }
+  .jk-top.has-menu .mony-menu-toggle:focus-visible{outline:2px solid var(--jk-focus);outline-offset:2px}
+  .jk-top.has-menu .jk-links{
+    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    display:flex;flex-direction:column;gap:0;
+    max-width:100%;max-height:calc(100dvh - var(--jk-top-clearance) - var(--jk-dock-clearance));overflow-x:hidden;overflow-y:auto;
+    overscroll-behavior-x:auto;scrollbar-width:auto;
+    -webkit-mask-image:none;mask-image:none;
+    padding:6px;background:var(--jk-surface-2);border:1px solid var(--jk-hair-2);border-radius:14px;
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity 160ms;
+  }
+  .jk-top.has-menu.is-menu-open .jk-links,.jk-top.has-menu.is-menu-closing .jk-links{visibility:visible}
+  .jk-top.has-menu.is-menu-open .jk-links{opacity:1;pointer-events:auto}
+  .jk-top.has-menu .jk-links a.jk-sw,
+  .jk-top.has-menu .jk-links a.jk-sw[aria-current],
+  .jk-top.has-menu .jk-links a.jk-sw[aria-pressed="true"]{
+    display:inline-flex;align-items:center;width:100%;min-height:44px;padding:0 14px;
+    justify-content:flex-start;text-align:left;
+    background:transparent;border:0;border-radius:0;box-shadow:none;
+  }
+  .jk-top.has-menu .jk-links a.jk-sw + a.jk-sw{border-top:1px solid var(--jk-hair-2)}
+  .jk-top.has-menu .jk-links a.jk-sw:is(:hover,:focus-visible,:active){background:var(--jk-tint-hi)}
+  .jk-top.has-menu .jk-links a.jk-sw:focus-visible{outline:2px solid var(--jk-focus);outline-offset:-2px}
+}
+/* Leave the vendor switch targets intact; recover space from the mark at 320px. */
+@media (max-width:340px){
+  .jk-top{padding-left:16px;gap:2px}
+  .jk-top.has-menu .jk-mark{font-size:11.5px}
+}
+@media (max-width:716.98px) and (prefers-reduced-motion:reduce){
+  .jk-top.has-menu .jk-links{transition:none}
 }

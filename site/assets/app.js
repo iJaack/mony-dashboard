@@ -1,3 +1,64 @@
+// Measure immediately, independently of data loading and switch mount order.
+(() => {
+  "use strict";
+  const root = document.documentElement;
+  const bar = document.querySelector("header.jk-top");
+  const dock = document.querySelector(".jk-dock");
+  const measure = () => {
+    if (bar) root.style.setProperty("--jk-top-clearance", (Math.ceil(bar.getBoundingClientRect().bottom) + 14) + "px");
+    if (dock && window.getComputedStyle(dock).display !== "none") root.style.setProperty("--jk-dock-clearance", (Math.ceil(window.innerHeight - dock.getBoundingClientRect().top) + 14) + "px");
+  };
+  measure();
+  if (typeof ResizeObserver === "function") {
+    const observer = new ResizeObserver(measure);
+    if (bar) observer.observe(bar);
+    if (dock) observer.observe(dock);
+  }
+  window.addEventListener("resize", measure);
+  window.addEventListener("orientationchange", measure);
+})();
+
+// Site-local English labels; keep the vendor's controls, icons and suffix nodes.
+(() => {
+  "use strict";
+  if (!document.documentElement.lang.startsWith("en")) return;
+  const watched = new WeakSet();
+  function localize() {
+    document.querySelectorAll("[data-jk-theme-switch]").forEach(host => {
+      if (watched.has(host)) return;
+      watched.add(host);
+      let observer;
+      function relabel() {
+        const group = host.querySelector(".jk-thsw");
+        if (!group) return false;
+        const theme = window.JaackTheme;
+        const labels = {
+          auto: ["Auto", `Automatic: light from ${theme.FROM} to ${theme.TO}`],
+          light: ["Light", "Light theme"],
+          dark: ["Dark", "Dark theme"]
+        };
+        group.setAttribute("aria-label", "Theme");
+        group.querySelectorAll("button[data-m]").forEach(button => {
+          const [label, title] = labels[button.dataset.m];
+          button.querySelector(".l").textContent = label;
+          button.title = title;
+          // Avoid Chrome inserting a space before the separately clipped comma.
+          const suffix = button.querySelector(".lang-en");
+          if (suffix) button.setAttribute("aria-label", label + suffix.textContent);
+        });
+        if (observer) observer.disconnect();
+        return true;
+      }
+      if (!relabel()) {
+        observer = new MutationObserver(relabel);
+        observer.observe(host, { childList: true, subtree: true });
+      }
+    });
+  }
+  localize();
+  document.addEventListener("DOMContentLoaded", localize, { once: true });
+})();
+
 (() => {
   'use strict';
   const DAY = 86_400_000;
@@ -465,26 +526,43 @@
 
   function hintScroll(node) {
     if (!node) return;
+    const nav = node.querySelector('#chapter-nav');
     const update = () => {
       const overflow = node.scrollWidth > node.clientWidth + 1;
       node.classList.toggle('can-scroll', overflow);
       node.classList.toggle('at-start', node.scrollLeft <= 1);
       node.classList.toggle('at-end', !overflow || node.scrollLeft + node.clientWidth >= node.scrollWidth - 1);
     };
+    const refresh = () => {
+      const active = nav?.querySelector('button[aria-pressed="true"]');
+      if (active) revealDock(active);
+      update();
+    };
     node.addEventListener('scroll', update, { passive: true });
-    if ('ResizeObserver' in window) new ResizeObserver(update).observe(node);
-    addEventListener('resize', update);
-    update();
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(refresh);
+      observer.observe(node);
+      if (nav) observer.observe(nav);
+    }
+    if (nav) new MutationObserver(refresh).observe(nav, { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
+    addEventListener('resize', refresh);
+    if (document.fonts?.ready) document.fonts.ready.then(refresh);
+    refresh();
   }
 
   function revealDock(button) {
     const scroller = button.closest('.dock-scroll');
     if (!scroller) return;
-    const left = button.offsetLeft;
-    const right = left + button.offsetWidth;
+    // Rects account for the nested pill's offset and border. Move only this
+    // scroller, reserving the same 24px as the masks at either hidden edge.
     const view = scroller.scrollLeft;
-    if (left >= view && right <= view + scroller.clientWidth) return;
-    scroller.scrollTo({ left: Math.max(0, left - (scroller.clientWidth - button.offsetWidth) / 2), behavior: reduced() ? 'auto' : 'smooth' });
+    const rect = button.getBoundingClientRect();
+    const left = rect.left - scroller.getBoundingClientRect().left - scroller.clientLeft + view;
+    const right = left + rect.width;
+    let target = view;
+    if (left < view + 24) target = left - 24;
+    else if (right > view + scroller.clientWidth - 24) target = right - scroller.clientWidth + 24;
+    scroller.scrollLeft = Math.max(0, Math.min(scroller.scrollWidth - scroller.clientWidth, target));
   }
 
   async function main() {
@@ -546,15 +624,5 @@
     if (window.visualViewport) visualViewport.addEventListener('resize', redraw);
     document.documentElement.dataset.ready = 'true';
   }
-  // Preserve the visible canonical label at the start of its accessible name.
-  // theme.js mounts the switch in its earlier DOMContentLoaded listener.
-  document.addEventListener('DOMContentLoaded', () => {
-    const lang = document.documentElement.lang.startsWith('it') ? 'it' : 'en';
-    document.querySelectorAll('.jk-thsw button').forEach((button) => {
-      const label = button.querySelector('.l');
-      const suffix = button.querySelector(`.lang-${lang}`);
-      if (label && suffix) button.setAttribute('aria-label', label.textContent + suffix.textContent);
-    });
-  });
   main();
 })();
