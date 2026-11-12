@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-10T17:25:23.000Z",
+  "updatedAt": "2026-11-12T15:11:53.000Z",
   "decisions": [
+    {
+      "id": "2026-11-12-btc-rebound-stop",
+      "date": "2026-11-12T15:11:53.000Z",
+      "outcome": "execute",
+      "title": "BTC rebound stop exit",
+      "reason": "BTC kept falling after the 10 Nov rebound entry and broke the stop (72,496) at about 71,380, so the BTC.b was sold back to USDC. Loss about -0.70 USDC (-4.5%) on the 15.44 USDC entry. The fund is now all USDC; no open rebound legs remain.",
+      "asset": "BTC.b",
+      "action": "sell",
+      "size": {
+        "amount": 0.00020656,
+        "asset": "BTC.b",
+        "usd": 14.74
+      },
+      "received": {
+        "amount": 14.744754,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x7a4d25c10c4978a0d19bb04f979654ae8226c9eae16173437b9b6359ad008a7f",
+          "block": 100122042,
+          "gasUsed": 50000,
+          "gasAvax": 0.00046875
+        },
+        {
+          "label": "swap",
+          "hash": "0x35959ab496b54a6132438d931916ac37295c98e25c6596d1a370b6a2f094d0cc",
+          "block": 100122091,
+          "gasUsed": 570773,
+          "gasAvax": 0.005351
+        }
+      ]
+    },
     {
       "id": "2026-11-10-eth-rebound-stop",
       "date": "2026-11-10T17:25:23.000Z",
