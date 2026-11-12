@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-11-12T15:09:46.552Z",
+  "generatedAt": "2026-11-12T15:25:42.349Z",
   "sources": {
     "avalanche_rpc": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Balances refreshed from Avalanche C-Chain."
     },
     "hyperliquid": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Margin equity, positions and spot balances refreshed."
     },
     "coingecko": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Available USD prices refreshed; each quote retains its own date."
     },
     "serialized_audit": {
@@ -27,32 +27,32 @@
     },
     "polymarket": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Prediction market positions marked at current outcome prices, plus pUSD cash on Polygon."
     },
     "avantis": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Vault shares valued at the current redeem preview, net of withdrawal fees; open trades checked."
     },
     "yo": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Vault shares valued at the current redeem preview on Base."
     },
     "evm_wallets": {
       "status": "ok",
-      "updatedAt": "2026-11-12T15:09:46.552Z",
-      "lastSuccessAt": "2026-11-12T15:09:46.552Z",
+      "updatedAt": "2026-11-12T15:25:42.349Z",
+      "lastSuccessAt": "2026-11-12T15:25:42.349Z",
       "note": "Native and major stable balances refreshed on Base, Polygon, Ethereum, Arbitrum, Optimism and BNB Chain."
     },
     "decisions": {
-      "status": "stale",
-      "updatedAt": "2026-11-10T17:25:23.000Z",
-      "lastSuccessAt": "2026-11-10T17:25:23.000Z",
+      "status": "ok",
+      "updatedAt": "2026-11-12T15:11:53.000Z",
+      "lastSuccessAt": "2026-11-12T15:11:53.000Z",
       "note": "Decisions are published after each run, twice daily."
     }
   }
