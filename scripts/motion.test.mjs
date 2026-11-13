@@ -304,3 +304,48 @@ test('deprecated-curve guard rejects CSS and script fixtures for both aliases', 
     }
   }
 });
+
+function assertTokenDurations(source, path) {
+  // Ignore comments and quoted content; inspect declaration values only.
+  const css = source.replace(/\/\*[\s\S]*?\*\/|"(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'/g, ' ');
+  for (const declaration of css.matchAll(/(?:^|[;{])\s*[-\w]+\s*:\s*([^;{}]+)/g)) {
+    assert.doesNotMatch(declaration[1], /(?:^|[^\w.-])[+-]?(?:\d*\.\d+|\d+\.?\d*)(?:ms|s)\b/i, path);
+  }
+}
+
+test('site-owned CSS uses tokens for every duration', () => {
+  function scan(directory, prefix = 'site/') {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (['vendor', 'jaack-design-system'].includes(entry.name)) continue;
+      const path = prefix + entry.name;
+      if (entry.isDirectory()) scan(new URL(`${entry.name}/`, directory), path + '/');
+      else if (/\.css$/.test(entry.name)) assertTokenDurations(readFileSync(new URL(entry.name, directory), 'utf8'), path);
+    }
+  }
+  scan(new URL('site/', root));
+});
+
+test('duration guard rejects literal times in CSS declarations', () => {
+  for (const fixture of [
+    '.sheet { transition: opacity 160ms; }',
+    '.sheet { transition-duration: 0.14s; }',
+    '.sheet { animation: fade .2s ease-out; }',
+    '.sheet { animation-delay: 10ms; }',
+    '.sheet { transition: opacity var(--jk-dur-2) 20ms; }',
+    '.sheet { --local-duration: 200ms; }',
+    '.sheet { transition-duration: 0s; }',
+  ]) assert.throws(() => assertTokenDurations(fixture, 'fixture'), assert.AssertionError, fixture);
+});
+
+test('duration guard accepts tokens, dimensions, comments and quoted content', () => {
+  assertTokenDurations(`
+    /* Historical transition: opacity 160ms; */
+    .sheet {
+      min-height: 44px; padding: 6px;
+      transition: opacity var(--jk-dur-2) var(--jk-ease-out);
+      transition-duration: calc(var(--jk-dur-2) * 0.7);
+      transition-timing-function: var(--jk-ease-in);
+      content: "transition: opacity 160ms;";
+    }
+  `, 'fixture');
+});

@@ -95,10 +95,11 @@ html[lang|="en"] .lang-it, html[lang|="it"] .lang-en { display: none; }
     overscroll-behavior-x:auto;scrollbar-width:auto;
     -webkit-mask-image:none;mask-image:none;
     padding:6px;background:var(--jk-surface-2);border:1px solid var(--jk-hair-2);border-radius:14px;
-    opacity:0;visibility:hidden;pointer-events:none;transition:opacity 160ms;
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--jk-dur-2) var(--jk-ease-out);
   }
   .jk-top.has-menu.is-menu-open .jk-links,.jk-top.has-menu.is-menu-closing .jk-links{visibility:visible}
   .jk-top.has-menu.is-menu-open .jk-links{opacity:1;pointer-events:auto}
+  .jk-top.has-menu:where(.is-menu-closing) .jk-links{transition-duration:calc(var(--jk-dur-2) * 0.7);transition-timing-function:var(--jk-ease-in)}
   .jk-top.has-menu .jk-links a.jk-sw,
   .jk-top.has-menu .jk-links a.jk-sw[aria-current],
   .jk-top.has-menu .jk-links a.jk-sw[aria-pressed="true"]{

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const source = fs.readFileSync('site/assets/menu.js', 'utf8');
 
-function load({ mobile = true, reduced = false } = {}) {
+function load({ mobile = true, reduced = false, closeDuration = '0.14s' } = {}) {
   const classes = new Set();
   const listeners = {};
   const timers = new Map();
@@ -37,8 +37,13 @@ function load({ mobile = true, reduced = false } = {}) {
       if (query.includes('reduced-motion')) return { matches: reduced };
       assert.equal(query, '(max-width: 716.98px)');
       return media;
+    }, getComputedStyle(target) {
+      assert.equal(target, sheet);
+      assert.ok(classes.has('is-menu-closing'));
+      assert.ok(!classes.has('is-menu-open'));
+      return { transitionDuration: closeDuration };
     } },
-    setTimeout(fn, delay) { assert.equal(delay, 160); timers.set(fn, fn); return fn; },
+    setTimeout(fn, delay) { timers.set(fn, delay); return fn; },
     clearTimeout(id) { timers.delete(id); }
   });
   function key(key, shiftKey = false) {
@@ -46,8 +51,8 @@ function load({ mobile = true, reduced = false } = {}) {
     listeners.keydown(event);
     return event;
   }
-  return { document, classes, button, sheet, links, media, key, listeners,
-    toggle: () => button.listeners.click(), finishFade: () => { timers.forEach(fn => fn()); timers.clear(); } };
+  return { document, classes, button, sheet, links, media, key, listeners, timers,
+    toggle: () => button.listeners.click(), finishFade: () => { for (const fn of timers.keys()) fn(); timers.clear(); } };
 }
 
 test('Menu CSS and JavaScript share the measured breakpoint and disable reduced-motion fades', () => {
@@ -55,6 +60,9 @@ test('Menu CSS and JavaScript share the measured breakpoint and disable reduced-
   assert.match(source, /matchMedia\('\(max-width: 716\.98px\)'\)/);
   assert.match(css, /@media \(max-width:716\.98px\)/);
   assert.match(css, /@media \(max-width:716\.98px\) and \(prefers-reduced-motion:reduce\)\{\s*\.jk-top.has-menu \.jk-links\{transition:none\}/);
+  assert.match(css, /transition:opacity var\(--jk-dur-2\) var\(--jk-ease-out\)/);
+  // :where keeps closing specificity low enough for the existing reduced-motion rule.
+  assert.match(css, /\.jk-top\.has-menu:where\(\.is-menu-closing\) \.jk-links\{transition-duration:calc\(var\(--jk-dur-2\) \* 0\.7\);transition-timing-function:var\(--jk-ease-in\)\}/);
   assert.match(css, /\.mony-menu-toggle\{display:none\}/);
   assert.match(css, /\.jk-top.has-menu \.jk-links\{/);
   assert.match(css, /min-height:44px;padding:0 14px/);
@@ -148,6 +156,7 @@ test('crossing to desktop clears hidden/inert state and returning to mobile stay
   assert.equal(p.sheet.inert, false);
   assert.equal(p.sheet.attrs['aria-hidden'], undefined);
   assert.ok(!p.classes.has('is-menu-closing'));
+  assert.equal(p.timers.size, 0);
   assert.equal(p.key('Tab').prevented, false);
   p.toggle();
   assert.equal(p.button.attrs['aria-expanded'], 'false');
@@ -157,6 +166,7 @@ test('crossing to desktop clears hidden/inert state and returning to mobile stay
 test('reduced motion closes immediately and reopening cancels a pending fade', () => {
   const reduced = load({ reduced: true }); reduced.toggle(); reduced.toggle();
   assert.ok(!reduced.classes.has('is-menu-closing'));
+  assert.equal(reduced.timers.size, 0);
   const p = load(); p.toggle(); p.toggle(); p.toggle(); p.finishFade();
   assert.ok(p.classes.has('is-menu-open'));
   assert.ok(!p.classes.has('is-menu-closing'));
@@ -183,3 +193,23 @@ test('non-Tab keys and internal pointer taps keep the open menu intact', () => {
   p.listeners.pointerdown({ target: p.button });
   assert.equal(p.button.attrs['aria-expanded'], 'true');
 });
+
+for (const [closeDuration, delay] of [['0.14s', 140], ['275ms', 275], ['0.35s', 350]]) {
+  test(`closing uses the sheet's computed duration (${closeDuration})`, () => {
+    const p = load({ closeDuration }); p.toggle(); p.toggle();
+    assert.deepEqual([...p.timers.values()], [delay]);
+    assert.ok(p.classes.has('is-menu-closing'));
+    p.finishFade();
+    assert.ok(!p.classes.has('is-menu-closing'));
+  });
+}
+for (const closeDuration of ['0s', '0ms']) {
+  test(`zero computed duration (${closeDuration}) leaves no closing class or timer`, () => {
+    const p = load({ closeDuration }); p.toggle(); p.toggle();
+    assert.equal(p.timers.size, 0);
+    assert.ok(!p.classes.has('is-menu-open'));
+    assert.ok(!p.classes.has('is-menu-closing'));
+    assert.equal(p.sheet.inert, true);
+    assert.equal(p.document.activeElement, p.button);
+  });
+}
