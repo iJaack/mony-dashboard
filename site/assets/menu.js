@@ -22,7 +22,10 @@
     else sheet.removeAttribute('aria-hidden');
     if (wasOpen && mobile.matches && !reducedMotion.matches) {
       nav.classList.add('is-menu-closing');
-      fade = setTimeout(function () { nav.classList.remove('is-menu-closing'); }, 160);
+      var duration = window.getComputedStyle(sheet).transitionDuration.trim();
+      var delay = parseFloat(duration) * (duration.endsWith('ms') ? 1 : 1000);
+      if (delay > 0) fade = setTimeout(function () { nav.classList.remove('is-menu-closing'); }, delay);
+      else nav.classList.remove('is-menu-closing');
     }
     if (wasOpen && returnFocus) button.focus();
   }

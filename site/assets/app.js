@@ -75,6 +75,125 @@
     return `${text.startsWith('-') ? `−${text.slice(1)}` : text}%`;
   };
   const reduced = () => document.documentElement.classList.contains('jk-rm') || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Only chapter headlines use this helper; replaced tables, feeds and bars stay instant.
+  const figureStates = new WeakMap();
+  const movingFigures = new Set();
+  function figureNumber(text) {
+    const match = text.match(/^((?:≈ )?)([−-]?)(\$?)(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(%|\/\d+)?$/);
+    if (!match) return null;
+    const [, approximate, sign, currency, whole, fraction = '', suffix = ''] = match;
+    const value = Number(whole.replaceAll(',', '') + fraction) * (sign ? -1 : 1);
+    if (!Number.isFinite(value) || Math.abs(value) > Number.MAX_SAFE_INTEGER) return null;
+    const digits = fraction.length ? fraction.length - 1 : 0;
+    return {
+      value, key: [approximate, currency, digits, suffix].join('|'),
+      format(number, unicodeMinus = false) {
+        const magnitude = Math.abs(number).toLocaleString('en-US', {
+          useGrouping: Boolean(currency || whole.includes(',')),
+          minimumFractionDigits: digits, maximumFractionDigits: digits,
+        });
+        const negative = number < 0 && Number(magnitude.replaceAll(',', '')) !== 0
+          ? (unicodeMinus || sign === '−' || suffix === '%' ? '−' : '-') : '';
+        return approximate + negative + currency + magnitude + suffix;
+      },
+    };
+  }
+  function figureTiming() {
+    const style = window.getComputedStyle(document.documentElement);
+    const duration = style.getPropertyValue('--jk-dur-2').trim();
+    const curve = style.getPropertyValue('--jk-ease-out').match(/^\s*cubic-bezier\(([^)]+)\)/);
+    const milliseconds = duration.endsWith('ms') ? parseFloat(duration) : parseFloat(duration) * 1000;
+    const points = curve?.[1].split(',').map(Number);
+    if (!(milliseconds > 0) || !points || points.length !== 4 || !points.every(Number.isFinite)) return null;
+    const [x1, y1, x2, y2] = points;
+    const bezier = (t, a, b) => 3 * (1 - t) ** 2 * t * a + 3 * (1 - t) * t ** 2 * b + t ** 3;
+    return { milliseconds, ease(progress) {
+      if (progress <= 0 || progress >= 1) return progress;
+      let low = 0, high = 1;
+      for (let i = 0; i < 20; i++) {
+        const mid = (low + high) / 2;
+        if (bezier(mid, x1, x2) < progress) low = mid;
+        else high = mid;
+      }
+      return bezier((low + high) / 2, y1, y2);
+    } };
+  }
+  let watchingFigureMotion = false;
+  function watchFigureMotion() {
+    if (watchingFigureMotion) return;
+    watchingFigureMotion = true;
+    const settle = () => {
+      if (reduced()) for (const state of movingFigures) state.finish();
+    };
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', settle);
+    new MutationObserver(settle).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
+  function setFigure(id, text) {
+    const node = el(id);
+    if (!node) return;
+    text = String(text);
+    let state = figureStates.get(node);
+    const first = !state;
+    if (first) {
+      const label = document.createElement('span');
+      label.style.display = 'inline-block';
+      const mark = id === 'day-delta' ? document.createElement('i') : null;
+      if (mark) mark.setAttribute('aria-hidden', 'true');
+      state = { label, mark, target: null, width: 0, frame: null, real: false };
+      figureStates.set(node, state);
+      node.replaceChildren(...(mark ? [mark, label] : [label]));
+    }
+    const write = (value) => {
+      state.label.textContent = value;
+      state.label.classList.toggle('jk-na', value === 'Unavailable');
+      if (state.mark) {
+        const number = figureNumber(value);
+        state.mark.className = `jk-mark ${number?.value < 0 ? 'neg' : 'pos'}`;
+        state.mark.style.visibility = number ? 'visible' : 'hidden';
+      }
+    };
+    const cancel = () => {
+      if (state.frame !== null) cancelAnimationFrame(state.frame);
+      state.frame = null;
+      movingFigures.delete(state);
+    };
+    state.finish = () => { cancel(); write(state.target); state.label.style.opacity = '1'; };
+    if (!first && state.target === text) {
+      if (reduced()) state.finish();
+      return;
+    }
+    const previous = state.label.textContent;
+    const opacity = state.frame !== null && state.fading ? Number(state.label.style.opacity) : 0;
+    cancel();
+    state.width = Math.max(state.width, previous.length, text.length);
+    state.label.style.minWidth = `${state.width}ch`;
+    node.style.minWidth = `${state.width}ch`;
+    state.target = text;
+    const initial = !state.real;
+    if (figureNumber(text) || !['', '—', '-', 'Unavailable'].includes(text)) state.real = true;
+    if (first || initial || reduced()) { state.finish(); return; }
+    const timing = figureTiming();
+    if (!timing) { state.finish(); return; }
+    const from = figureNumber(previous), to = figureNumber(text);
+    const count = from && to && from.key === to.key;
+    state.fading = !count;
+    if (count) state.label.style.opacity = '1';
+    else { write(text); state.label.style.opacity = String(opacity); }
+    const start = performance.now();
+    const tick = (now) => {
+      if (reduced()) { state.finish(); return; }
+      const progress = Math.min(1, Math.max(0, (now - start) / timing.milliseconds));
+      if (progress === 1) { state.finish(); return; }
+      const eased = timing.ease(progress);
+      if (count) write(to.format(from.value + (to.value - from.value) * eased, previous.includes('−')));
+      else state.label.style.opacity = String(opacity + (1 - opacity) * eased);
+      state.frame = requestAnimationFrame(tick);
+    };
+    watchFigureMotion();
+    movingFigures.add(state);
+    state.frame = requestAnimationFrame(tick);
+  }
+  window.__monyMotion = { setFigure };
   const dateFormatter = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
   const zoneFormatter = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', timeZoneName: 'long' });
   const dayLabel = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' });
@@ -112,7 +231,12 @@
   function safeRender(ids, fn) {
     try { fn(); } catch (error) {
       console.warn('A data section is unavailable:', error.message);
-      for (const id of ids) { const node = el(id); if (node) node.innerHTML = empty(); }
+      for (const id of ids) {
+        const node = el(id);
+        if (!node) continue;
+        if (node.classList.contains('jk-big') || node.classList.contains('jk-mid')) setFigure(id, 'Unavailable');
+        else node.innerHTML = empty();
+      }
     }
   }
   async function load(name) {
@@ -159,7 +283,7 @@
     const tag = el('execution-status');
     tag.textContent = `Public · read-only · Execution ${status}`;
     tag.classList.toggle('is-warn', status === 'paused' || data.execution.escalated);
-    el('nav-title').textContent = `${data.estimated ? '≈ ' : ''}$${plain(data.nav)}`;
+    setFigure('nav-title', `${data.estimated ? '≈ ' : ''}$${plain(data.nav)}`);
     const last = history?.at(-1);
     const start = history?.[0];
     const spanDays = last && start ? (Date.parse(last.t) - Date.parse(start.t)) / DAY : 0;
@@ -172,12 +296,12 @@
     el('nav-cmp').innerHTML = `${managed} · ${since} · ${meanText}. Weights use total holdings.`;
     if (yest && yest !== last) {
       const delta = last.nav - yest.nav;
-      el('day-delta').innerHTML = `<i class="jk-mark ${delta < 0 ? 'neg' : 'pos'}" aria-hidden="true"></i>${money(delta).replace('-', '−')}`;
+      setFigure('day-delta', money(delta).replace('-', '−'));
       const ratio = yest.nav ? delta / yest.nav : null;
       const peak = data.drawdown && finite(data.drawdown.fromPeak) ? `from the managed peak <b>${percent(data.drawdown.fromPeak)}</b>` : 'managed peak unavailable';
       el('day-cmp').innerHTML = `yesterday <b>${money(yest.nav)}</b> · ${finite(ratio) ? `<b>${percent(ratio)}</b>` : '—'} · ${peak}`;
     } else {
-      el('day-delta').innerHTML = na();
+      setFigure('day-delta', 'Unavailable');
       el('day-cmp').textContent = history && history.length ? 'No reading from a day earlier yet.' : 'History has not loaded.';
     }
     const concentration = data.allocation.sAVAX;
@@ -198,7 +322,7 @@
     const next = ranked[1];
     if (top) {
       el('book-label').textContent = `Largest line · ${top.asset}`;
-      el('book-value').textContent = money(top.valueUsd);
+      setFigure('book-value', money(top.valueUsd));
       el('book-cmp').innerHTML = `<b>${escape(top.asset)}</b> on ${escape(top.venue)} · ${percent(top.weight)} of holdings${next ? ` · next <b>${escape(next.asset)}</b> ${money(next.valueUsd)}` : ''}`;
     }
     const priority = ['sAVAX', 'USDC', 'WAVAX', 'AVAX', 'USDt', 'BTC.b', 'WETH.e'];
@@ -208,7 +332,7 @@
     el('holdings-note').textContent = data.note || '';
     updated('holdings-updated', data.updatedAt);
 
-    el('savax-value').textContent = percent(concentration.weight);
+    setFigure('savax-value', percent(concentration.weight));
     const trim = finite(concentration.trimmedAmount) ? `trimmed <b>${amount(concentration.trimmedAmount)} sAVAX</b>` : 'trim progress unavailable';
     el('savax-cmp').innerHTML = concentration.overCap
       ? `over the <b>15%</b> cap by ${money(concentration.excessUsd)} · about ${amount(concentration.trimAmount)} sAVAX would reach the cap at current marks · ${trim}`
@@ -222,12 +346,12 @@
     });
     const external = data.allocation.external;
     if (external && finite(external.weight)) {
-      el('external-value').textContent = percent(external.weight);
+      setFigure('external-value', percent(external.weight));
       el('external-cmp').innerHTML = external.venues.length
         ? external.venues.map((row) => `${escape(row.venue)} <b>${percent(row.weight)}</b>`).join(' · ')
         : 'No venue is outside the mandate.';
     } else {
-      el('external-value').innerHTML = na();
+      setFigure('external-value', 'Unavailable');
     }
     const satellites = data.allocation.satellites;
     const notes = [];
@@ -253,11 +377,11 @@
     const latest = rows[0];
     if (!latest) {
       for (const id of ['latest-content', 'decisions-content', 'execution-content']) el(id).innerHTML = empty('No published decisions');
-      el('decisions-value').innerHTML = na();
+      setFigure('decisions-value', 'Unavailable');
       return;
     }
     const executed = rows.filter((row) => row.outcome === 'execute');
-    el('decisions-value').textContent = String(rows.length);
+    setFigure('decisions-value', String(rows.length));
     el('decisions-cmp').innerHTML = `latest <b>${escape(OUTCOMES[latest.outcome]?.[0] || latest.outcome)}</b> · ${time(latest.date)} · <b>${executed.length}</b> executed in this record`;
     const sizeLine = latest.received
       ? `${amount(latest.size.amount)} ${escape(latest.size.asset)} → ${amount(latest.received.amount)} ${escape(latest.received.asset)}${finite(latest.size.usd) ? ` · ${money(latest.size.usd)}` : ''}`
@@ -277,8 +401,6 @@
 
   let chartWidth = 0;
   let chartViewport = 0;
-  let chartAnimated = false;
-  let chartObserver = null;
   function chartHeight(width, viewportHeight) {
     // Forma: max(160, min(27% of the viewport, 24% of the width, 300)).
     // On the inner display the chapter is only ~550–850px wide, so 24% of
@@ -348,26 +470,7 @@
     plot.replaceChildren(svg);
     const covered = (Date.parse(rows.at(-1).t) - Date.parse(rows[0].t)) / DAY;
     el('history-caption').textContent = `NAV, ${days}-day window · ${money(low)} to ${money(high)} · ${covered < days - 0.5 ? `${Math.max(1, Math.round(covered))} days on record, from ${axisDayYear.format(new Date(history[0].t))}` : `${rows.length} readings`} · the dot is the latest reading`;
-    armChartDraw(path, box);
     bindScrub(box);
-  }
-  function armChartDraw(path, box) {
-    if (chartObserver) chartObserver.disconnect();
-    if (reduced() || chartAnimated) return;
-    const length = path.getTotalLength();
-    if (!length) return;
-    path.style.strokeDasharray = String(length);
-    path.style.strokeDashoffset = String(length);
-    const go = () => {
-      chartAnimated = true;
-      path.style.transition = 'stroke-dashoffset var(--jk-d-draw) var(--jk-ease)';
-      path.style.strokeDashoffset = '0';
-    };
-    if (!('IntersectionObserver' in window)) { go(); return; }
-    chartObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) { go(); chartObserver.disconnect(); }
-    }, { threshold: 0.3 });
-    chartObserver.observe(box);
   }
   // Keep empty/hidden tooltips out of the accessibility tree, and give the
   // populated tooltip a name. Same local fix as Predictie; vendor stays exact.
@@ -463,7 +566,7 @@
     const order = ['AVAX', 'sAVAX', 'PHAR', 'p33', 'NEAR', 'ZEC', 'VVV', 'AAVE', 'HYPE'];
     rows.sort((a, b) => (order.indexOf(a.token) < 0 ? 99 : order.indexOf(a.token)) - (order.indexOf(b.token) < 0 ? 99 : order.indexOf(b.token)));
     const passing = data.rows.filter((row) => row.gatePass === true).length;
-    el('signals-value').textContent = `${passing}/${data.rows.length}`;
+    setFigure('signals-value', `${passing}/${data.rows.length}`);
     el('signals-summary').textContent = 'Watchlist';
     el('signals-cmp').innerHTML = `<b>${passing}</b> of ${data.rows.length} gates pass · quotes ${priceData ? time(priceData.updatedAt) : 'unavailable'}`;
     const gate = (row) => row.gatePass === true
@@ -487,7 +590,7 @@
     const pct = (value) => `${Math.round(value * 100)}%`;
     const rows = data.rows.filter((row) => Array.isArray(row.band) && finite(row.band[0]) && finite(row.band[1]));
     const stale = rows.filter((row) => row.staleAfter && today > row.staleAfter).length;
-    el('forecasts-value').textContent = String(rows.length);
+    setFigure('forecasts-value', String(rows.length));
     el('forecasts-summary').textContent = data.source || 'Forecast book';
     el('forecasts-cmp').innerHTML = `as of <b>${day(data.asOf)}</b> · <b>${stale}</b> past review · ${escape(data.source || 'forecast book')}`;
     el('forecasts-content').innerHTML = rows.length ? `<ul class="jk-rows rows-forecast wrap" aria-label="Forecast probability bands">${rows.map((row) => {
@@ -514,7 +617,7 @@
     const labels = { avalanche_rpc: 'Avalanche RPC', hyperliquid: 'Hyperliquid', polymarket: 'Polymarket', avantis: 'Avantis', yo: 'YO', evm_wallets: 'Other chains RPC', coingecko: 'CoinGecko', serialized_audit: 'Serialized Audit', decisions: 'Decisions' };
     const keys = [...Object.keys(labels), ...Object.keys(data.sources).filter((key) => !labels[key])];
     const fresh = keys.filter((key) => data.sources[key]?.status === 'ok').length;
-    el('sources-value').textContent = `${fresh}/${keys.length}`;
+    setFigure('sources-value', `${fresh}/${keys.length}`);
     el('sources-cmp').innerHTML = `last refresh ${data.generatedAt ? time(data.generatedAt) : 'unavailable'} · Europe/Rome`;
     el('sources-content').innerHTML = keys.map((key) => {
       const row = data.sources[key];
@@ -583,7 +686,6 @@
     if (window.JaackPill && period) {
       JaackPill.init(period, (value) => {
         days = Number(value);
-        chartAnimated = true;
         safeRender(['history-plot'], () => renderChart(history, days));
       });
     }
@@ -616,7 +718,6 @@
       if (!plot) return;
       const vh = window.innerHeight;
       if (Math.abs(plot.clientWidth - chartWidth) < 2 && Math.abs(vh - chartViewport) < 12) return;
-      chartAnimated = true;
       safeRender(['history-plot'], () => renderChart(history, days));
     };
     if ('ResizeObserver' in window) new ResizeObserver(redraw).observe(el('history-plot'));

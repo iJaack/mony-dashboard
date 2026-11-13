@@ -20,4 +20,4 @@ Open `http://127.0.0.1:8080`. Seeded files work without access to data providers
 
 ## Design
 
-Canonical source: `iJaack/jaack-design` v2.0.0, commit `008ab6f2f0a30091543db16ac70f02cab041338e`, vendored in `site/vendor/jaack/`. Verify with `(cd site/vendor/jaack && shasum -a 256 -c MANIFEST.txt)`. Local overrides live in `site/assets/jaack-local.css`; vendor files stay unchanged. `SOURCE` records the release provenance; the package supplies `VERSION`. Only manifest files, `MANIFEST.txt` and `SOURCE` are shipped.
+Canonical source: `iJaack/jaack-design` v2.1.0, commit `1df06388224c77dcef92145252f0f3c27d8e4fd7`, vendored in `site/vendor/jaack/`. Verify with `(cd site/vendor/jaack && shasum -a 256 -c MANIFEST.txt)`. Local overrides live in `site/assets/jaack-local.css`; vendor files stay unchanged. `SOURCE` records the release provenance; the package supplies `VERSION`. Only manifest files, `MANIFEST.txt` and `SOURCE` are shipped.

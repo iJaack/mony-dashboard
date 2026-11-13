@@ -75,7 +75,7 @@ test('Mony light and dark tokens match the authoritative palette fixture', async
   }
 });
 
-test('v2.0.0 vendor file set, every manifest hash and release provenance stay intact', async () => {
+test('v2.1.0 vendor file set, every manifest hash and release provenance stay intact', async () => {
   const tokens = await read('site/vendor/jaack/tokens.css');
   assert.match(tokens, /html\[data-theme="dark"\]\s*\{[^}]*--jk-bg:\s*#130e0b\s*;/);
   const manifest = await read('site/vendor/jaack/MANIFEST.txt');
@@ -102,7 +102,7 @@ test('v2.0.0 vendor file set, every manifest hash and release provenance stay in
     const bytes = await readFile(new URL(path, vendor));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), expected, path);
   }
-  assert.equal(await read('site/vendor/jaack/SOURCE'), 'iJaack/jaack-design v2.0.0 008ab6f2f0a30091543db16ac70f02cab041338e\n');
+  assert.equal(await read('site/vendor/jaack/SOURCE'), 'iJaack/jaack-design v2.1.0 1df06388224c77dcef92145252f0f3c27d8e4fd7\n');
 });
 
 test('site acceptance scans reject retired colours, shadows, offsets and ghost numerals', async () => {
