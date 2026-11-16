@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-12T15:11:53.000Z",
+  "updatedAt": "2026-11-16T08:21:13.000Z",
   "decisions": [
+    {
+      "id": "2026-11-16-eth-rebound-entry",
+      "date": "2026-11-16T08:21:13.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound entry",
+      "reason": "ETH is deeply oversold (z -1.69, RSI 26.7) and bounced +1.8% in 24h, clearing the stricter downtrend rebound bar. Bought a small WETH.e leg (about 10% of the fund) with a stop at 1,725, a target at the 10-day average (1,996) and a 5-day expiry. Only one rebound leg is open; the r",
+      "asset": "WETH.e",
+      "action": "buy",
+      "size": {
+        "amount": 15.206976,
+        "asset": "USDC",
+        "usd": 15.21
+      },
+      "received": {
+        "amount": 0.0084100445,
+        "asset": "WETH.e"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x8f480f0602f8eda29782a976bec22d77112c71fa6c9788408369e86295c6e5ae",
+          "block": 100461264,
+          "gasUsed": 55437,
+          "gasAvax": 0.00051972
+        },
+        {
+          "label": "swap",
+          "hash": "0x6a5640eb9d1419ccd6cf212bc5b31ec37ffb9029cf395e4908ae056e979c6722",
+          "block": 100461321,
+          "gasUsed": 450000,
+          "gasAvax": 0.00421875
+        }
+      ]
+    },
     {
       "id": "2026-11-12-btc-rebound-stop",
       "date": "2026-11-12T15:11:53.000Z",
