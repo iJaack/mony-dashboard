@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./assets/app.css">
   <script src="./vendor/jaack/jaack.js" defer></script>
   <script src="./assets/menu.js" defer></script>
+  <script src="./assets/holdings.js" defer></script>
   <script src="./assets/app.js" defer></script>
 </head>
 <body>
@@ -103,9 +104,19 @@
             </div>
           </div>
         </div>
-        <div class="jk-group jk-fx">
+        <div class="jk-group">
           <h3 class="jk-lab">The holdings</h3>
-          <div id="holdings-content"><p class="jk-note">Unavailable</p></div>
+          <div id="holdings-content">
+            <ul id="holdings-figures" class="jk-figures" data-layout="list" aria-label="Treasury holdings in USD; daily position history" aria-busy="true">
+              <li id="holdings-loading" class="jk-figure" data-state="loading" aria-busy="true">
+                <span class="jk-figure-label">Holdings</span>
+                <span class="jk-figure-reading"><span class="jk-figure-value">—</span></span>
+                <span class="jk-figure-history"><svg class="jk-figure-spark" aria-hidden="true"></svg></span>
+                <span class="jk-figure-alt">Loading</span>
+              </li>
+            </ul>
+            <div id="holdings-open"></div>
+          </div>
           <p class="jk-note" id="holdings-note"></p>
           <p class="jk-note" id="holdings-updated">Last updated: unavailable</p>
         </div>

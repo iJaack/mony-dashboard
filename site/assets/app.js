@@ -277,7 +277,7 @@
     ].join('');
   }
 
-  function renderTreasury(data, history) {
+  function renderTreasury(data, history, positionsHistory) {
     if (!data || !finite(data.nav) || !Array.isArray(data.positions)) return;
     const status = data.execution.status === 'paused' ? 'paused' : 'active';
     const tag = el('execution-status');
@@ -328,7 +328,8 @@
     const priority = ['sAVAX', 'USDC', 'WAVAX', 'AVAX', 'USDt', 'BTC.b', 'WETH.e'];
     const positions = [...data.positions].sort((a, b) => (priority.indexOf(a.asset) < 0 ? 99 : priority.indexOf(a.asset)) - (priority.indexOf(b.asset) < 0 ? 99 : priority.indexOf(b.asset)) || b.valueUsd - a.valueUsd);
     const open = venues.hyperliquid.assetPositions;
-    el('holdings-content').innerHTML = `<table class="sheet"><caption class="sr-only">Treasury holdings across all venues, in USD.</caption><thead><tr><th scope="col">Asset</th><th scope="col">Balance</th><th scope="col">Value</th><th scope="col">Weight</th></tr></thead><tbody>${positions.map((row) => `<tr><th scope="row">${escape(row.asset)}<small class="sub">${escape(row.venue)}${row.inManagedNav === false ? ' · not in drawdown basis' : ''}</small></th><td class="num" data-label="Balance">${amount(row.balance, 6)}</td><td class="num" data-label="Value">${money(row.valueUsd)}</td><td class="num" data-label="Weight">${percent(row.weight)}</td></tr>`).join('')}</tbody></table>${open.length ? `<div class="jk-group"><h3 class="jk-lab">Open positions</h3><ul class="jk-rows rows-venues wrap">${open.map((row) => `<li><span>${escape(row.asset)}<small class="sub">${amount(row.balance)} · unrealized P&amp;L ${money(row.unrealizedPnl)} · included in margin equity</small></span><span class="r">${money(row.positionValue)}</span></li>`).join('')}</ul></div>` : ''}`;
+    window.MonyHoldings.render(positions, positionsHistory, Date.parse(data.generatedAt || data.updatedAt));
+    el('holdings-open').innerHTML = open.length ? `<div class="jk-group"><h3 class="jk-lab">Open positions</h3><ul class="jk-rows rows-venues wrap">${open.map((row) => `<li><span>${escape(row.asset)}<small class="sub">${amount(row.balance)} · unrealized P&amp;L ${money(row.unrealizedPnl)} · included in margin equity</small></span><span class="r">${money(row.positionValue)}</span></li>`).join('')}</ul></div>` : '';
     el('holdings-note').textContent = data.note || '';
     updated('holdings-updated', data.updatedAt);
 
@@ -671,10 +672,13 @@
   async function main() {
     hintScroll(document.querySelector('.jk-links'));
     hintScroll(document.querySelector('.dock-scroll'));
-    const [treasury, prices, historyData, sources, decisions, valuation, audits, forecasts] = await Promise.all(['treasury', 'prices', 'nav-history', 'sources', 'decisions', 'valuation', 'audits', 'forecasts'].map(load));
+    const [treasury, prices, historyData, sources, decisions, valuation, audits, forecasts, positionsHistory] = await Promise.all(['treasury', 'prices', 'nav-history', 'sources', 'decisions', 'valuation', 'audits', 'forecasts', 'positions-history'].map(load));
     const history = validHistory(historyData);
     let days = 7;
-    safeRender(['nav-title', 'venues-content', 'holdings-content', 'allocation-content', 'trim-content', 'savax-value'], () => renderTreasury(treasury, history));
+    safeRender(['nav-title', 'venues-content', 'holdings-content', 'allocation-content', 'trim-content', 'savax-value'], () => renderTreasury(treasury, history, positionsHistory));
+    if (!treasury || !finite(treasury.nav) || !Array.isArray(treasury.positions)) {
+      el('holdings-content').innerHTML = empty('Holdings unavailable');
+    }
     safeRender(['latest-content', 'decisions-content', 'execution-content', 'decisions-value'], () => renderDecisions(decisions));
     safeRender(['history-plot'], () => renderChart(history, days));
     safeRender(['risk-content'], () => renderRisk(history, treasury));

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, cp, rm, readFile, writeFile } from 'node:fs/promises';
-import { units, request, fetchAvalanche, updatePublicData, drawdown, compactHistory, allocation, gasSpent } from './update-public-data.mjs';
+import { units, request, fetchAvalanche, updatePublicData, drawdown, compactHistory, allocation, gasSpent, positionKey, updatePositionsHistory } from './update-public-data.mjs';
 
 const NOW = new Date('2026-10-17T20:41:00Z');
 const DAY = 86_400_000;
@@ -251,4 +251,90 @@ test('refresh never rewrites or deletes the forecast book', async () => temporar
   await updatePublicData({ dataDir, fetcher: provider(), now: NOW });
   await updatePublicData({ dataDir, fetcher: failing, now: new Date(NOW.valueOf() + 900_000) });
   assert.equal(await readFile(`${dataDir}/forecasts.json`, 'utf8'), book);
+}));
+
+test('position keys are stable, case-sensitive and cannot collide at delimiters', () => {
+  assert.equal(positionKey({ asset: 'Fondo A', venue: 'Avalanche' }), 'Fondo%20A@Avalanche');
+  assert.notEqual(positionKey({ asset: 'A@B', venue: 'C' }), positionKey({ asset: 'A', venue: 'B@C' }));
+  assert.notEqual(positionKey({ asset: 'A', venue: 'V' }), positionKey({ asset: 'a', venue: 'V' }));
+});
+
+test('position history buckets UTC days with the last reading winning, even unordered', () => {
+  const row = { asset: 'Fondo A', venue: 'Avalanche', valueUsd: 13000 };
+  const key = positionKey(row);
+  const history = { positions: { [key]: [
+    { t: '2026-10-16T23:30:00Z', valueUsd: 12200 },
+    { t: '2026-10-16T10:00:00Z', valueUsd: 11900 },
+    { t: '2026-10-16T23:30:00Z', valueUsd: 12480 },
+    { t: '2026-10-17T00:05:00+02:00', valueUsd: 12000 },
+  ] } };
+  const original = structuredClone(history);
+  assert.deepEqual(updatePositionsHistory(history, [row], NOW.valueOf()).positions[key], [
+    { t: '2026-10-16T23:30:00.000Z', valueUsd: 12480 },
+    { t: NOW.toISOString(), valueUsd: 13000 },
+  ]);
+  assert.deepEqual(history, original, 'helper does not mutate stored history');
+  assert.equal(updatePositionsHistory(history, [row, { ...row, valueUsd: 14000 }], NOW.valueOf()).positions[key].at(-1).valueUsd, 14000);
+});
+
+test('position retention is exactly 30 civil UTC days, including the whole oldest day', () => {
+  const points = Array.from({ length: 35 }, (_, i) => ({ t: new Date(Date.UTC(2026, 9, 17 - i)).toISOString(), valueUsd: i }));
+  const result = updatePositionsHistory({ positions: { old: points } }, [], NOW.valueOf()).positions.old;
+  assert.equal(result.length, 30);
+  assert.equal(result[0].t, '2026-09-18T00:00:00.000Z');
+  assert.equal(result.at(-1).t, '2026-10-17T00:00:00.000Z');
+});
+
+test('young and disappeared positions preserve only real readings and age out without zeros', () => {
+  const young = { asset: 'Young', venue: 'Avalanche', valueUsd: 3000 };
+  const twelveDays = { positions: { [positionKey(young)]: Array.from({ length: 12 }, (_, i) => ({ t: new Date(NOW.valueOf() - (11 - i) * DAY).toISOString(), valueUsd: 3000 + i })) } };
+  assert.deepEqual(updatePositionsHistory(twelveDays, [], NOW.valueOf()), twelveDays);
+  const once = updatePositionsHistory(null, [young], NOW.valueOf());
+  assert.equal(once.positions[positionKey(young)].length, 1);
+  const missing = updatePositionsHistory(once, [], NOW.valueOf() + DAY);
+  assert.deepEqual(missing, once);
+  assert.deepEqual(updatePositionsHistory(once, [], NOW.valueOf() + 30 * DAY), { positions: {} });
+});
+
+test('position history skips invalid values, times and identities, retaining real zero and signed equity', () => {
+  const row = { asset: 'A', venue: 'V', valueUsd: 0 };
+  const invalid = [null, '10', undefined, NaN, Infinity];
+  const history = { positions: { bad: [null, ...invalid.map(valueUsd => ({ t: NOW.toISOString(), valueUsd })), { t: 'bad', valueUsd: 1 }, { t: new Date(NOW.valueOf() + DAY).toISOString(), valueUsd: 1 }] } };
+  const result = updatePositionsHistory(history, [...invalid.map(valueUsd => ({ ...row, valueUsd })), {}, null, row, { ...row, asset: 'Margin', valueUsd: -10 }], NOW.valueOf());
+  assert.deepEqual(Object.keys(result.positions), ['A@V', 'Margin@V']);
+  assert.equal(result.positions['A@V'][0].valueUsd, 0);
+  assert.equal(result.positions['Margin@V'][0].valueUsd, -10);
+});
+
+test('successful refresh writes position history once per day and preserves declared targets', async () => temporaryData(async (dataDir) => {
+  await rm(`${dataDir}/positions-history.json`);
+  const previous = JSON.parse(await readFile(`${dataDir}/treasury.json`, 'utf8'));
+  previous.positions.push({ asset: 'sAVAX', venue: 'Avalanche', valueUsd: 20, targetBand: [15, 30] });
+  await writeFile(`${dataDir}/treasury.json`, JSON.stringify(previous));
+  const first = await updatePublicData({ dataDir, fetcher: provider(), now: NOW });
+  assert.deepEqual(first.treasury.positions.find(row => row.asset === 'sAVAX').targetBand, [15, 30]);
+  assert.equal(Object.keys(first['positions-history'].positions).length, first.treasury.positions.length);
+  const later = new Date(NOW.valueOf() + 900_000);
+  const second = await updatePublicData({ dataDir, fetcher: provider({ margin: '40' }), now: later });
+  const key = positionKey({ asset: 'USDC', venue: 'Hyperliquid margin' });
+  assert.deepEqual(second['positions-history'].positions[key], [{ t: later.toISOString(), valueUsd: 40 }]);
+  assert.deepEqual(JSON.parse(await readFile(`${dataDir}/positions-history.json`, 'utf8')), second['positions-history']);
+}));
+
+test('failed source refresh and invalid NAV valuation add no position history', async () => temporaryData(async (dataDir) => {
+  const before = updatePositionsHistory(null, [{ asset: 'A', venue: 'V', valueUsd: 10 }], NOW.valueOf() - DAY);
+  await writeFile(`${dataDir}/positions-history.json`, JSON.stringify(before));
+  const failed = await updatePublicData({ dataDir, fetcher: failing, now: NOW });
+  assert.deepEqual(failed['positions-history'], before);
+  const prices = JSON.parse(await readFile(`${dataDir}/prices.json`, 'utf8'));
+  delete prices.prices.sAVAX;
+  await writeFile(`${dataDir}/prices.json`, JSON.stringify(prices));
+  const invalid = await updatePublicData({ dataDir, fetcher: provider({ omitPrice: true }), now: NOW });
+  assert.deepEqual(invalid['positions-history'], before);
+}));
+
+test('partial refresh mirrors the estimated NAV snapshot in position history', async () => temporaryData(async (dataDir) => {
+  const result = await updatePublicData({ dataDir, fetcher: async (url, options) => url.includes('hyperliquid.xyz') ? failing() : provider()(url, options), now: NOW });
+  assert.equal(result.treasury.estimated, true);
+  for (const row of result.treasury.positions) assert.deepEqual(result['positions-history'].positions[positionKey(row)].at(-1), { t: NOW.toISOString(), valueUsd: row.valueUsd });
 }));

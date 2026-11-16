@@ -1,0 +1,225 @@
+{
+  "generatedAt": "2026-11-16T12:00:00.000Z",
+  "updatedAt": "2026-11-16T12:00:00.000Z",
+  "wallet": "0x0000000000000000000000000000000000000001",
+  "currency": "USD",
+  "estimated": false,
+  "note": "Synthetic fixture — not real data",
+  "nav": 39760,
+  "managedNav": 38760,
+  "venues": {
+    "avalanche": {
+      "valueUsd": 28760,
+      "updatedAt": "2026-11-16T12:00:00.000Z"
+    },
+    "hyperliquid": {
+      "valueUsd": 10000,
+      "updatedAt": "2026-11-16T12:00:00.000Z",
+      "accountValue": 0,
+      "withdrawable": 0,
+      "spotBalances": [
+        {
+          "asset": "SYNTH",
+          "balance": 1000
+        }
+      ],
+      "assetPositions": [
+        {
+          "asset": "SYNTH",
+          "balance": 1,
+          "entryPrice": 100,
+          "positionValue": 100,
+          "unrealizedPnl": 0,
+          "marginUsed": 10
+        }
+      ]
+    },
+    "polymarket": {
+      "label": "Polymarket",
+      "chain": "Polygon",
+      "valueUsd": 1000,
+      "updatedAt": "2026-11-16T12:00:00.000Z",
+      "positionsValue": 1000,
+      "cash": 0,
+      "openPositions": 1,
+      "redeemablePositions": 0,
+      "redeemableValue": 0,
+      "positions": []
+    }
+  },
+  "avalancheBalances": [
+    {
+      "asset": "SYNTH",
+      "balance": 2876,
+      "decimals": 18
+    }
+  ],
+  "positions": [
+    {
+      "asset": "Fondo A",
+      "venue": "Avalanche",
+      "balance": 1248,
+      "priceUsd": 10,
+      "valueUsd": 12480,
+      "weight": 0.31388329979879276,
+      "targetBand": [
+        12000,
+        13000
+      ]
+    },
+    {
+      "asset": "Fondo B",
+      "venue": "Avalanche",
+      "balance": 423,
+      "priceUsd": 10,
+      "valueUsd": 4230,
+      "weight": 0.10638832997987928
+    },
+    {
+      "asset": "Fondo C",
+      "venue": "Avalanche",
+      "balance": 875,
+      "priceUsd": 10,
+      "valueUsd": 8750,
+      "weight": 0.22007042253521128,
+      "targetBand": [
+        8500,
+        9000
+      ]
+    },
+    {
+      "asset": "Fondo D",
+      "venue": "Avalanche",
+      "balance": 330,
+      "priceUsd": 10,
+      "valueUsd": 3300,
+      "weight": 0.0829979879275654
+    },
+    {
+      "asset": "Fondo E",
+      "venue": "Hyperliquid spot",
+      "balance": 600,
+      "priceUsd": 10,
+      "valueUsd": 6000,
+      "weight": 0.15090543259557343
+    },
+    {
+      "asset": "Fondo F",
+      "venue": "Hyperliquid spot",
+      "balance": 250,
+      "priceUsd": 10,
+      "valueUsd": 2500,
+      "weight": 0.06287726358148893
+    },
+    {
+      "asset": "Fondo G",
+      "venue": "Hyperliquid spot",
+      "balance": 150,
+      "priceUsd": 10,
+      "valueUsd": 1500,
+      "weight": 0.03772635814889336
+    },
+    {
+      "asset": "Fondo H",
+      "venue": "Polymarket",
+      "balance": 100,
+      "priceUsd": 10,
+      "valueUsd": 1000,
+      "weight": 0.025150905432595575,
+      "inManagedNav": false
+    }
+  ],
+  "allocation": {
+    "sAVAX": {
+      "weight": 0,
+      "cap": 0.15,
+      "overCap": false,
+      "excessUsd": 0,
+      "trimAmount": 0,
+      "trimmedAmount": 0
+    },
+    "satellites": {
+      "weight": 0.9748490945674044,
+      "capEach": 0.1,
+      "capCombined": 0.4,
+      "overCap": true,
+      "assets": [
+        {
+          "asset": "Fondo A",
+          "valueUsd": 12480,
+          "weight": 0.31388329979879276,
+          "overCap": true
+        },
+        {
+          "asset": "Fondo B",
+          "valueUsd": 4230,
+          "weight": 0.10638832997987928,
+          "overCap": true
+        },
+        {
+          "asset": "Fondo C",
+          "valueUsd": 8750,
+          "weight": 0.22007042253521128,
+          "overCap": true
+        },
+        {
+          "asset": "Fondo D",
+          "valueUsd": 3300,
+          "weight": 0.0829979879275654,
+          "overCap": false
+        },
+        {
+          "asset": "Fondo E",
+          "valueUsd": 6000,
+          "weight": 0.15090543259557343,
+          "overCap": true
+        },
+        {
+          "asset": "Fondo F",
+          "valueUsd": 2500,
+          "weight": 0.06287726358148893,
+          "overCap": false
+        },
+        {
+          "asset": "Fondo G",
+          "valueUsd": 1500,
+          "weight": 0.03772635814889336,
+          "overCap": false
+        }
+      ]
+    },
+    "basis": {
+      "kind": "full",
+      "valueUsd": 39760
+    },
+    "tiers": {
+      "t1Usd": 1192.8,
+      "t2Usd": 3976,
+      "note": "Percent limits on full NAV; the EUR ceilings of 1k and 5k do not bind at this size. Per-transaction caps still apply."
+    },
+    "external": {
+      "weight": 0.025150905432595575,
+      "venues": [
+        {
+          "venue": "Polymarket",
+          "valueUsd": 1000,
+          "weight": 0.025150905432595575
+        }
+      ]
+    }
+  },
+  "drawdown": {
+    "sevenDay": -0.01,
+    "fromPeak": -0.02,
+    "peakNav": 40000,
+    "pauseThreshold": -0.1,
+    "escalateThreshold": -0.25,
+    "basis": "managed",
+    "managedNav": 38760
+  },
+  "execution": {
+    "status": "active",
+    "escalated": false
+  },
+  "gasAvax": 0
+}

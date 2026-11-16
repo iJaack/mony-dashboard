@@ -68,6 +68,7 @@ test('Mony light and dark tokens match the authoritative palette fixture', async
     const block = css.match(new RegExp(`html\\[data-theme="${theme}"\\][^{]*\\{([^}]+)\\}`))?.[1];
     assert.ok(block, `${theme} palette exists`);
     for (const [key, expected] of Object.entries(values)) {
+      if (key === 'figure') continue;
       const token = `--jk-${names[key] || key}`;
       const actual = block.match(new RegExp(`${token}\\s*:\\s*([^;]+);`))?.[1];
       assert.equal(actual?.replace(/\s/g, ''), expected, `${theme} ${token}`);
@@ -75,7 +76,7 @@ test('Mony light and dark tokens match the authoritative palette fixture', async
   }
 });
 
-test('v2.1.0 vendor file set, every manifest hash and release provenance stay intact', async () => {
+test('v2.2.0 vendor file set, every manifest hash and release provenance stay intact', async () => {
   const tokens = await read('site/vendor/jaack/tokens.css');
   assert.match(tokens, /html\[data-theme="dark"\]\s*\{[^}]*--jk-bg:\s*#130e0b\s*;/);
   const manifest = await read('site/vendor/jaack/MANIFEST.txt');
@@ -86,6 +87,8 @@ test('v2.1.0 vendor file set, every manifest hash and release provenance stay in
   });
   const paths = entries.map(([, path]) => path);
   assert.equal(new Set(paths).size, paths.length, 'no duplicate entries');
+  for (const file of ['components/figure.css', 'components/figure.js']) assert.ok(paths.includes(file), file);
+  assert.equal(await read('site/vendor/jaack/VERSION'), '2.2.0\n');
   const files = [];
   async function walk(directory, prefix = '') {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -102,7 +105,7 @@ test('v2.1.0 vendor file set, every manifest hash and release provenance stay in
     const bytes = await readFile(new URL(path, vendor));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), expected, path);
   }
-  assert.equal(await read('site/vendor/jaack/SOURCE'), 'iJaack/jaack-design v2.1.0 1df06388224c77dcef92145252f0f3c27d8e4fd7\n');
+  assert.equal(await read('site/vendor/jaack/SOURCE'), 'iJaack/jaack-design v2.2.0 ec751590c3e6c34017e572e57fed11bbf5b8adff\n');
 });
 
 test('site acceptance scans reject retired colours, shadows, offsets and ghost numerals', async () => {
@@ -177,21 +180,6 @@ test('all dock and fallback bar fade masks use 24px and the edge token stays .39
     assert.doesNotMatch(masks[0][1], /22px/);
   }
   assert.match(css, /--jk-edge:\s*rgba\(233,228,218,\.39\);/);
-});
-
-test('sheet text and numeric column headers align with their cells at desktop widths', async () => {
-  const css = await read('site/assets/app.css');
-  const desktop = css.slice(0, css.indexOf('@container (max-width: 720px)'));
-  assert.match(desktop, /\.sheet th, \.sheet td\s*\{[^}]*text-align:\s*right;/);
-  assert.match(desktop, /\.sheet th:first-child, \.sheet td:first-child\s*\{\s*text-align:\s*left;/);
-  const app = await read('site/assets/app.js');
-  const tables = [...app.matchAll(/<table class="sheet">([\s\S]*?)<\/table>/g)];
-  assert.equal(tables.length, 1, 'audit every generated sheet table');
-  const table = tables[0][1];
-  assert.deepEqual([...table.matchAll(/<th scope="col">([^<]+)<\/th>/g)].map(([, label]) => label), ['Asset', 'Balance', 'Value', 'Weight']);
-  assert.match(table, /<tbody>[^]*?<tr><th scope="row">/);
-  assert.deepEqual([...table.matchAll(/<td class="num" data-label="([^"]+)">/g)].map(([, label]) => label), ['Balance', 'Value', 'Weight']);
-  assert.doesNotMatch(await read('site/index.html'), /class="sheet"/, 'no additional static sheet tables to audit');
 });
 
 async function dockHarness({ view = 0, width = 200, total = 600, left = 260, buttonWidth = 80 } = {}) {

@@ -9,6 +9,7 @@ The JSON Schema 2020-12 document below defines every public file. To validate a 
 | `site/data/treasury.json` | `#/$defs/treasury` |
 | `site/data/prices.json` | `#/$defs/prices` |
 | `site/data/nav-history.json` | `#/$defs/nav-history` |
+| `site/data/positions-history.json` | `#/$defs/positions-history` |
 | `site/data/sources.json` | `#/$defs/sources` |
 | `site/data/decisions.json` | `#/$defs/decisions` |
 | `site/data/valuation.json` | `#/$defs/valuation` |
@@ -22,6 +23,12 @@ NAV includes full venue values across Avalanche, Hyperliquid, Polymarket (positi
 Drawdown is measured on managed NAV: the full NAV minus open prediction-market positions, with prediction-market cash kept in. Its peak is tracked separately from the full-NAV history, starting 18 Oct 2026; earlier points without a managed value are ignored. The headline `nav` (total holdings, including open prediction-market positions) drives position weights, the sAVAX cap, satellite caps and tier sizes. Managed NAV is used only for drawdown; open prediction-market positions are flagged `inManagedNav: false`. Polymarket, Avantis, YO and other-chain balances are reported, not traded, and not satellites. The 7-day drawdown needs at least two recent points and seven days of coverage. Peak drawdown needs at least two points; the all-time high is retained separately in treasury even as history is compacted. Execution pauses at or below -10% over seven days; the escalation flag is set at or below -25% from peak. Drawdown alone does not prove that trades are running.
 
 History is bucketed to the last point of each quarter-hour, then to the last point per UTC day beyond 30 days. The hard 2,000-entry ceiling retains the highest sampled point and the newest points. Thirty days at 15-minute intervals needs 2,880 entries, so the ceiling necessarily shortens full-resolution coverage. A wholly failed refresh creates no new history point; a partially refreshed valuation may use dated fallback values and is marked estimated.
+
+Position history is separate from total NAV: `positions-history.json` maps a stable key, `encodeURIComponent(asset) + "@" + encodeURIComponent(venue)`, to `{t, valueUsd}` observations. Keys are case-sensitive; changing asset or venue starts a new history. Each position retains the last reading per **UTC civil day**, using the same UTC day boundary as older NAV history, for today and the preceding 29 days. `t` preserves the actual reading time. Later timestamps win even when input is unordered; equal timestamps use the last supplied reading. Values must be finite numbers (signed margin equity is valid); malformed observations and future dates are skipped. No prior days, missing days or disappeared positions are filled with zeros. Disappeared positions retain their earlier observations until they age out after 30 days. A wholly failed refresh, or a valuation that fails to produce a new NAV observation, adds no position observation; partial refreshes mirror NAV's estimated snapshot, including dated fallback values. Existing history can still be trimmed on failure.
+
+The initial position history contains **only the 16 November 2026 snapshot** already in `treasury.json`, at its original `updatedAt`; no past values were inferred from total NAV. The existing 15-minute workflow includes this file through `git add site/data/*.json`.
+
+A position may declare an optional USD `targetBand: [lo, hi]`, with finite ordered endpoints. The updater preserves declared bands by position key. Production positions currently declare none. Holdings uses a local scale containing both the observed history and the whole target band, and prints those scale ends beside the sparkline. Accessible English text describes observed extrema, trend (stable within 0.5% relative change), the actual recorded window (at most 30 UTC days), internal missing days and any band. Delta compares the first and last available reading when at least two exist; an initial zero makes relative delta unavailable. Rounded zero is unsigned and neutral. Missing or invalid position history leaves current values visible with “History unavailable”.
 
 Valuation fields describe the dated research snapshot. `modeledValue` is its base present value, `buyLevel` its stressed admission ceiling, and `marginOfSafety` its original discount to base value. Gates are published research outputs, not automatically reapproved when prices change. The price table carries independent quote dates. The `token` field is the required asset symbol, not authentication material. Unknown p33 market mapping is left unmapped; its dated research quote remains available.
 
@@ -119,7 +126,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
       "properties": {
         "asset": {
           "type": "string",
-          "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,23}$"
+          "pattern": "^[A-Za-z][A-Za-z0-9 ._-]{0,63}$"
         },
         "venue": {
           "enum": [
@@ -156,6 +163,15 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "inManagedNav": {
           "const": false,
           "description": "Present on open prediction-market positions, which are excluded from managed NAV (the drawdown basis). Their weight still uses full NAV."
+        },
+        "targetBand": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Optional USD target interval [lo, hi], lo <= hi. Ordered endpoints are validated by the application; JSON Schema cannot compare sibling values."
         }
       },
       "required": [
@@ -226,7 +242,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
             "properties": {
               "asset": {
                 "type": "string",
-                "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,23}$"
+                "pattern": "^[A-Za-z][A-Za-z0-9 ._-]{0,63}$"
               },
               "valueUsd": {
                 "type": "number",
@@ -1119,6 +1135,44 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "label",
         "valueUsd",
         "updatedAt"
+      ]
+    },
+    "positions-history": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "note": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "positions": {
+          "type": "object",
+          "description": "Case-sensitive URI-encoded asset@venue keys. One last reading per UTC day; chronological order; today plus preceding 29 UTC days.",
+          "additionalProperties": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "t": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "valueUsd": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "t",
+                "valueUsd"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "positions"
       ]
     },
     "forecasts": {

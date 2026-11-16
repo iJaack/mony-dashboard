@@ -1,4 +1,7 @@
 fixtures/
+!tests/fixtures/
+.playwright-cli/
+output/playwright/
 *.log
 codex-*.log
 PHASE*_BRIEF.md
