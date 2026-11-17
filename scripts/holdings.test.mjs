@@ -44,7 +44,8 @@ function harness({ mediaReduced = false, classReduced = false, duration = '200ms
   const group = node('ul'), root = node('html');
   if (classReduced) root.classList.add('jk-rm');
   const media = { matches: mediaReduced, listeners: new Set(), addEventListener(name, fn) { this.listeners.add(fn); }, removeEventListener(name, fn) { this.listeners.delete(fn); } };
-  const document = { documentElement: root, getElementById: id => id === 'holdings-figures' ? group : null, createElement: node, createElementNS: (ns, tag) => node(tag), addEventListener() {} };
+  const document = { documentElement: root, getElementById: id => id === 'holdings-figures' ? group : null, createElement: node, createElementNS: (ns, tag) => node(tag),
+    createTextNode(value) { const text = node('#text'); text.textContent = value; return text; }, addEventListener() {} };
   const window = {};
   const context = {
     window, document, performance: { now: () => clock }, matchMedia: () => media,
@@ -315,13 +316,29 @@ test('fixture rows render once with metadata, English alternatives and unsigned 
   assert.equal(find(c, 'delta').textContent, '0.0%'); assert.equal(find(c, 'delta').dataset.sign, 'zero');
   assert.equal(find(a, 'min').textContent, '$11,900.00'); assert.equal(find(a, 'max').textContent, '$13,000.00');
   assert.ok(find(a, 'band')); assert.equal(find(b, 'band'), null);
-  assert.match(find(a, 'label').textContent, /Fondo AAvalancheBalance 1,248 · Weight 31.4%/);
+  assert.equal(find(a, 'label').textContent, 'Fondo AAvalancheBalance 1,248 · Weight 31.4%');
   assert.match(find(h.group.children[7], 'label').textContent, /not in drawdown basis/);
   for (const row of h.group.children) {
     assert.equal(find(row, 'spark').attrs['aria-hidden'], 'true');
     assert.equal(row.attrs['aria-busy'], 'false');
     assert.match(find(row, 'alt').textContent, /minimum .*maximum .*(?:12|30) days with readings in the last 30 days/);
   }
+});
+
+test('Balance and Weight are separate intact pieces with a middle-dot separator from 1280px', () => {
+  const h = harness(); h.render(treasury.positions, history, now);
+  for (const row of h.group.children) {
+    const details = row.querySelector('.holdings-details');
+    const [balance, separator, weight] = details.children;
+    assert.equal(details.children.length, 3);
+    assert.equal(balance.tag, 'span'); assert.equal(weight.tag, 'span');
+    assert.equal(balance.className, 'holdings-detail'); assert.equal(weight.className, 'holdings-detail');
+    assert.match(balance.textContent, /^Balance \S+$/); assert.match(weight.textContent, /^Weight \S+$/);
+    assert.equal(separator.textContent, ' · ');
+    assert.match(visibleText(details).replace(/\s+/g, ' ').trim(), /^Balance \S+ · Weight \S+$/);
+  }
+  const css = read('site/assets/app.css');
+  assert.match(css, /@media \(min-width: 1280px\) \{[^]*?\.jk-figure-label \{ min-width: 22ch;[^]*?\.holdings-detail \{ overflow-wrap: normal; \}[^]*?\.holdings-detail \{ white-space: nowrap; \}/);
 });
 
 test('refresh reuses each vendor instance, counting values while marks and bands update immediately', () => {

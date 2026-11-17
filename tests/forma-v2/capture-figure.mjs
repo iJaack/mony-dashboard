@@ -157,23 +157,36 @@ try {
         }
         results.push({ count: count ?? 'full', width, height, theme, motion, ...evidence });
         if (motion === 'normal') {
-          if (width === 1280) {
+          if (width === 1280 || width === 2560) {
             const layout = await page.evaluate(() => {
               // All rows are rendered (no virtualization), so DOM rects also measure
               // rows below the viewport without cropping them to the screenshot.
               const rows = [...document.querySelectorAll('#holdings-figures > li')].map(node => {
                 const rect = node.getBoundingClientRect();
-                const subtitle = [...node.querySelectorAll('.jk-figure-label .sub')].find(node => node.textContent.startsWith('Balance '));
+                const subtitle = node.querySelector('.holdings-details');
                 const range = document.createRange();
                 range.selectNodeContents(subtitle);
                 const clientRects = [...range.getClientRects()].map(rect => ({ x: rect.x, y: rect.y + scrollY, width: rect.width, height: rect.height }));
                 const lineHeight = parseFloat(getComputedStyle(subtitle).lineHeight);
+                const spark = node.querySelector('.jk-figure-spark');
+                const history = node.querySelector('.jk-figure-history');
+                const sparkStyle = getComputedStyle(spark);
                 return {
                   label: node.querySelector('.jk-figure-label').firstChild.textContent,
                   valueX: node.querySelector('.jk-figure-value').getBoundingClientRect().x,
                   top: rect.top + scrollY, viewportTop: rect.top, height: rect.height,
+                  sparkWidth: spark.getBoundingClientRect().width,
+                  expectedSparkWidth: parseFloat(sparkStyle.width),
+                  sparkFlex: sparkStyle.flex, historyFlex: getComputedStyle(history).flex,
+                  historyWidth: history.getBoundingClientRect().width,
                   subtitle: { text: subtitle.textContent, clientRects, lineHeight, height: subtitle.getBoundingClientRect().height,
-                    wraps: clientRects.length > 1 || subtitle.getBoundingClientRect().height > lineHeight + 0.5 },
+                    separator: subtitle.childNodes[1]?.textContent,
+                    pieces: [...subtitle.querySelectorAll('.holdings-detail')].map(piece => ({
+                      text: piece.textContent, whiteSpace: getComputedStyle(piece).whiteSpace,
+                      overflowWrap: getComputedStyle(piece).overflowWrap,
+                      clientRects: [...piece.getClientRects()].map(rect => ({ x: rect.x, y: rect.y + scrollY, width: rect.width, height: rect.height })),
+                    })),
+                    wraps: new Set(clientRects.map(rect => rect.y)).size > 1 || subtitle.getBoundingClientRect().height > lineHeight + 0.5 },
                 };
               });
               const tops = [...new Set(rows.map(row => row.top))].sort((a, b) => a - b);
@@ -187,6 +200,22 @@ try {
               return { rows, rowHeightsDiffer: rows.some(row => Math.abs(row.height - rows[0].height) > 0.02) };
             });
             assert.equal(layout.rows.length, treasury.positions.length);
+            for (const row of layout.rows) {
+              const state = `${count ?? 'full'} days, ${width}px, ${theme}, ${row.label}`;
+              assert.equal(row.subtitle.separator, ' · ', state);
+              assert.equal(row.subtitle.pieces.length, 2, state);
+              assert.match(row.subtitle.pieces[0].text, /^Balance /, state);
+              assert.match(row.subtitle.pieces[1].text, /^Weight /, state);
+              for (const piece of row.subtitle.pieces) {
+                assert.equal(piece.whiteSpace, 'nowrap', state);
+                assert.equal(piece.overflowWrap, 'normal', state);
+                assert.equal(piece.clientRects.length, 1, `${state}: internal wrap in ${piece.text}`);
+                assert.ok(piece.clientRects[0].width > 0, state);
+              }
+              assert.equal(row.sparkFlex, '0 0 auto', state);
+              assert.equal(row.historyFlex, '0 0 auto', state);
+              assert.ok(Math.abs(row.sparkWidth - row.expectedSparkWidth) <= 0.02, `${state}: spark shrank`);
+            }
             measurements.push({ days: count ?? 'full', width, height, theme, ...layout });
           }
           const name = count === null ? `holdings-${width}-${theme}.png` : `days-${count}-${width}-${theme}.png`;
@@ -209,12 +238,16 @@ try {
   }
   assert.deepEqual(external, []); assert.deepEqual(browserErrors, []);
   for (const layout of measurements) {
-    const baseline = measurements.find(item => item.days === 30 && item.theme === layout.theme);
+    const baseline = measurements.find(item => item.days === 30 && item.width === layout.width && item.theme === layout.theme);
     layout.matches30 = {
       valueX: layout.rows.every((row, index) => Math.abs(row.valueX - baseline.rows[index].valueX) <= 0.02),
       pitch: layout.rows.every((row, index) => Math.abs(row.pitch - baseline.rows[index].pitch) <= 0.02),
       wrapping: layout.rows.every((row, index) => row.subtitle.wraps === baseline.rows[index].subtitle.wraps),
     };
+    for (const [index, row] of layout.rows.entries()) {
+      assert.ok(Math.abs(row.pitch - baseline.rows[index].pitch) <= 0.02,
+        `${layout.width}px, ${layout.theme}, ${layout.days} days, ${row.label}: pitch ${row.pitch} differs from 30 days (${baseline.rows[index].pitch})`);
+    }
   }
   await writeFile(resolve(output, 'measurements.json'), JSON.stringify({
     units: 'CSS px', topOrigin: 'document', pitch: 'Successive distinct grid-row tops; adjacent cells also retain nextRowTopDelta. Last row uses preceding pitch; a single grid row uses height.',
@@ -250,19 +283,22 @@ value shown, history box reserved, no visible empty-state label (0/1 day). Hidde
 All data JSON requests used fixtures; no external requests or browser errors.
 Detailed evidence: [checks.json](checks.json).
 
-## Layout measurements at 1280 × 800
+## Layout measurements at 1280 × 800 and 2560 × 1440
 
 All eight rendered rows are measured, including rows below the viewport. Coordinates are CSS pixels.
-Full per-row value x, document top, viewport top, height, pitch and subtitle text client rects:
+Full per-row value x, document top, viewport top, height, pitch, spark widths and subtitle text client rects:
 [measurements.json](measurements.json). Pitch uses successive distinct grid-row tops because
-adjacent cells in the two-column grid share a top. The final grid row uses the preceding pitch.
-Matches compare each row to the 30-day set in the same theme (tolerance 0.02px).
+adjacent cells in a grid row share a top. The final grid row uses the preceding pitch.
+Matches compare each row to the 30-day set at the same width and theme (tolerance 0.02px).
+Pitch equality is asserted for all variants. Each Balance/Weight span has one nonzero-width
+client rect, white-space:nowrap and overflow-wrap:normal. The pair may wrap between spans.
+Spark/history retain flex:none; measured spark width matches the fixed CSS width.
 
-| Days | Theme | Value x (row order) | Row pitch | Heights | X / pitch match 30 | Wrapped Balance/Weight rows |
-| --- | --- | --- | --- | --- | --- | --- |
-${measurements.map(item => `| ${item.days} | ${item.theme} | ${item.rows.map(row => row.valueX.toFixed(3)).join(', ')} | ${unique(item.rows, row => row.pitch)} | ${unique(item.rows, row => row.height)} | ${item.matches30.valueX} / ${item.matches30.pitch} | ${item.rows.filter(row => row.subtitle.wraps).map(row => row.label).join(', ') || 'none'} |`).join('\n')}
+| Width | Days | Theme | Value x (row order) | Row pitch | Heights | Spark widths | X / pitch match 30 | Wrapped Balance/Weight rows |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+${measurements.map(item => `| ${item.width} | ${item.days} | ${item.theme} | ${item.rows.map(row => row.valueX.toFixed(3)).join(', ')} | ${unique(item.rows, row => row.pitch)} | ${unique(item.rows, row => row.height)} | ${unique(item.rows, row => row.sparkWidth)} | ${item.matches30.valueX} / ${item.matches30.pitch} | ${item.rows.filter(row => row.subtitle.wraps).map(row => row.label).join(', ') || 'none'} |`).join('\n')}
 
-${measurements.map(item => `${item.days} days, ${item.theme}: row heights ${item.rowHeightsDiffer ? 'differ' : 'equal'}; subtitle wrapping ${item.matches30.wrapping ? 'matches' : 'differs from'} 30 days.`).join('\n\n')}
+${measurements.map(item => `${item.width}px, ${item.days} days, ${item.theme}: row heights ${item.rowHeightsDiffer ? 'differ' : 'equal'}; subtitle wrapping ${item.matches30.wrapping ? 'matches' : 'differs from'} 30 days.`).join('\n\n')}
 
 ## Other validation
 

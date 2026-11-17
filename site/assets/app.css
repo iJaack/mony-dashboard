@@ -311,6 +311,16 @@ a.jk-a:hover, a.jk-a:focus-visible { color: var(--jk-ink); }
 #holdings-figures > .jk-figure { width: 100%; border-top: 1px solid var(--jk-hair); }
 #holdings-figures .jk-figure-label { font-weight: 650; }
 #holdings-figures .jk-figure-label .sub { overflow-wrap: anywhere; }
+@media (min-width: 1280px) {
+  /* Let subtitles use the empty space beneath the reading/history. */
+  #holdings-figures > .jk-figure { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; }
+  #holdings-figures .jk-figure-label { min-width: 22ch; width: 22ch; grid-area: 1 / 1 / 2 / -1; }
+  #holdings-figures .jk-figure-reading { grid-area: 1 / 2; }
+  #holdings-figures .jk-figure-history { grid-area: 1 / 3; }
+  #holdings-figures .jk-figure-label .holdings-details,
+  #holdings-figures .holdings-detail { overflow-wrap: normal; }
+  #holdings-figures .holdings-detail { white-space: nowrap; }
+}
 #holdings-figures [data-state="loading"] { min-height: 76px; }
 #holdings-figures [data-state="loading"] .jk-figure-value { min-width: 10ch; }
 

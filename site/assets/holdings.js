@@ -91,10 +91,16 @@
       venue.className = 'sub';
       venue.textContent = `${row.venue}${row.inManagedNav === false ? ' · not in drawdown basis' : ''}`;
       const details = document.createElement('small');
-      details.className = 'sub';
+      details.className = 'sub holdings-details';
       const balance = finite(row.balance) ? row.balance.toLocaleString('en-GB', { maximumFractionDigits: 6 }) : 'Unavailable';
       const weight = finite(row.weight) ? `${row.weight < 0 ? '−' : ''}${percent(row.weight * 100)}` : 'Unavailable';
-      details.textContent = `Balance ${balance} · Weight ${weight}`;
+      const balanceLabel = document.createElement('span');
+      balanceLabel.className = 'holdings-detail';
+      balanceLabel.textContent = `Balance ${balance}`;
+      const weightLabel = document.createElement('span');
+      weightLabel.className = 'holdings-detail';
+      weightLabel.textContent = `Weight ${weight}`;
+      details.append(balanceLabel, document.createTextNode(' · '), weightLabel);
       label.append(venue, details);
       // Appending an existing node preserves the vendor instance and active count.
       group.appendChild(entry.node);
