@@ -306,13 +306,16 @@ test('position history skips invalid values, times and identities, retaining rea
   assert.equal(result.positions['Margin@V'][0].valueUsd, -10);
 });
 
-test('successful refresh writes position history once per day and preserves declared targets', async () => temporaryData(async (dataDir) => {
+test('successful refresh writes position history once per day without copying previous target bands', async () => temporaryData(async (dataDir) => {
   await rm(`${dataDir}/positions-history.json`);
   const previous = JSON.parse(await readFile(`${dataDir}/treasury.json`, 'utf8'));
   previous.positions.push({ asset: 'sAVAX', venue: 'Avalanche', valueUsd: 20, targetBand: [15, 30] });
   await writeFile(`${dataDir}/treasury.json`, JSON.stringify(previous));
   const first = await updatePublicData({ dataDir, fetcher: provider(), now: NOW });
-  assert.deepEqual(first.treasury.positions.find(row => row.asset === 'sAVAX').targetBand, [15, 30]);
+  assert.ok(first.treasury.positions.some(row => row.asset === 'sAVAX'));
+  assert.ok(first.treasury.positions.every(row => !Object.hasOwn(row, 'targetBand')));
+  const written = JSON.parse(await readFile(`${dataDir}/treasury.json`, 'utf8'));
+  assert.ok(written.positions.every(row => !Object.hasOwn(row, 'targetBand')));
   assert.equal(Object.keys(first['positions-history'].positions).length, first.treasury.positions.length);
   const later = new Date(NOW.valueOf() + 900_000);
   const second = await updatePublicData({ dataDir, fetcher: provider({ margin: '40' }), now: later });

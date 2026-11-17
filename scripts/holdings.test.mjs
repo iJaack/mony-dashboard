@@ -78,6 +78,8 @@ function harness({ mediaReduced = false, classReduced = false, duration = '200ms
 }
 
 const find = (node, name) => node.querySelector('.jk-figure-' + name);
+const visibleText = (node) => node.hidden || node.style.visibility === 'hidden' || node.style.display === 'none' || node.className === 'jk-figure-alt'
+  ? '' : (node.text || '') + node.children.map(visibleText).join(' ');
 
 test('all loaded public files have full-shape, explicitly synthetic fixtures and a dummy wallet', () => {
   const production = readdirSync(new URL('../site/data/', import.meta.url)).filter(name => name.endsWith('.json')).sort();
@@ -154,16 +156,45 @@ for (const count of [0, 1, 2, 5, 30]) test(`${count} daily readings use a fixed 
   const rendered = h.group.children[0];
   assert.equal(find(rendered, 'number').textContent, '$12,480.00');
   assert.ok(find(rendered, 'history')); assert.equal(find(rendered, 'history').hidden, false);
-  assert.equal(find(rendered, 'delta').hidden, count < 2);
-  assert.equal(find(rendered, 'min').hidden, count < 2);
-  assert.equal(find(rendered, 'max').hidden, count < 2);
+  for (const name of ['delta', 'min', 'spark', 'max']) {
+    assert.equal(find(rendered, name).hidden, false);
+    assert.equal(find(rendered, name).style.visibility, count < 2 ? 'hidden' : '');
+    assert.notEqual(find(rendered, name).style.display, 'none');
+  }
   assert.equal(!!find(rendered, 'line'), count >= 2);
   assert.equal(!!find(rendered, 'dot'), count >= 2);
   if (count < 2) {
     assert.equal(find(rendered, 'spark').children.length, 0, 'no marks, including a synthetic band');
-    const visibleText = rendered.descendants().filter(node => !node.hidden && node.className !== 'jk-figure-alt').map(node => node.text || '').join(' ');
-    assert.doesNotMatch(visibleText, /insufficient|unavailable|history|reading/i);
+    assert.doesNotMatch(visibleText(rendered), /insufficient|unavailable|history|reading|\+0\.0%/i);
+    assert.equal(find(rendered, 'min').textContent, '$12,480.00');
+    assert.equal(find(rendered, 'max').textContent, '$12,480.00');
+    assert.equal(find(rendered, 'delta').textContent, '+0.0%');
     assert.equal(find(rendered, 'alt').textContent, count ? 'One reading' : 'No history yet');
+  } else {
+    assert.equal(find(rendered, 'min').textContent, result.formatter(result.scale[0]));
+    assert.equal(find(rendered, 'max').textContent, result.formatter(result.scale[1]));
+    assert.equal(find(rendered, 'delta').textContent, `${result.delta < 0 ? '−' : result.delta > 0 ? '+' : ''}${Math.abs(result.delta).toFixed(1)}%`);
+  }
+});
+
+test('reserved history pieces remain in every row without exposing placeholder text', () => {
+  for (const count of [0, 1]) {
+    const h = harness();
+    const selected = { positions: Object.fromEntries(Object.entries(history.positions).map(([key, points]) => [key, count ? points.slice(-count) : []])) };
+    h.render(treasury.positions, selected, now);
+    for (const [index, rendered] of h.group.children.entries()) {
+      const formatted = h.figureData(treasury.positions[index], selected, now).formatter(treasury.positions[index].valueUsd);
+      assert.equal(visibleText(rendered).split(formatted).length - 1, 1, 'only the current value is visible');
+      for (const name of ['delta', 'min', 'spark', 'max']) {
+        const piece = find(rendered, name);
+        assert.ok(rendered.descendants().includes(piece));
+        assert.equal(piece.hidden, false);
+        assert.equal(piece.style.visibility, 'hidden');
+        assert.notEqual(piece.style.display, 'none');
+      }
+      assert.equal(find(rendered, 'min').textContent, formatted);
+      assert.equal(find(rendered, 'max').textContent, formatted);
+    }
   }
 });
 
@@ -216,19 +247,38 @@ test('invalid and duplicate same-day readings cannot enable a one-point chart', 
   assert.equal(result.series.length, 0); assert.equal(result.delta, null); assert.equal(result.alt, 'One reading');
 });
 
-test('refreshing from a chart to 0/1 readings removes marks and hides delta and scale ends', () => {
+test('refreshing from a chart to 0/1 readings reuses the reserved hidden layout and restores it at 2', () => {
   const row = treasury.positions[0], key = positionKey(row), h = harness();
   h.render([row], history, now);
   const rendered = h.group.children[0], historyBox = find(rendered, 'history');
+  const pieces = ['delta', 'min', 'spark', 'max'].map(name => find(rendered, name));
   for (const count of [1, 0, 2]) {
     h.render([row], { positions: { [key]: count ? history.positions[key].slice(-count) : [] } }, now);
     assert.equal(find(rendered, 'history'), historyBox);
     assert.equal(find(rendered, 'history').hidden, false);
     assert.equal(!!find(rendered, 'line'), count >= 2);
     assert.equal(!!find(rendered, 'dot'), count >= 2);
-    assert.equal(find(rendered, 'min').hidden, count < 2);
-    assert.equal(find(rendered, 'max').hidden, count < 2);
-    assert.equal(find(rendered, 'delta').hidden, count < 2);
+    for (const [index, name] of ['delta', 'min', 'spark', 'max'].entries()) {
+      const piece = find(rendered, name);
+      assert.equal(piece, pieces[index]);
+      assert.ok(rendered.descendants().includes(piece), 'reserved pieces remain in the tree');
+      assert.equal(piece.hidden, false);
+      assert.equal(piece.style.visibility, count < 2 ? 'hidden' : '');
+      assert.notEqual(piece.style.display, 'none');
+    }
+    assert.equal(find(rendered, 'number').textContent, '$12,480.00');
+    if (count < 2) {
+      assert.equal(find(rendered, 'spark').children.length, 0);
+      assert.equal(find(rendered, 'min').textContent, '$12,480.00');
+      assert.equal(find(rendered, 'max').textContent, '$12,480.00');
+      assert.equal(find(rendered, 'delta').textContent, '+0.0%');
+      assert.doesNotMatch(visibleText(rendered), /history|reading|\+0\.0%/i);
+    } else {
+      const expected = h.figureData(row, { positions: { [key]: history.positions[key].slice(-count) } }, now);
+      assert.equal(find(rendered, 'min').textContent, expected.formatter(expected.scale[0]));
+      assert.equal(find(rendered, 'max').textContent, expected.formatter(expected.scale[1]));
+      assert.equal(find(rendered, 'delta').textContent, `${expected.delta < 0 ? '−' : expected.delta > 0 ? '+' : ''}${Math.abs(expected.delta).toFixed(1)}%`);
+    }
   }
 });
 

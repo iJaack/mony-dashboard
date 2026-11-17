@@ -439,8 +439,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
       // Full NAV drives weights, the sAVAX cap and tiers. Managed NAV (full NAV minus open prediction-market
       // positions, pUSD cash kept in) drives drawdown alarms only, with its own peak.
       const managedNav = tidy(Math.max(0, nav - (extraVenues.polymarket?.positionsValue ?? 0)));
-      const targets = new Map((previous?.positions ?? []).filter((row) => row.targetBand).map((row) => [positionKey(row), row.targetBand]));
-      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => ({ ...row, weight: nav > 0 ? row.valueUsd / nav : 0, ...(managedRow(row) ? {} : { inManagedNav: false }), ...(targets.has(positionKey(row)) ? { targetBand: targets.get(positionKey(row)) } : {}) }));
+      const positions = [...avalanchePositions, marginPosition, ...hlPositions, ...extraPositions].filter((row) => Math.abs(row.valueUsd) >= 0.01).map((row) => ({ ...row, weight: nav > 0 ? row.valueUsd / nav : 0, ...(managedRow(row) ? {} : { inManagedNav: false }) }));
       history.push({ t: at, nav, managed: managedNav });
       const managedPeak = previous?.drawdown?.basis === 'managed' ? previous.drawdown.peakNav : null;
       const risk = { ...drawdown(history, managedNav, now.valueOf(), managedPeak, 'managed'), basis: 'managed', managedNav };

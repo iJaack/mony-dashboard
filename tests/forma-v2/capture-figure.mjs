@@ -57,7 +57,7 @@ const server = createServer(async (req, res) => {
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const origin = `http://127.0.0.1:${server.address().port}`;
 await mkdir(output, { recursive: true });
-const results = [], captures = [], browserErrors = [], external = [];
+const results = [], captures = [], measurements = [], browserErrors = [], external = [];
 let browser;
 try {
   browser = await playwright.chromium.launch({ headless: true });
@@ -86,7 +86,7 @@ try {
     await page.goto(origin + '/#holdings');
     await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
     await page.evaluate(() => document.fonts.ready);
-    for (const [width, height] of sizes.filter(([w]) => count === null || w === 466 || w === 1280)) {
+    for (const [width, height] of sizes.filter(([w]) => count === null || w !== 3440)) {
       await page.setViewportSize({ width, height });
       for (const theme of ['light', 'dark']) for (const motion of ['normal', 'media', 'class']) {
         await page.emulateMedia({ reducedMotion: motion === 'media' ? 'reduce' : 'no-preference' });
@@ -120,8 +120,10 @@ try {
                 slots: data.series.length, leading: data.series.findIndex(Number.isFinite),
                 line: !!node.querySelector('.jk-figure-line'), dot: !!dot,
                 dotOnCalendarDay: !dot || Math.abs(Number(dot.getAttribute('cx')) - (pad + last / 29 * (rect.width - 2 * pad))) < 0.02,
-                deltaHidden: node.querySelector('.jk-figure-delta').hidden,
-                limitsHidden: ['min', 'max'].every(name => node.querySelector('.jk-figure-' + name).hidden),
+                pieces: ['delta', 'min', 'spark', 'max'].map(name => {
+                  const piece = node.querySelector('.jk-figure-' + name);
+                  return { name, hidden: piece.hidden, hiddenAttribute: piece.hasAttribute('hidden'), visibility: piece.style.visibility, display: getComputedStyle(piece).display, width: piece.getBoundingClientRect().width };
+                }),
                 empty: spark.children.length === 0,
                 reserved: node.querySelector('.jk-figure-history').getBoundingClientRect().width > 0 && rect.height > 0,
                 noLabel: !/insufficient|unavailable|no history|one reading/i.test([...node.children].filter(child => !child.matches('.jk-figure-alt')).map(child => child.innerText || '').join(' ')),
@@ -138,14 +140,50 @@ try {
         for (const row of evidence.rows) {
           assert.ok(row.axis && row.dotOnCalendarDay && row.reserved && row.valueShown && row.instant, JSON.stringify(row));
           assert.equal(row.line, row.numeric >= 2); assert.equal(row.dot, row.numeric >= 2);
-          if (row.numeric < 2) assert.ok(row.empty && row.deltaHidden && row.limitsHidden && row.noLabel, JSON.stringify(row));
+          if (row.numeric < 2) {
+            assert.ok(row.empty && row.noLabel, JSON.stringify(row));
+            assert.ok(row.pieces.every(piece => !piece.hidden && !piece.hiddenAttribute && piece.visibility === 'hidden' && piece.display !== 'none' && piece.width > 0), JSON.stringify(row));
+          }
           else {
+            assert.ok(row.pieces.every(piece => piece.visibility === ''), JSON.stringify(row));
             assert.equal(row.slots, 30); assert.equal(row.leading, 30 - row.numeric);
             assert.ok(row.alt.includes(`${row.numeric} days with readings in the last 30 days (UTC)`));
           }
         }
         results.push({ count: count ?? 'full', width, height, theme, motion, ...evidence });
         if (motion === 'normal') {
+          if (width === 1280) {
+            const layout = await page.evaluate(() => {
+              // All rows are rendered (no virtualization), so DOM rects also measure
+              // rows below the viewport without cropping them to the screenshot.
+              const rows = [...document.querySelectorAll('#holdings-figures > li')].map(node => {
+                const rect = node.getBoundingClientRect();
+                const subtitle = [...node.querySelectorAll('.jk-figure-label .sub')].find(node => node.textContent.startsWith('Balance '));
+                const range = document.createRange();
+                range.selectNodeContents(subtitle);
+                const clientRects = [...range.getClientRects()].map(rect => ({ x: rect.x, y: rect.y + scrollY, width: rect.width, height: rect.height }));
+                const lineHeight = parseFloat(getComputedStyle(subtitle).lineHeight);
+                return {
+                  label: node.querySelector('.jk-figure-label').firstChild.textContent,
+                  valueX: node.querySelector('.jk-figure-value').getBoundingClientRect().x,
+                  top: rect.top + scrollY, viewportTop: rect.top, height: rect.height,
+                  subtitle: { text: subtitle.textContent, clientRects, lineHeight, height: subtitle.getBoundingClientRect().height,
+                    wraps: clientRects.length > 1 || subtitle.getBoundingClientRect().height > lineHeight + 0.5 },
+                };
+              });
+              const tops = [...new Set(rows.map(row => row.top))].sort((a, b) => a - b);
+              for (const [index, row] of rows.entries()) {
+                const level = tops.indexOf(row.top);
+                row.nextRowTopDelta = index + 1 < rows.length ? rows[index + 1].top - row.top : null;
+                // Adjacent cells in the same grid row have delta zero. Pitch is
+                // the next distinct grid-row top, or the preceding pitch at the end.
+                row.pitch = tops.length === 1 ? row.height : level + 1 < tops.length ? tops[level + 1] - row.top : row.top - tops[level - 1];
+              }
+              return { rows, rowHeightsDiffer: rows.some(row => Math.abs(row.height - rows[0].height) > 0.02) };
+            });
+            assert.equal(layout.rows.length, treasury.positions.length);
+            measurements.push({ days: count ?? 'full', width, height, theme, ...layout });
+          }
           const name = count === null ? `holdings-${width}-${theme}.png` : `days-${count}-${width}-${theme}.png`;
           await page.screenshot({ path: resolve(output, name) }); captures.push(name);
           if (width === 466) {
@@ -163,6 +201,19 @@ try {
     await context.close();
   }
   assert.deepEqual(external, []); assert.deepEqual(browserErrors, []);
+  for (const layout of measurements) {
+    const baseline = measurements.find(item => item.days === 30 && item.theme === layout.theme);
+    layout.matches30 = {
+      valueX: layout.rows.every((row, index) => Math.abs(row.valueX - baseline.rows[index].valueX) <= 0.02),
+      pitch: layout.rows.every((row, index) => Math.abs(row.pitch - baseline.rows[index].pitch) <= 0.02),
+      wrapping: layout.rows.every((row, index) => row.subtitle.wraps === baseline.rows[index].subtitle.wraps),
+    };
+  }
+  await writeFile(resolve(output, 'measurements.json'), JSON.stringify({
+    units: 'CSS px', topOrigin: 'document', pitch: 'Successive distinct grid-row tops; adjacent cells also retain nextRowTopDelta. Last row uses preceding pitch; a single grid row uses height.',
+    tolerance: 0.02, measurements,
+  }, null, 2) + '\n');
+  const unique = (rows, value) => [...new Set(rows.map(value))].map(value => value.toFixed(3)).join(', ');
   await writeFile(resolve(output, 'checks.json'), JSON.stringify(results, null, 2) + '\n');
   await writeFile(resolve(output, 'README.md'), `# Holdings figure captures — 17 November 2026
 
@@ -186,10 +237,25 @@ ${captures.map(name => `- [${name}](${name})`).join('\n')}
 ${results.length} viewport/theme/motion checks passed (normal, reduced media, reduced class), eight rows each.
 No horizontal page or row overflow. Fixed 30-day calendar axis matches every observation;
 today is slot 29, leading null count equals 30 minus reading days. Dot stays on the last recorded day.
-Under two readings: empty drawable series, no line/dot/band/scale ends, delta hidden,
+Under two readings: empty drawable series, no line/dot/band; delta, min, spark and max
+remain in layout with visibility hidden, no hidden attribute or display:none, and nonzero widths;
 value shown, history box reserved, no visible empty-state label (0/1 day). Hidden English alt remains.
 All data JSON requests used fixtures; no external requests or browser errors.
 Detailed evidence: [checks.json](checks.json).
+
+## Layout measurements at 1280 × 800
+
+All eight rendered rows are measured, including rows below the viewport. Coordinates are CSS pixels.
+Full per-row value x, document top, viewport top, height, pitch and subtitle text client rects:
+[measurements.json](measurements.json). Pitch uses successive distinct grid-row tops because
+adjacent cells in the two-column grid share a top. The final grid row uses the preceding pitch.
+Matches compare each row to the 30-day set in the same theme (tolerance 0.02px).
+
+| Days | Theme | Value x (row order) | Row pitch | Heights | X / pitch match 30 | Wrapped Balance/Weight rows |
+| --- | --- | --- | --- | --- | --- | --- |
+${measurements.map(item => `| ${item.days} | ${item.theme} | ${item.rows.map(row => row.valueX.toFixed(3)).join(', ')} | ${unique(item.rows, row => row.pitch)} | ${unique(item.rows, row => row.height)} | ${item.matches30.valueX} / ${item.matches30.pitch} | ${item.rows.filter(row => row.subtitle.wraps).map(row => row.label).join(', ') || 'none'} |`).join('\n')}
+
+${measurements.map(item => `${item.days} days, ${item.theme}: row heights ${item.rowHeightsDiffer ? 'differ' : 'equal'}; subtitle wrapping ${item.matches30.wrapping ? 'matches' : 'differs from'} 30 days.`).join('\n\n')}
 
 ## Other validation
 
@@ -204,8 +270,7 @@ Project checks run separately; retain their output alongside this pack:
 
 ## Open points
 
-The supplied SPEC-jk-figure.md ends at section 10 and lacks the named revision and Stage 2 decisions.
-The explicit Stage 2 task requirements control this implementation. The app continues to pass its
+The supplied spec includes Stage 2 decisions 9–11. The app continues to pass its
 refresh timestamp as now; changing that existing call site to wall-clock time is outside this adapter change.
 Synthetic bands exercise optional support; live treasury positions have no targetBand.
 Design acceptance remains with Jaack. No push or deployment is performed.

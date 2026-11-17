@@ -63,6 +63,16 @@
       entry.node.querySelector('.jk-figure-alt').textContent = data.alt;
       const delta = entry.node.querySelector('.jk-figure-delta');
       if (finite(data.delta)) delta.textContent = `${data.delta < 0 ? '−' : data.delta > 0 ? '+' : ''}${percent(data.delta)}`;
+      // Reserve the history layout without inventing observations or drawing marks.
+      const reserved = data.series.length === 0;
+      for (const name of ['delta', 'min', 'spark', 'max']) {
+        const piece = entry.node.querySelector('.jk-figure-' + name);
+        piece.style.visibility = reserved ? 'hidden' : '';
+        if (reserved) {
+          piece.hidden = false;
+          if (name !== 'spark') piece.textContent = name === 'delta' ? `+${percent(0)}` : money(data.value);
+        }
+      }
       if (data.value === null) {
         const number = entry.node.querySelector('.jk-figure-number');
         if (!entry.unavailableObserver) {
