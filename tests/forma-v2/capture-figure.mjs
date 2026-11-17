@@ -88,14 +88,19 @@ try {
     await page.evaluate(() => document.fonts.ready);
     for (const [width, height] of sizes.filter(([w]) => count === null || w !== 3440)) {
       await page.setViewportSize({ width, height });
+      // Let layout settle after a viewport change before measuring or scrolling.
+      await page.evaluate(() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done))));
       for (const theme of ['light', 'dark']) for (const motion of ['normal', 'media', 'class']) {
         await page.emulateMedia({ reducedMotion: motion === 'media' ? 'reduce' : 'no-preference' });
         await page.evaluate(({ theme, motion }) => {
           document.documentElement.dataset.theme = theme;
           document.documentElement.classList.toggle('jk-rm', motion === 'class');
           const group = document.getElementById('holdings-figures');
-          window.scrollTo(0, group.getBoundingClientRect().top + scrollY - 100);
+          const top = document.querySelector('.jk-top');
+          const offset = (top ? top.getBoundingClientRect().height : 0) + 16;
+          window.scrollTo(0, Math.max(0, group.getBoundingClientRect().top + scrollY - offset));
         }, { theme, motion });
+        await page.evaluate(() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done))));
         const evidence = await page.evaluate(({ positions, selected, now, today, day }) => {
           const group = document.getElementById('holdings-figures');
           return {
@@ -185,6 +190,8 @@ try {
             measurements.push({ days: count ?? 'full', width, height, theme, ...layout });
           }
           const name = count === null ? `holdings-${width}-${theme}.png` : `days-${count}-${width}-${theme}.png`;
+          const firstTop = await page.evaluate(() => document.querySelector('#holdings-figures > li')?.getBoundingClientRect().top ?? null);
+          assert.ok(firstTop != null && firstTop >= 0 && firstTop < 220, `Holdings first row off-screen in ${name}: top=${firstTop}`);
           await page.screenshot({ path: resolve(output, name) }); captures.push(name);
           if (width === 466) {
             // Supplemental strip lets reviewers inspect all eight synthetic rows.
