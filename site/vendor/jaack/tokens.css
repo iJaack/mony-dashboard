@@ -81,6 +81,15 @@
   --jk-d-pill: var(--jk-d-2);
   --jk-d-draw: var(--jk-d-3);
 
+  /* figure — one word of history beside a tabular value */
+  --jk-figure-stroke: 1.25px;
+  --jk-figure-dot: 3px;
+  --jk-figure-ratio: 5;
+  --jk-figure-height: 1cap;
+  --jk-figure-line: var(--jk-ink-2);
+  --jk-figure-mark: var(--jk-accent-text);
+  --jk-figure-band: color-mix(in oklch, var(--jk-ink) 8%, transparent);
+
   /* chart / data colours (marks, bars, lines — never body text) */
   --jk-c-blue:#0a84ff;--jk-c-orange:#ff9f0a;--jk-c-yellow:#ffd60a;--jk-c-green:#30d158;--jk-c-cyan:#64d2ff;--jk-c-purple:#bf5af2;--jk-c-pink:#ff375f;--jk-c-red:#ff453a;
 }

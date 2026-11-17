@@ -82,6 +82,15 @@
   --jk-d-pill: var(--jk-d-2);
   --jk-d-draw: var(--jk-d-3);
 
+  /* figure — one word of history beside a tabular value */
+  --jk-figure-stroke: 1.25px;
+  --jk-figure-dot: 3px;
+  --jk-figure-ratio: 5;
+  --jk-figure-height: 1cap;
+  --jk-figure-line: var(--jk-ink-2);
+  --jk-figure-mark: var(--jk-accent-text);
+  --jk-figure-band: color-mix(in oklch, var(--jk-ink) 8%, transparent);
+
   /* chart / data colours (marks, bars, lines — never body text) */
   --jk-c-blue:#0a84ff;--jk-c-orange:#ff9f0a;--jk-c-yellow:#ffd60a;--jk-c-green:#30d158;--jk-c-cyan:#64d2ff;--jk-c-purple:#bf5af2;--jk-c-pink:#ff375f;--jk-c-red:#ff453a;
 }
@@ -329,6 +338,39 @@ html[data-theme="dark"] .jk-glass::after{background:radial-gradient(420px circle
 .jk-cell .jk-viz{margin-top:var(--jk-s2)}.jk-cell .jk-viz svg{display:block;width:100%;height:auto}
 @container (max-width:880px){.jk-stats:not(.two){--n:2;row-gap:var(--jk-s6)}.jk-stats:not(.two)>.jk-cell:nth-child(3){border-left:0;padding-left:0}.jk-stats:not(.two)>.jk-cell:nth-child(n+3){border-top:1px solid var(--jk-hair);padding-top:var(--jk-s6)}}
 @container (max-width:440px){.jk-stats{--n:1!important;row-gap:var(--jk-s6)}.jk-stats>.jk-cell+.jk-cell{border-left:0;padding-left:0;border-top:1px solid var(--jk-hair);padding-top:var(--jk-s6)}.jk-cell{padding-right:0}}
+/* A figure and its history. Data marks redraw instantly; only the number may fade.
+   Set --jk-figure-row-bg on the row's container when its ground is not --jk-bg. */
+.jk-figure{display:flex;align-items:baseline;gap:var(--jk-s2);min-width:0;max-width:720px;font-size:var(--jk-fs-body);line-height:1.4;text-shadow:none}
+.jk-figure-label{flex:1;min-width:0;color:var(--jk-t2);overflow-wrap:anywhere}
+.jk-figure-reading,.jk-figure-history{display:flex;align-items:baseline;gap:var(--jk-s2);flex:none}
+.jk-figure-value{text-align:right;font-variant-numeric:tabular-nums lining-nums;color:var(--jk-accent-text);font-weight:650;white-space:nowrap}
+.jk-figure-number{display:inline-block}
+.jk-figure-delta{font-size:var(--jk-fs-sm);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;color:var(--jk-t2)}
+.jk-figure-delta[data-sign="positive"]{color:var(--jk-ok)}
+.jk-figure-delta[data-sign="negative"]{color:var(--jk-fail)}
+.jk-figure-min,.jk-figure-max{font-size:var(--jk-fs-sm);font-variant-numeric:tabular-nums lining-nums;color:var(--jk-t3);white-space:nowrap}
+.jk-figure-spark{display:block;flex:none;overflow:visible;height:0.7em;width:calc(var(--jk-figure-ratio) * 0.7em);align-self:center}
+@supports (height:1cap){.jk-figure-spark{height:var(--jk-figure-height);width:calc(var(--jk-figure-ratio) * var(--jk-figure-height))}}
+.jk-figure-band{fill:var(--jk-figure-band)}
+.jk-figure-line{fill:none;stroke:var(--jk-figure-line);stroke-width:var(--jk-figure-stroke);stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.jk-figure-dot{fill:var(--jk-figure-mark);stroke:var(--jk-figure-row-bg,var(--jk-bg));stroke-width:1px;vector-effect:non-scaling-stroke}
+/* Also override the instant theme rule in base.css: marks never transition. */
+.jk-figure .jk-figure-line,.jk-figure .jk-figure-band,.jk-figure .jk-figure-dot{transition:none!important;animation:none!important}
+.jk-figure-alt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;margin:-1px;padding:0;border:0}
+.jk-figure [hidden]{display:none}
+.jk-figure[data-state="loading"] .jk-figure-value,.jk-figure[data-state="empty"] .jk-figure-value{color:var(--jk-t3)}
+.jk-figures{display:grid;grid-template-columns:repeat(1,1fr);gap:var(--jk-s6)}
+.jk-figures[data-ratio="3"]{--jk-figure-ratio:3}
+.jk-figures[data-ratio="8"]{--jk-figure-ratio:8}
+/* Only tables and declared numeric lists use data padding. */
+.jk-figures[data-layout="list"]>.jk-figure,table .jk-figure{padding-block:var(--jk-row-pad-data)}
+@media (max-width:599px){.jk-figure{flex-wrap:wrap;justify-content:space-between}.jk-figure-label{flex-basis:100%}.jk-figure-value{text-align:left}.jk-figure-history{margin-left:auto}}
+@media (min-width:600px){.jk-figures{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1280px){.jk-figures{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:2560px){.jk-figures{grid-template-columns:repeat(4,1fr)}}
+.jk-figures[data-layout="list"]{grid-template-columns:1fr;gap:0}
+@media (min-width:1280px){.jk-figures[data-layout="list"]{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:2560px){.jk-figures[data-layout="list"]{grid-template-columns:repeat(4,1fr)}}
 /* nav pill — segmented control (chapter navigation at the bottom, or a period switch above a chart).
    A sliding indicator follows the active item; it moves only when motion is allowed. */
 .jk-pill{position:relative;display:inline-flex;padding:4px;--r:var(--jk-r-pill)}

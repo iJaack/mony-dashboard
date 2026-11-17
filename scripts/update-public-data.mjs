@@ -229,6 +229,32 @@ export function compactHistory(history, now = Date.now()) {
   return kept;
 }
 
+// Encode each part separately so asset/venue punctuation cannot collide.
+export const positionKey = ({ asset, venue }) => `${encodeURIComponent(asset)}@${encodeURIComponent(venue)}`;
+
+export function updatePositionsHistory(history, positions = [], now = Date.now()) {
+  const cutoff = Math.floor(now / DAY) * DAY - 29 * DAY;
+  const entries = new Map(Object.entries(history?.positions ?? {}).map(([key, points]) => [key, Array.isArray(points) ? [...points] : []]));
+  for (const row of positions) {
+    if (!row || typeof row.asset !== 'string' || !row.asset || typeof row.venue !== 'string' || !row.venue || !Number.isFinite(row.valueUsd)) continue;
+    const key = positionKey(row);
+    if (!entries.has(key)) entries.set(key, []);
+    entries.get(key).push({ t: new Date(now).toISOString(), valueUsd: row.valueUsd });
+  }
+  const result = [];
+  for (const [key, points] of entries) {
+    const days = new Map();
+    const valid = points.filter((point) => point && Number.isFinite(point.valueUsd) && Number.isFinite(Date.parse(point.t)) && Date.parse(point.t) >= cutoff && Date.parse(point.t) <= now);
+    for (const point of valid.sort((a, b) => Date.parse(a.t) - Date.parse(b.t))) {
+      const t = new Date(point.t).toISOString();
+      days.set(t.slice(0, 10), { t, valueUsd: point.valueUsd });
+    }
+    // Disappeared positions age out naturally; never synthesize zero readings.
+    if (days.size) result.push([key, [...days.values()]]);
+  }
+  return { positions: Object.fromEntries(result) };
+}
+
 export function drawdown(history, nav, now = Date.now(), peakNav = null, key = 'nav') {
   const points = history.filter((point) => Number.isFinite(point[key]) && point[key] >= 0 && Number.isFinite(Date.parse(point.t)) && Date.parse(point.t) <= now).map((point) => ({ t: point.t, nav: point[key] })).sort((a, b) => a.t.localeCompare(b.t));
   const recent = points.filter((point) => Date.parse(point.t) >= now - 7 * DAY);
@@ -303,10 +329,11 @@ async function readJson(directory, name, fallback) {
 
 export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), fetcher = fetch, now = new Date() } = {}) {
   const at = now.toISOString();
-  const [previous, priceFile, oldHistory, oldSources, decisionFile, valuation, audits] = await Promise.all([
+  const [previous, priceFile, oldHistory, oldSources, decisionFile, valuation, audits, oldPositionsHistory] = await Promise.all([
     readJson(dataDir, 'treasury', null), readJson(dataDir, 'prices', { prices: {} }), readJson(dataDir, 'nav-history', []),
     readJson(dataDir, 'sources', { sources: {} }), readJson(dataDir, 'decisions', { decisions: [] }),
     readJson(dataDir, 'valuation', { rows: [] }), readJson(dataDir, 'audits', { rows: [] }),
+    readJson(dataDir, 'positions-history', { positions: {} }),
   ]);
   const assets = [...new Set([...Object.keys(IDS), ...valuation.rows.map((row) => row.token), ...Object.keys(priceFile.prices)])];
   const chainKeys = Object.keys(CHAINS);
@@ -351,6 +378,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
 
   let treasury = previous;
   let history = [...oldHistory];
+  let refreshedPositions = [];
   const anyFresh = avalanche.status === 'fulfilled' || hlOk || quotes.status === 'fulfilled';
   if (anyFresh) {
     try {
@@ -429,6 +457,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
         execution: { status: risk.sevenDay !== null && risk.sevenDay <= -0.1 ? 'paused' : 'active', escalated: risk.fromPeak !== null && risk.fromPeak <= -0.25 },
         gasAvax: gasSpent(decisionFile.decisions),
       };
+      refreshedPositions = positions;
     } catch {
       sources.coingecko.note += ' NAV not refreshed: complete venue balances and held prices are required.';
     }
@@ -440,6 +469,7 @@ export async function updatePublicData({ dataDir = resolve(ROOT, 'site/data'), f
     treasury,
     prices: { generatedAt: at, updatedAt: quotes.status === 'fulfilled' ? at : priceFile.updatedAt ?? null, prices },
     'nav-history': compactHistory(history, now.valueOf()),
+    'positions-history': updatePositionsHistory(oldPositionsHistory, refreshedPositions, now.valueOf()),
     sources: { generatedAt: at, sources },
   };
   for (const [name, data] of Object.entries(output)) {

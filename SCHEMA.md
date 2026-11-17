@@ -9,6 +9,7 @@ The JSON Schema 2020-12 document below defines every public file. To validate a 
 | `site/data/treasury.json` | `#/$defs/treasury` |
 | `site/data/prices.json` | `#/$defs/prices` |
 | `site/data/nav-history.json` | `#/$defs/nav-history` |
+| `site/data/positions-history.json` | `#/$defs/positions-history` |
 | `site/data/sources.json` | `#/$defs/sources` |
 | `site/data/decisions.json` | `#/$defs/decisions` |
 | `site/data/valuation.json` | `#/$defs/valuation` |
@@ -22,6 +23,14 @@ NAV includes full venue values across Avalanche, Hyperliquid, Polymarket (positi
 Drawdown is measured on managed NAV: the full NAV minus open prediction-market positions, with prediction-market cash kept in. Its peak is tracked separately from the full-NAV history, starting 18 Oct 2026; earlier points without a managed value are ignored. The headline `nav` (total holdings, including open prediction-market positions) drives position weights, the sAVAX cap, satellite caps and tier sizes. Managed NAV is used only for drawdown; open prediction-market positions are flagged `inManagedNav: false`. Polymarket, Avantis, YO and other-chain balances are reported, not traded, and not satellites. The 7-day drawdown needs at least two recent points and seven days of coverage. Peak drawdown needs at least two points; the all-time high is retained separately in treasury even as history is compacted. Execution pauses at or below -10% over seven days; the escalation flag is set at or below -25% from peak. Drawdown alone does not prove that trades are running.
 
 History is bucketed to the last point of each quarter-hour, then to the last point per UTC day beyond 30 days. The hard 2,000-entry ceiling retains the highest sampled point and the newest points. Thirty days at 15-minute intervals needs 2,880 entries, so the ceiling necessarily shortens full-resolution coverage. A wholly failed refresh creates no new history point; a partially refreshed valuation may use dated fallback values and is marked estimated.
+
+Position history is separate from total NAV: `positions-history.json` maps a stable key, `encodeURIComponent(asset) + "@" + encodeURIComponent(venue)`, to `{t, valueUsd}` observations. Keys are case-sensitive; changing asset or venue starts a new history. Each position retains the last reading per **UTC civil day**, using the same UTC day boundary as older NAV history, for today and the preceding 29 days. `t` preserves the actual reading time. Later timestamps win even when input is unordered; equal timestamps use the last supplied reading. Values must be finite numbers (signed margin equity is valid); malformed observations and future dates are skipped. No prior days, missing days or disappeared positions are filled with zeros. Disappeared positions retain their earlier observations until they age out after 30 days. A wholly failed refresh, or a valuation that fails to produce a new NAV observation, adds no position observation; partial refreshes mirror NAV's estimated snapshot, including dated fallback values. Existing history can still be trimmed on failure.
+
+The initial position history contains **only the 16 November 2026 snapshot** already in `treasury.json`, at its original `updatedAt`; no past values were inferred from total NAV. The existing 15-minute workflow includes this file through `git add site/data/*.json`.
+
+Compared with `origin/main`, the only public data-contract addition is `site/data/positions-history.json`, described above. Every pre-existing file keeps its original schema and shape. Live treasury positions carry **no `targetBand`**, so live Holdings renders no target band. The updater does not copy a previous `targetBand` into refreshed live `treasury.json`. Optional `targetBand: [lo, hi]` support in the adapter is exercised only by synthetic fixtures; it is not part of the production position schema. Synthetic-only names and bands are validated with a test-local schema extension.
+
+Holdings always reserves a 30-slot UTC calendar axis, from the UTC day of `now` minus 29 through today on the right. Missing readings remain null, including leading and trailing days; there is no interpolation or inferred past value. With at least two readings, the local scale includes observed values and any synthetic band. Accessible English text reports observed extrema, trend (stable within 0.5% relative change), and “N days with readings in the last 30 days (UTC)”. Delta compares the first and last available reading; an initial zero makes relative delta unavailable. Rounded zero is unsigned and neutral. With fewer than two readings the current value remains visible, the history box stays reserved and the spark contains no marks: no line, dot or band. Delta, minimum, spark and maximum stay in the layout with `hidden = false` and `visibility: hidden`. Non-visible placeholders reserve their natural widths (current formatted value for minimum/maximum, `+0.0%` for delta); they do not represent past observations. At two or more readings the visibility overrides are cleared and vendor rendering resumes. No visible empty-state label is added; hidden text says “One reading” or “No history yet”.
 
 Valuation fields describe the dated research snapshot. `modeledValue` is its base present value, `buyLevel` its stressed admission ceiling, and `marginOfSafety` its original discount to base value. Gates are published research outputs, not automatically reapproved when prices change. The price table carries independent quote dates. The `token` field is the required asset symbol, not authentication material. Unknown p33 market mapping is left unmapped; its dated research quote remains available.
 
@@ -1119,6 +1128,44 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "label",
         "valueUsd",
         "updatedAt"
+      ]
+    },
+    "positions-history": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "note": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "positions": {
+          "type": "object",
+          "description": "Case-sensitive URI-encoded asset@venue keys. One last reading per UTC day; chronological order; today plus preceding 29 UTC days.",
+          "additionalProperties": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "t": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "valueUsd": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "t",
+                "valueUsd"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "positions"
       ]
     },
     "forecasts": {

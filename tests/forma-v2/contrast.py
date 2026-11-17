@@ -34,5 +34,18 @@ for name,themes in data.items():
         for f,b in p.get('extra',[]):
             fv=p.get(f,f); bv=p.get(b,b); r=ratio(fv,bv); ok=r>=3.0; fail+=(not ok)
             out.append(f"| {name} | {theme} | {f} {fv} su {b} {bv} | segno | {r:.2f} | {'OK' if ok else 'FAIL'} |")
+        # The vendor's oklch mix with transparent preserves ink's colour at 8% alpha.
+        # Test the actual band composite on every possible figure ground.
+        figure=p.get('figure')
+        if figure:
+            for ground in ('bg','surface','surface2'):
+                base=parse(p[ground])
+                band=over(parse(p[figure['bandInk']])[:3]+(figure['bandAlpha'],),base)
+                for part in ('value','label','limits','dot','line'):
+                    minimum=(4.6 if ground=='surface2' else 4.5) if part=='value' else 4.5 if part in ('label','limits') else 3.0
+                    grounds=[(ground,base)] if part in ('value','label','limits') else [(ground,base),(ground+' + band',band)]
+                    for label,background in grounds:
+                        r=ratio(p[figure[part]],background); ok=r>=minimum; fail+=(not ok)
+                        out.append(f"| {name} | {theme} | figure {part} su {label} | ≥{minimum:.1f} | {r:.2f} | {'OK' if ok else 'FAIL'} |")
 print("| progetto | tema | coppia | tipo | rapporto | esito |\n|---|---|---|---|---|---|"); print("\n".join(out))
 print(f"\nFAIL: {fail}", file=sys.stderr); sys.exit(1 if fail else 0)

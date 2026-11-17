@@ -240,12 +240,12 @@ test('day delta keeps the same trusted mark node and animates only its text', ()
   assert.ok(h.label('day-delta').classList.contains('jk-na'));
 });
 
-test('all nine headline render paths use setFigure, leaving tables, lists and gauges instant', () => {
+test('all nine headline render paths use setFigure, leaving other lists and gauges instant', () => {
   for (const id of ['nav-title', 'day-delta', 'book-value', 'savax-value', 'external-value', 'signals-value', 'forecasts-value', 'decisions-value', 'sources-value']) {
     assert.ok(app.includes(`setFigure('${id}',`), id);
     assert.doesNotMatch(app, new RegExp(`el\\('${id}'\\)\\.(?:textContent|innerHTML)\\s*=`), id);
   }
-  for (const id of ['holdings-content', 'venues-content', 'signals-content', 'forecasts-content', 'decisions-content', 'sources-content', 'savax-gauge']) {
+  for (const id of ['holdings-open', 'venues-content', 'signals-content', 'forecasts-content', 'decisions-content', 'sources-content', 'savax-gauge']) {
     assert.ok(app.includes(`el('${id}').innerHTML =`), id);
     assert.ok(!app.includes(`setFigure('${id}',`), id);
   }
