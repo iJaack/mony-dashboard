@@ -27,3 +27,14 @@ Dark (Ombra), normal motion, media reduced motion and `html.jk-rm`. The list's
 columns are 1/1/2/4/4 at <600 / 600–1279 / 1280–2559 / ≥2560 respectively;
 minimum/maximum labels are scale ends, while accessible text reports history's
 observed extrema. The sign on each nonzero delta supplements its colour.
+
+Stage 2 capture pack: `node tests/forma-v2/capture-figure.mjs` reuses the installed
+Playwright (or `PLAYWRIGHT_MODULE=/path/to/playwright`) and writes the requested
+five viewports in Light/Ombra to `output/figure-2026-11-17/`. It also truncates
+history in memory to 0/1/5/30 days at 466 and 1280px; D retains at most its 12 real
+readings. Every drawable series has 30 calendar slots with nulls for missing
+days. Below two readings the box stays reserved and empty, with no visible label
+or delta. The runner checks normal and both reduced-motion modes, blocks external
+requests, and routes every data JSON to these fixtures on both server and browser.
+`python3 tests/forma-v2/validate-data.py` validates all local JSON; synthetic names
+and target bands use a test-only schema overlay, leaving the live contract intact.

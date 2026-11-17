@@ -28,7 +28,9 @@ Position history is separate from total NAV: `positions-history.json` maps a sta
 
 The initial position history contains **only the 16 November 2026 snapshot** already in `treasury.json`, at its original `updatedAt`; no past values were inferred from total NAV. The existing 15-minute workflow includes this file through `git add site/data/*.json`.
 
-A position may declare an optional USD `targetBand: [lo, hi]`, with finite ordered endpoints. The updater preserves declared bands by position key. Production positions currently declare none. Holdings uses a local scale containing both the observed history and the whole target band, and prints those scale ends beside the sparkline. Accessible English text describes observed extrema, trend (stable within 0.5% relative change), the actual recorded window (at most 30 UTC days), internal missing days and any band. Delta compares the first and last available reading when at least two exist; an initial zero makes relative delta unavailable. Rounded zero is unsigned and neutral. Missing or invalid position history leaves current values visible with “History unavailable”.
+Compared with `origin/main`, the only public data-contract addition is `site/data/positions-history.json`, described above. Every pre-existing file keeps its original schema and shape. Live treasury positions carry **no `targetBand`**, so live Holdings renders no target band. Optional `targetBand: [lo, hi]` support in the adapter is exercised only by synthetic fixtures; it is not part of the production position schema. Synthetic-only names and bands are validated with a test-local schema extension.
+
+Holdings always reserves a 30-slot UTC calendar axis, from the UTC day of `now` minus 29 through today on the right. Missing readings remain null, including leading and trailing days; there is no interpolation or inferred past value. With at least two readings, the local scale includes observed values and any synthetic band. Accessible English text reports observed extrema, trend (stable within 0.5% relative change), and “N days with readings in the last 30 days (UTC)”. Delta compares the first and last available reading; an initial zero makes relative delta unavailable. Rounded zero is unsigned and neutral. With fewer than two readings the current value remains visible, the history box stays reserved and empty, and line, dot, scale ends, band and delta are omitted. No visible empty-state label is added; hidden text says “One reading” or “No history yet”.
 
 Valuation fields describe the dated research snapshot. `modeledValue` is its base present value, `buyLevel` its stressed admission ceiling, and `marginOfSafety` its original discount to base value. Gates are published research outputs, not automatically reapproved when prices change. The price table carries independent quote dates. The `token` field is the required asset symbol, not authentication material. Unknown p33 market mapping is left unmapped; its dated research quote remains available.
 
@@ -126,7 +128,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
       "properties": {
         "asset": {
           "type": "string",
-          "pattern": "^[A-Za-z][A-Za-z0-9 ._-]{0,63}$"
+          "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,23}$"
         },
         "venue": {
           "enum": [
@@ -163,15 +165,6 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
         "inManagedNav": {
           "const": false,
           "description": "Present on open prediction-market positions, which are excluded from managed NAV (the drawdown basis). Their weight still uses full NAV."
-        },
-        "targetBand": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          },
-          "minItems": 2,
-          "maxItems": 2,
-          "description": "Optional USD target interval [lo, hi], lo <= hi. Ordered endpoints are validated by the application; JSON Schema cannot compare sibling values."
         }
       },
       "required": [
@@ -242,7 +235,7 @@ Valuation fields describe the dated research snapshot. `modeledValue` is its bas
             "properties": {
               "asset": {
                 "type": "string",
-                "pattern": "^[A-Za-z][A-Za-z0-9 ._-]{0,63}$"
+                "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,23}$"
               },
               "valueUsd": {
                 "type": "number",

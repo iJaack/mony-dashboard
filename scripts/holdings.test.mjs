@@ -103,7 +103,7 @@ test('synthetic A/B/C use USD figures, signed deltas, local scales including dec
   assert.deepEqual(plain(a.scale), [11900, 13000]);
   assert.deepEqual(plain(b.scale), [4150, 4410]); assert.equal(b.band, null);
   assert.deepEqual(plain(c.scale), [8500, 9000]);
-  assert.match(a.alt, /Rising by 2.1 percent, minimum \$11,900.00, maximum \$12,510.00, last 30 days \(UTC\); target band \$12,000.00 to \$13,000.00/);
+  assert.match(a.alt, /Rising by 2.1 percent, minimum \$11,900.00, maximum \$12,510.00, 30 days with readings in the last 30 days \(UTC\); target band \$12,000.00 to \$13,000.00/);
   assert.match(b.alt, /^Falling/); assert.match(c.alt, /^Stable/);
 });
 
@@ -123,14 +123,113 @@ test('the window is 30 UTC civil days, last daily reading wins and internal gaps
   assert.match(result.alt, /28 days missing/);
 });
 
-test('a young position describes only its twelve real days; one point has no delta', () => {
+test('a young position leaves 18 leading slots empty on the fixed 30-day axis', () => {
   const young = data('Fondo D');
-  assert.equal(young.series.length, 12); assert.match(young.alt, /last 12 days \(UTC\)/);
-  assert.ok(young.series.every(value => value > 0));
-  const row = treasury.positions[0];
-  const once = pure.figureData(row, { positions: { [positionKey(row)]: [{ t: treasury.updatedAt, valueUsd: row.valueUsd }] } }, now);
-  assert.equal(once.series.length, 1); assert.equal(once.delta, null);
-  assert.match(once.alt, /Trend unavailable.*last 1 day.*one reading/);
+  assert.equal(young.series.length, 30);
+  assert.equal(young.series.findIndex(Number.isFinite), 18);
+  assert.ok(young.series.slice(0, 18).every(value => value === null));
+  assert.ok(young.series.slice(18).every(value => value > 0));
+  assert.match(young.alt, /12 days with readings in the last 30 days \(UTC\)/);
+});
+
+for (const count of [0, 1, 2, 5, 30]) test(`${count} daily readings use a fixed axis or an empty drawable series`, () => {
+  const row = treasury.positions[0], key = positionKey(row);
+  const readings = count ? history.positions[key].slice(-count) : [];
+  const result = pure.figureData(row, { positions: { [key]: readings } }, now);
+  assert.equal(result.value, row.valueUsd);
+  if (count < 2) {
+    assert.deepEqual(plain(result.series), []);
+    assert.equal(result.scale, null); assert.equal(result.band, null); assert.equal(result.delta, null);
+    assert.equal(result.alt, count ? 'One reading' : 'No history yet');
+  } else {
+    assert.equal(result.series.length, 30);
+    assert.equal(result.series.filter(Number.isFinite).length, count);
+    assert.equal(result.series.findIndex(Number.isFinite), 30 - count);
+    assert.ok(result.series.slice(0, 30 - count).every(value => value === null));
+    assert.deepEqual(plain(result.series.slice(30 - count)), readings.map(point => point.valueUsd));
+    assert.equal(result.series[29], readings.at(-1).valueUsd);
+    assert.match(result.alt, new RegExp(`${count} days with readings in the last 30 days`));
+  }
+  const h = harness(); h.render([row], { positions: { [key]: readings } }, now);
+  const rendered = h.group.children[0];
+  assert.equal(find(rendered, 'number').textContent, '$12,480.00');
+  assert.ok(find(rendered, 'history')); assert.equal(find(rendered, 'history').hidden, false);
+  assert.equal(find(rendered, 'delta').hidden, count < 2);
+  assert.equal(find(rendered, 'min').hidden, count < 2);
+  assert.equal(find(rendered, 'max').hidden, count < 2);
+  assert.equal(!!find(rendered, 'line'), count >= 2);
+  assert.equal(!!find(rendered, 'dot'), count >= 2);
+  if (count < 2) {
+    assert.equal(find(rendered, 'spark').children.length, 0, 'no marks, including a synthetic band');
+    const visibleText = rendered.descendants().filter(node => !node.hidden && node.className !== 'jk-figure-alt').map(node => node.text || '').join(' ');
+    assert.doesNotMatch(visibleText, /insufficient|unavailable|history|reading/i);
+    assert.equal(find(rendered, 'alt').textContent, count ? 'One reading' : 'No history yet');
+  }
+});
+
+test('stale readings leave today empty; the dot remains on yesterday rather than stretching right', () => {
+  const row = treasury.positions[0], key = positionKey(row);
+  const stale = { positions: { [key]: history.positions[key].slice(-3, -1) } };
+  const result = pure.figureData(row, stale, now);
+  assert.equal(result.series.length, 30);
+  assert.equal(result.series.findIndex(Number.isFinite), 27);
+  assert.equal(result.series[28], stale.positions[key].at(-1).valueUsd);
+  assert.equal(result.series[29], null);
+  const h = harness(); h.render([row], stale, now);
+  const dot = find(h.group.children[0], 'dot');
+  assert.ok(Math.abs(Number(dot.attrs.cx) - (2.5 + 28 / 29 * 55)) < 1e-9);
+});
+
+test('an internal missing day breaks the path and preserves both calendar positions', () => {
+  const row = treasury.positions[0], key = positionKey(row);
+  const gap = { positions: { [key]: history.positions[key].slice(-3).filter((_, index) => index !== 1) } };
+  const result = pure.figureData(row, gap, now);
+  assert.equal(result.series.length, 30);
+  assert.equal(result.series[28], null);
+  assert.equal(result.series[27], gap.positions[key][0].valueUsd);
+  assert.equal(result.series[29], gap.positions[key][1].valueUsd);
+  const h = harness(); h.render([row], gap, now);
+  assert.match(find(h.group.children[0], 'line').attrs.d, /^M[^L]+M/);
+  assert.equal(Number(find(h.group.children[0], 'dot').attrs.cx), 57.5);
+});
+
+test('UTC midnight rolls the calendar even when the final reading is stale', () => {
+  const row = treasury.positions[0], key = positionKey(row);
+  const readings = { positions: { [key]: history.positions[key].slice(-2) } };
+  const before = pure.figureData(row, readings, Date.parse('2026-11-16T23:59:59.999Z'));
+  const after = pure.figureData(row, readings, Date.parse('2026-11-17T00:00:00.000Z'));
+  assert.equal(before.series[29], row.valueUsd);
+  assert.equal(after.series[28], row.valueUsd); assert.equal(after.series[29], null);
+  assert.equal(after.series.length, 30);
+});
+
+test('invalid and duplicate same-day readings cannot enable a one-point chart', () => {
+  const row = treasury.positions[0], key = positionKey(row);
+  const records = [
+    { t: treasury.updatedAt, valueUsd: 1 }, { t: treasury.updatedAt, valueUsd: 2 },
+    { t: 'bad', valueUsd: 3 }, { t: '2026-11-15T12:00:00Z', valueUsd: null },
+    { t: '2026-11-15T12:00:00Z', valueUsd: NaN }, { t: '2026-11-15T12:00:00Z', valueUsd: Infinity },
+    { t: '2026-11-15T12:00:00Z', valueUsd: '5' },
+    { t: '2026-11-16T13:00:00Z', valueUsd: 6 }, { t: '2026-10-17T23:59:59Z', valueUsd: 7 },
+  ];
+  const result = pure.figureData(row, { positions: { [key]: records } }, now);
+  assert.equal(result.series.length, 0); assert.equal(result.delta, null); assert.equal(result.alt, 'One reading');
+});
+
+test('refreshing from a chart to 0/1 readings removes marks and hides delta and scale ends', () => {
+  const row = treasury.positions[0], key = positionKey(row), h = harness();
+  h.render([row], history, now);
+  const rendered = h.group.children[0], historyBox = find(rendered, 'history');
+  for (const count of [1, 0, 2]) {
+    h.render([row], { positions: { [key]: count ? history.positions[key].slice(-count) : [] } }, now);
+    assert.equal(find(rendered, 'history'), historyBox);
+    assert.equal(find(rendered, 'history').hidden, false);
+    assert.equal(!!find(rendered, 'line'), count >= 2);
+    assert.equal(!!find(rendered, 'dot'), count >= 2);
+    assert.equal(find(rendered, 'min').hidden, count < 2);
+    assert.equal(find(rendered, 'max').hidden, count < 2);
+    assert.equal(find(rendered, 'delta').hidden, count < 2);
+  }
 });
 
 test('trend uses the 0.5% relative threshold and zero/near-zero deltas stay neutral', () => {
@@ -145,16 +244,16 @@ test('trend uses the 0.5% relative threshold and zero/near-zero deltas stay neut
   assert.equal(zero.delta, null); assert.match(zero.alt, /^Rising/);
 });
 
-test('missing or invalid history preserves values and English history-unavailable text', () => {
+test('missing or invalid history preserves values and hidden English alternatives', () => {
   for (const missing of [null, {}, [], { positions: [] }, { positions: { [positionKey(treasury.positions[0])]: 'bad' } }]) {
     const result = data('Fondo A', missing);
     assert.equal(result.value, 12480); assert.equal(result.delta, null); assert.equal(result.series.length, 0);
-    assert.equal(result.scale, null); assert.match(result.alt, /^History unavailable/);
+    assert.equal(result.scale, null); assert.match(result.alt, /^No history yet/);
   }
   const h = harness(); h.render(treasury.positions, null, now);
   assert.equal(find(h.group.children[0], 'number').textContent, '$12,480.00');
   assert.equal(find(h.group.children[0], 'spark').children.length, 0);
-  assert.match(find(h.group.children[0], 'alt').textContent, /^History unavailable/);
+  assert.match(find(h.group.children[0], 'alt').textContent, /^No history yet/);
 });
 
 test('fixture rows render once with metadata, English alternatives and unsigned neutral zero', () => {
@@ -171,7 +270,7 @@ test('fixture rows render once with metadata, English alternatives and unsigned 
   for (const row of h.group.children) {
     assert.equal(find(row, 'spark').attrs['aria-hidden'], 'true');
     assert.equal(row.attrs['aria-busy'], 'false');
-    assert.match(find(row, 'alt').textContent, /minimum .*maximum .*last (?:12|30) days/);
+    assert.match(find(row, 'alt').textContent, /minimum .*maximum .*(?:12|30) days with readings in the last 30 days/);
   }
 });
 

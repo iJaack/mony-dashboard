@@ -16,30 +16,29 @@
       const valid = records.filter((point) => point && finite(point.valueUsd) && Number.isFinite(Date.parse(point.t)) && Date.parse(point.t) >= cutoff && Date.parse(point.t) <= now);
       for (const point of valid.sort((a, b) => Date.parse(a.t) - Date.parse(b.t))) days.set(Math.floor(Date.parse(point.t) / DAY), point.valueUsd);
     }
-    const dates = [...days.keys()];
-    const firstDay = dates[0], lastDay = dates.at(-1);
-    // Only internal missing days become nulls. No pre-birth padding or interpolation.
-    const series = dates.length ? Array.from({ length: lastDay - firstDay + 1 }, (_, index) => days.get(firstDay + index) ?? null) : [];
+    const firstDay = cutoff / DAY;
+    // Keep today's slot on the right, including missing days at either end.
+    const series = Array.from({ length: 30 }, (_, index) => days.get(firstDay + index) ?? null);
     const points = series.filter(finite);
-    const band = pair(row.targetBand) ? [...row.targetBand] : null;
+    const drawable = points.length >= 2;
+    const band = drawable && pair(row.targetBand) ? [...row.targetBand] : null;
     const bounds = points.concat(band ?? []);
-    const scale = points.length ? [Math.min(...bounds), Math.max(...bounds)] : null;
+    const scale = drawable ? [Math.min(...bounds), Math.max(...bounds)] : null;
     const change = points.length >= 2 && points[0] !== 0 ? (points.at(-1) - points[0]) / Math.abs(points[0]) * 100 : null;
     const delta = finite(change) ? Math.round(change * 10) / 10 || 0 : null;
-    const window = `last ${series.length} ${series.length === 1 ? 'day' : 'days'} (UTC)`;
+    const window = `${points.length} ${points.length === 1 ? 'day' : 'days'} with readings in the last 30 days (UTC)`;
     let alt = finite(row.valueUsd) ? '' : 'Value unavailable; ';
-    if (!points.length) alt += 'History unavailable';
+    if (!drawable) alt += points.length ? 'One reading' : 'No history yet';
     else {
       const difference = points.at(-1) - points[0];
       const stable = finite(change) ? Math.abs(change) <= 0.5 : difference === 0;
-      const trend = points.length === 1 ? 'Trend unavailable' : stable ? 'Stable' : difference > 0 ? 'Rising' : 'Falling';
+      const trend = stable ? 'Stable' : difference > 0 ? 'Rising' : 'Falling';
       alt += `${trend}${!stable && finite(change) ? ` by ${percent(change).replace('%', ' percent')}` : ''}, minimum ${money(Math.min(...points))}, maximum ${money(Math.max(...points))}, ${window}`;
-      if (points.length === 1) alt += '; one reading';
       const gaps = series.length - points.length;
       if (gaps) alt += `; ${gaps} ${gaps === 1 ? 'day' : 'days'} missing`;
     }
     if (band) alt += `; target band ${money(band[0])} to ${money(band[1])}`;
-    return { label: row.asset, value: finite(row.valueUsd) ? row.valueUsd : null, formatter: money, delta, series, scale, band, window, mode: 'mony', threshold: 0.5, reserveChars: 10, state: 'ready', alt };
+    return { label: row.asset, value: finite(row.valueUsd) ? row.valueUsd : null, formatter: money, delta, series: drawable ? series : [], scale, band, window, mode: 'mony', threshold: 0.5, reserveChars: 10, state: 'ready', alt };
   }
 
   const rows = new Map();

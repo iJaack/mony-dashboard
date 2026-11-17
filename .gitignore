@@ -2,6 +2,7 @@ fixtures/
 !tests/fixtures/
 .playwright-cli/
 output/playwright/
+output/figure-2026-11-17/
 *.log
 codex-*.log
 PHASE*_BRIEF.md
