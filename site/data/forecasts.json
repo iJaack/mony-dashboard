@@ -1,7 +1,55 @@
 {
-  "asOf": "2026-11-09",
+  "asOf": "2026-11-21",
   "source": "Forecast book",
   "rows": [
+    {
+      "title": "Anthropic closes its first trading day above $1.5T market cap",
+      "band": [
+        0.17,
+        0.31
+      ],
+      "confidence": "Low",
+      "horizon": "2026-11-19",
+      "staleAfter": "2026-11-20",
+      "lastReviewed": "2026-11-20",
+      "market": "Resolved No"
+    },
+    {
+      "title": "Fed hikes 50bp or more at Dec 8–9 FOMC",
+      "band": [
+        0.01,
+        0.05
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-09",
+      "staleAfter": "2026-12-05",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
+    },
+    {
+      "title": "Bitcoin dips to $60k by Dec 31",
+      "band": [
+        0.62,
+        0.92
+      ],
+      "confidence": "Medium",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-23",
+      "lastReviewed": "2026-11-21",
+      "market": "Resolved Yes"
+    },
+    {
+      "title": "Bitcoin dips to $50k by Dec 31",
+      "band": [
+        0.25,
+        0.55
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-28",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket Yes 0.43"
+    },
     {
       "title": "Binance restores general BTC, ETH and USDT withdrawals by Nov 3",
       "band": [
@@ -17,73 +65,37 @@
     {
       "title": "Anthropic shares listed and trading on a public exchange by Nov 30",
       "band": [
-        0.6,
-        0.84
-      ],
-      "confidence": "Low",
-      "horizon": "2026-11-30",
-      "staleAfter": "2026-11-11",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.90"
-    },
-    {
-      "title": "Yashar wins the most Knesset seats in Israel's Oct 27 election",
-      "band": [
-        0.55,
-        0.7
-      ],
-      "confidence": "Low",
-      "horizon": "2026-10-30",
-      "staleAfter": "2026-10-28",
-      "lastReviewed": "2026-10-27",
-      "market": "Polymarket Yes 0.705"
-    },
-    {
-      "title": "Fed holds 3.75–4.00% at Oct 27–28 FOMC",
-      "band": [
-        0.88,
-        0.95
+        0.97,
+        0.99
       ],
       "confidence": "High",
-      "horizon": "2026-10-28",
-      "staleAfter": "2026-10-28",
-      "lastReviewed": "2026-10-27",
-      "market": "CME FedWatch"
+      "horizon": "2026-11-30",
+      "staleAfter": "2026-11-20",
+      "lastReviewed": "2026-11-20",
+      "market": "Resolved Yes"
     },
     {
       "title": "Fed hikes ≥25bp at Dec 8–9 FOMC",
       "band": [
-        0.62,
-        0.8
+        0.89,
+        0.99
       ],
-      "confidence": "Medium",
+      "confidence": "High",
       "horizon": "2026-12-09",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-11-07",
+      "staleAfter": "2026-11-25",
+      "lastReviewed": "2026-11-11",
       "market": "CME FedWatch"
-    },
-    {
-      "title": "US spot BTC ETFs net positive for October",
-      "band": [
-        0.3,
-        0.45
-      ],
-      "confidence": "Low",
-      "horizon": "2026-10-30",
-      "staleAfter": "2026-10-28",
-      "lastReviewed": "2026-10-27",
-      "market": "Flow data, no traded price"
     },
     {
       "title": "US confirms suspending Ukraine intel sharing or PURL by Nov 30",
       "band": [
-        0.2,
-        0.35
+        0.03,
+        0.17
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-10-30",
-      "lastReviewed": "2026-10-18",
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-21",
       "market": "None"
     },
     {
@@ -95,8 +107,8 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-09",
-      "market": "None"
+      "lastReviewed": "2026-11-10",
+      "market": "Resolved Yes"
     },
     {
       "title": "AVAX between $8 and $12 on Dec 1 (CoinGecko)",
@@ -144,18 +156,6 @@
       "horizon": "2026-12-31",
       "staleAfter": "2026-10-30",
       "lastReviewed": "2026-11-04",
-      "market": "None"
-    },
-    {
-      "title": "Solana Alpenglow consensus live on mainnet by Oct 31",
-      "band": [
-        0.96,
-        0.99
-      ],
-      "confidence": "High",
-      "horizon": "2026-10-31",
-      "staleAfter": "2026-10-31",
-      "lastReviewed": "2026-10-22",
       "market": "None"
     },
     {
@@ -286,10 +286,9 @@
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-10-27",
-      "lastReviewed": "2026-11-05",
-      "market": "Polymarket Yes 0.135",
-      "treasuryLink": "Holds No · ~69.2 shares, ~$61"
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Strait of Hormuz traffic back to normal by Dec 31",
@@ -367,13 +366,13 @@
       "title": "AVAX reaches $13 by Dec 31",
       "band": [
         0.01,
-        0.19
+        0.09
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.075"
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-20",
+      "market": "Polymarket"
     },
     {
       "title": "Bitcoin reaches $100k by Dec 31",
@@ -510,14 +509,14 @@
     {
       "title": "USDT market cap hits $200B by Dec 31",
       "band": [
-        0.02,
-        0.07
+        0.01,
+        0.06
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-15",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.44"
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-13",
+      "market": "Polymarket"
     },
     {
       "title": "Ethena USDe depegs by Dec 31",
@@ -527,33 +526,33 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-15",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.02"
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-13",
+      "market": "Polymarket"
     },
     {
       "title": "Aave TVL falls below $10B in 2026",
       "band": [
-        0.03,
-        0.07
+        0.01,
+        0.2
       ],
-      "confidence": "Medium",
+      "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-15",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.075"
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-13",
+      "market": "Polymarket"
     },
     {
       "title": "US and Iran both accept a Strait of Hormuz shipping agreement by Nov 30",
       "band": [
-        0.03,
-        0.27
+        0.01,
+        0.05
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.255"
+      "staleAfter": "2026-11-26",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Jensen Huang resignation or removal as NVIDIA CEO announced by Dec 31",
@@ -564,8 +563,8 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket"
+      "lastReviewed": "2026-11-13",
+      "market": "Resolved Yes"
     }
   ]
 }
