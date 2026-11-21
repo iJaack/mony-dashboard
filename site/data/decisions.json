@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-20T17:23:50.000Z",
+  "updatedAt": "2026-11-21T17:21:58.000Z",
   "decisions": [
+    {
+      "id": "2026-11-21-eth-rebound-entry",
+      "date": "2026-11-21T17:21:58.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound leg opened",
+      "reason": "ETH bounced more than 3% in 24 hours after a deep selloff (RSI 17), which clears the stricter rebound bar set for downtrends. Bought a small WETH.e leg with about 10% of the fund at about 1,683. Target is the 10-day average near 1,803; the leg is cut if ETH closes the scan below",
+      "asset": "WETH.e",
+      "action": "buy",
+      "size": {
+        "amount": 15.026193,
+        "asset": "USDC",
+        "usd": 15.03
+      },
+      "received": {
+        "amount": 0.0089273688,
+        "asset": "WETH.e"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0xc7a515f13466bf88d0a19cc7ba8c3d10204d79c4ad46efce526b1878764b991f",
+          "block": 100997935,
+          "gasUsed": 55437,
+          "gasAvax": 0.00051972
+        },
+        {
+          "label": "swap",
+          "hash": "0xbb89debd364f82f0cb7b6d1e0db8c35ae84ab2eb5bd410a7d1a0a5769744e445",
+          "block": 100997983,
+          "gasUsed": 450000,
+          "gasAvax": 0.00421875
+        }
+      ]
+    },
     {
       "id": "2026-11-20-eth-rebound-stop-exit",
       "date": "2026-11-20T17:23:50.000Z",
