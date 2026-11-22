@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-21",
+  "asOf": "2026-11-22",
   "source": "Forecast book",
   "rows": [
     {
@@ -113,37 +113,37 @@
     {
       "title": "AVAX between $8 and $12 on Dec 1 (CoinGecko)",
       "band": [
-        0.48,
-        0.6
+        0.01,
+        0.09
       ],
-      "confidence": "Low",
+      "confidence": "Medium",
       "horizon": "2026-12-01",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-18",
+      "staleAfter": "2026-11-26",
+      "lastReviewed": "2026-11-21",
       "market": "None"
     },
     {
       "title": "US spot AVAX ETFs reach $36.6M cumulative net inflows by Nov 30",
       "band": [
-        0.02,
-        0.1
+        0.01,
+        0.04
       ],
       "confidence": "Medium",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-07",
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-21",
       "market": "None"
     },
     {
       "title": "sAVAX trades 3%+ below redemption rate, Oct 19–Dec 15",
       "band": [
-        0.03,
-        0.08
+        0.01,
+        0.1
       ],
       "confidence": "Medium",
       "horizon": "2026-12-15",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-18",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-21",
       "market": "None"
     },
     {
@@ -258,13 +258,13 @@
       "title": "Next Google Gemini Pro model released by Nov 30",
       "band": [
         0.01,
-        0.15
+        0.04
       ],
-      "confidence": "Low",
+      "confidence": "Medium",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-14",
-      "lastReviewed": "2026-11-07",
-      "market": "Polymarket Yes 0.25"
+      "staleAfter": "2026-11-28",
+      "lastReviewed": "2026-11-22",
+      "market": "Polymarket"
     },
     {
       "title": "ECB raises the deposit rate 25bp at the Dec 16–17 meeting",
@@ -293,38 +293,38 @@
     {
       "title": "Strait of Hormuz traffic back to normal by Dec 31",
       "band": [
-        0.07,
-        0.14
+        0.01,
+        0.06
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.125"
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Russia–Ukraine ceasefire by Dec 31, holding 10+ days",
       "band": [
-        0.04,
-        0.09
+        0.02,
+        0.11
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.085"
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Israel–Iran ceasefire holds through Dec 31 (no strikes)",
       "band": [
-        0.35,
-        0.65
+        0.45,
+        0.75
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.34"
+      "staleAfter": "2026-11-28",
+      "lastReviewed": "2026-11-22",
+      "market": "Polymarket"
     },
     {
       "title": "US recession by end of 2026 (Polymarket test)",
@@ -341,14 +341,14 @@
     {
       "title": "CLARITY Act signed into law in 2026",
       "band": [
-        0.02,
-        0.06
+        0.01,
+        0.07
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-13",
-      "lastReviewed": "2026-10-18",
-      "market": "Polymarket Yes 0.0505"
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Next Astra model (6.1+) released by Dec 31",
@@ -437,38 +437,38 @@
     {
       "title": "Hyperliquid (HYPE) reaches $100 by Dec 31",
       "band": [
-        0.05,
-        0.35
+        0.01,
+        0.13
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.445"
+      "staleAfter": "2026-11-27",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Zcash dips to $700 by Dec 31",
       "band": [
-        0.05,
-        0.35
+        0.27,
+        0.57
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.21"
+      "staleAfter": "2026-11-25",
+      "lastReviewed": "2026-11-21",
+      "market": "Resolved Yes"
     },
     {
       "title": "BNB reaches $1,000 by Dec 31",
       "band": [
         0.01,
-        0.05
+        0.02
       ],
-      "confidence": "Medium",
+      "confidence": "High",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.185"
+      "staleAfter": "2026-12-05",
+      "lastReviewed": "2026-11-21",
+      "market": "Polymarket"
     },
     {
       "title": "Dogecoin dips to $0.06 by Dec 31",
@@ -485,14 +485,14 @@
     {
       "title": "Chainlink dips to $8 by Dec 31",
       "band": [
-        0.18,
-        0.48
+        0.41,
+        0.71
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.495"
+      "staleAfter": "2026-11-25",
+      "lastReviewed": "2026-11-21",
+      "market": "Resolved Yes"
     },
     {
       "title": "Uniswap (UNI) reaches $11 by Dec 31",
