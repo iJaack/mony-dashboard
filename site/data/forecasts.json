@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-22",
+  "asOf": "2026-11-23",
   "source": "Forecast book",
   "rows": [
     {
@@ -83,7 +83,7 @@
       "confidence": "High",
       "horizon": "2026-12-09",
       "staleAfter": "2026-11-25",
-      "lastReviewed": "2026-11-11",
+      "lastReviewed": "2026-11-23",
       "market": "CME FedWatch"
     },
     {
@@ -269,13 +269,13 @@
     {
       "title": "ECB raises the deposit rate 25bp at the Dec 16–17 meeting",
       "band": [
-        0.66,
-        0.78
+        0.85,
+        0.97
       ],
       "confidence": "Medium",
       "horizon": "2026-12-17",
-      "staleAfter": "2026-10-30",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-11-25",
+      "lastReviewed": "2026-11-23",
       "market": "Polymarket Yes 0.825"
     },
     {
@@ -330,12 +330,12 @@
       "title": "US recession by end of 2026 (Polymarket test)",
       "band": [
         0.01,
-        0.04
+        0.02
       ],
       "confidence": "High",
       "horizon": "2027-01-29",
-      "staleAfter": "2026-10-30",
-      "lastReviewed": "2026-10-18",
+      "staleAfter": "2026-11-25",
+      "lastReviewed": "2026-11-23",
       "market": "Polymarket Yes 0.065"
     },
     {
