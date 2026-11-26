@@ -1,6 +1,40 @@
 {
-  "updatedAt": "2026-11-21T17:21:58.000Z",
+  "updatedAt": "2026-11-26T17:25:09.000Z",
   "decisions": [
+    {
+      "id": "2026-11-26-eth-rebound-expiry-exit",
+      "date": "2026-11-26T17:25:09.000Z",
+      "outcome": "execute",
+      "title": "ETH rebound leg closed at expiry",
+      "reason": "The ETH rebound leg opened on 21 Nov reached its 5-day limit without hitting the stop (1,597) or the target (1,803). The market is still in a broad downtrend, so the whole WETH.e leg was sold back into USDC at about 1,685, roughly flat: about +0.02 USDC (+0.1%) on the leg",
+      "asset": "WETH.e",
+      "action": "sell",
+      "size": {
+        "amount": 0.008927368830853568,
+        "asset": "WETH.e",
+        "usd": 15.1
+      },
+      "received": {
+        "amount": 15.041472,
+        "asset": "USDC"
+      },
+      "txs": [
+        {
+          "label": "approve",
+          "hash": "0x5d3e0679210b8b766e24d8f0c5f56ca499ad7b621da2a9eaaf8af08b9c0722ee",
+          "block": 101464809,
+          "gasUsed": 50000,
+          "gasAvax": 0.00046875
+        },
+        {
+          "label": "swap",
+          "hash": "0x42b3d7047a45718d2dc7117514fc07b6731c7b9f0838d1b666cb09ad42d6351c",
+          "block": 101464855,
+          "gasUsed": 502856,
+          "gasAvax": 0.00484227
+        }
+      ]
+    },
     {
       "id": "2026-11-21-eth-rebound-entry",
       "date": "2026-11-21T17:21:58.000Z",
