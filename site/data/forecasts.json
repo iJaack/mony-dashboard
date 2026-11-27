@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-23",
+  "asOf": "2026-11-27",
   "source": "Forecast book",
   "rows": [
     {
@@ -41,26 +41,26 @@
     {
       "title": "Bitcoin dips to $50k by Dec 31",
       "band": [
-        0.25,
-        0.55
+        0.15,
+        0.45
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-26",
       "market": "Polymarket Yes 0.43"
     },
     {
       "title": "Binance restores general BTC, ETH and USDT withdrawals by Nov 3",
       "band": [
-        0.6,
-        0.75
+        0.88,
+        0.98
       ],
-      "confidence": "Low",
+      "confidence": "High",
       "horizon": "2026-11-03",
       "staleAfter": "2026-11-02",
-      "lastReviewed": "2026-10-30",
-      "market": "No market"
+      "lastReviewed": "2026-11-01",
+      "market": "Resolved Yes"
     },
     {
       "title": "Anthropic shares listed and trading on a public exchange by Nov 30",
@@ -82,8 +82,8 @@
       ],
       "confidence": "High",
       "horizon": "2026-12-09",
-      "staleAfter": "2026-11-25",
-      "lastReviewed": "2026-11-23",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "CME FedWatch"
     },
     {
@@ -94,8 +94,8 @@
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-27",
       "market": "None"
     },
     {
@@ -118,8 +118,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-12-01",
-      "staleAfter": "2026-11-26",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-11-28",
+      "lastReviewed": "2026-11-27",
       "market": "None"
     },
     {
@@ -130,8 +130,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-27",
       "market": "None"
     },
     {
@@ -149,13 +149,13 @@
     {
       "title": "Ethereum Glamsterdam upgrade live on mainnet by Dec 31",
       "band": [
-        0.03,
-        0.11
+        0.01,
+        0.03
       ],
-      "confidence": "Medium",
+      "confidence": "High",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-10-30",
-      "lastReviewed": "2026-11-04",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "None"
     },
     {
@@ -166,9 +166,9 @@
       ],
       "confidence": "High",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-04",
-      "lastReviewed": "2026-11-04",
-      "market": "None"
+      "staleAfter": "2026-11-06",
+      "lastReviewed": "2026-11-06",
+      "market": "Resolved Yes"
     },
     {
       "title": "NEAR House of Stake approves cutting max issuance to 1.6% by Dec 31",
@@ -185,14 +185,14 @@
     {
       "title": "AVAX dips to $7 by Dec 31 (Binance 1-min low)",
       "band": [
-        0.53,
-        0.83
+        0.5,
+        0.8
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.385"
+      "staleAfter": "2026-11-21",
+      "lastReviewed": "2026-11-15",
+      "market": "Resolved Yes"
     },
     {
       "title": "Bitcoin dips to $70k by Dec 31",
@@ -203,20 +203,20 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.355"
+      "lastReviewed": "2026-11-13",
+      "market": "Resolved Yes"
     },
     {
       "title": "MSCI removes Strategy (MSTR) from MSCI World or USA by Dec 31",
       "band": [
-        0.84,
+        0.73,
         0.97
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-12",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.935"
+      "lastReviewed": "2026-11-12",
+      "market": "Resolved Yes"
     },
     {
       "title": "US–Iran ceasefire holds through the Nov 3 midterms (no US strike)",
@@ -263,7 +263,7 @@
       "confidence": "Medium",
       "horizon": "2026-11-30",
       "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-22",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -274,8 +274,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-12-17",
-      "staleAfter": "2026-11-25",
-      "lastReviewed": "2026-11-23",
+      "staleAfter": "2026-12-02",
+      "lastReviewed": "2026-11-25",
       "market": "Polymarket Yes 0.825"
     },
     {
@@ -317,13 +317,13 @@
     {
       "title": "Israel–Iran ceasefire holds through Dec 31 (no strikes)",
       "band": [
-        0.45,
-        0.75
+        0.5,
+        0.8
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-22",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-26",
       "market": "Polymarket"
     },
     {
@@ -334,8 +334,8 @@
       ],
       "confidence": "High",
       "horizon": "2027-01-29",
-      "staleAfter": "2026-11-25",
-      "lastReviewed": "2026-11-23",
+      "staleAfter": "2026-12-02",
+      "lastReviewed": "2026-11-25",
       "market": "Polymarket Yes 0.065"
     },
     {
@@ -353,14 +353,14 @@
     {
       "title": "Next Astra model (6.1+) released by Dec 31",
       "band": [
-        0.9,
-        0.98
+        0.89,
+        0.99
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-11-05",
-      "market": "Polymarket Yes 0.974"
+      "staleAfter": "2026-11-23",
+      "lastReviewed": "2026-11-19",
+      "market": "Resolved Yes"
     },
     {
       "title": "AVAX reaches $13 by Dec 31",
@@ -370,20 +370,20 @@
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-20",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
       "title": "Bitcoin reaches $100k by Dec 31",
       "band": [
         0.01,
-        0.11
+        0.05
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket Yes 0.225"
     },
     {
@@ -395,19 +395,19 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-06",
-      "lastReviewed": "2026-10-20",
-      "market": "Polymarket Yes 0.61"
+      "lastReviewed": "2026-10-30",
+      "market": "Resolved Yes"
     },
     {
       "title": "Ethereum reaches $3,000 by Dec 31",
       "band": [
         0.01,
-        0.21
+        0.05
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket Yes 0.155"
     },
     {
@@ -419,8 +419,8 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.515"
+      "lastReviewed": "2026-11-13",
+      "market": "Resolved Yes"
     },
     {
       "title": "XRP dips to $1.00 by Dec 31",
@@ -431,8 +431,8 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.355"
+      "lastReviewed": "2026-11-13",
+      "market": "Resolved Yes"
     },
     {
       "title": "Hyperliquid (HYPE) reaches $100 by Dec 31",
@@ -442,8 +442,8 @@
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -473,14 +473,14 @@
     {
       "title": "Dogecoin dips to $0.06 by Dec 31",
       "band": [
-        0.43,
-        0.73
+        0.72,
+        0.98
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
-      "market": "Polymarket Yes 0.42"
+      "staleAfter": "2026-11-17",
+      "lastReviewed": "2026-11-15",
+      "market": "Resolved Yes"
     },
     {
       "title": "Chainlink dips to $8 by Dec 31",
@@ -497,13 +497,13 @@
     {
       "title": "Uniswap (UNI) reaches $11 by Dec 31",
       "band": [
-        0.07,
-        0.37
+        0.01,
+        0.07
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-16",
-      "lastReviewed": "2026-11-09",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket Yes 0.28"
     },
     {
@@ -514,8 +514,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-13",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -526,8 +526,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-13",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -538,8 +538,8 @@
       ],
       "confidence": "Low",
       "horizon": "2026-12-31",
-      "staleAfter": "2026-11-27",
-      "lastReviewed": "2026-11-13",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -550,8 +550,8 @@
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-26",
-      "lastReviewed": "2026-11-21",
+      "staleAfter": "2026-11-28",
+      "lastReviewed": "2026-11-27",
       "market": "Polymarket"
     },
     {
@@ -565,6 +565,18 @@
       "staleAfter": "2026-11-16",
       "lastReviewed": "2026-11-13",
       "market": "Resolved Yes"
+    },
+    {
+      "title": "Sky USDS depegs by Dec 31",
+      "band": [
+        0.01,
+        0.07
+      ],
+      "confidence": "Low",
+      "horizon": "2026-12-31",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-24",
+      "market": "Polymarket"
     }
   ]
 }
