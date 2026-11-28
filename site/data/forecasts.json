@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-27",
+  "asOf": "2026-11-28",
   "source": "Forecast book",
   "rows": [
     {
@@ -47,7 +47,7 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-26",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket Yes 0.43"
     },
     {
@@ -89,13 +89,13 @@
     {
       "title": "US confirms suspending Ukraine intel sharing or PURL by Nov 30",
       "band": [
-        0.03,
-        0.17
+        0.01,
+        0.07
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-27",
+      "lastReviewed": "2026-11-28",
       "market": "None"
     },
     {
@@ -114,12 +114,12 @@
       "title": "AVAX between $8 and $12 on Dec 1 (CoinGecko)",
       "band": [
         0.01,
-        0.09
+        0.03
       ],
       "confidence": "Medium",
       "horizon": "2026-12-01",
-      "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-27",
+      "staleAfter": "2026-12-01",
+      "lastReviewed": "2026-11-28",
       "market": "None"
     },
     {
@@ -131,7 +131,7 @@
       "confidence": "Medium",
       "horizon": "2026-11-30",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-27",
+      "lastReviewed": "2026-11-28",
       "market": "None"
     },
     {
@@ -143,7 +143,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-15",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-21",
+      "lastReviewed": "2026-11-28",
       "market": "None"
     },
     {
@@ -262,8 +262,8 @@
       ],
       "confidence": "Medium",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-27",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -287,7 +287,7 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-21",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -299,7 +299,7 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-21",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -311,7 +311,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-21",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -347,7 +347,7 @@
       "confidence": "Medium",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-21",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -550,8 +550,8 @@
       ],
       "confidence": "Low",
       "horizon": "2026-11-30",
-      "staleAfter": "2026-11-28",
-      "lastReviewed": "2026-11-27",
+      "staleAfter": "2026-11-30",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     },
     {
@@ -575,7 +575,7 @@
       "confidence": "Low",
       "horizon": "2026-12-31",
       "staleAfter": "2026-11-30",
-      "lastReviewed": "2026-11-24",
+      "lastReviewed": "2026-11-28",
       "market": "Polymarket"
     }
   ]
